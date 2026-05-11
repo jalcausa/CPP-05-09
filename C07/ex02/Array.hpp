@@ -10,25 +10,55 @@ class Array
     class IndexOutOfBoundsException : public std::exception
     {
       public:
-        const char *what() const throw();
+        const char *what() const throw()
+        {
+            return "Array: index out of bounds";
+        }
     };
 
-    Array();
-    Array(unsigned int n);
-    Array(const Array<T> &other);
-    ~Array();
+    Array() : _data(NULL), _size(0) {}
 
-    Array<T>     &operator=(const Array<T> &other);
-    T            &operator[](unsigned int idx);
-    const T      &operator[](unsigned int idx) const;
+    Array(unsigned int n) : _data(new T[n]()), _size(n) {}
 
-    unsigned int  size() const;
+    Array(const Array<T> &other) : _data(NULL), _size(0)
+    {
+        *this = other;
+    }
+
+    ~Array() { delete[] _data; }
+
+    Array<T> &operator=(const Array<T> &other)
+    {
+        if (this != &other)
+        {
+            delete[] _data;
+            _size = other._size;
+            _data = new T[_size];
+            for (unsigned int i = 0; i < _size; ++i)
+                _data[i] = other._data[i];
+        }
+        return *this;
+    }
+
+    T &operator[](unsigned int idx)
+    {
+        if (idx >= _size)
+            throw IndexOutOfBoundsException();
+        return _data[idx];
+    }
+
+    const T &operator[](unsigned int idx) const
+    {
+        if (idx >= _size)
+            throw IndexOutOfBoundsException();
+        return _data[idx];
+    }
+
+    unsigned int size() const { return _size; }
 
   private:
     T            *_data;
     unsigned int  _size;
 };
-
-# include "Array.tpp"
 
 #endif

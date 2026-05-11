@@ -16,8 +16,8 @@ int main(void)
     std::cout << std::endl;
 
     // --- String tests ---
-    std::string c = "chaine1";
-    std::string d = "chaine2";
+    std::string c = "chain1";
+    std::string d = "chain2";
 
     ::swap(c, d);
     std::cout << "c = " << c << ", d = " << d << std::endl;
