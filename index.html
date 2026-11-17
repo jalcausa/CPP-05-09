@@ -1,0 +1,3655 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CPP 08–09 · Guía de defensa</title>
+<meta name="description" content="Objetivos, enunciados y explicación pedagógica del código de los módulos C++ 08 y 09 de 42, pensada para preparar la evaluación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<style>
+:root{
+  --bg:#fbfaf7; --panel:#ffffff; --ink:#1d1f23; --muted:#5f6670; --line:#e4e1da;
+  --accent:#2f5bd3; --accent-soft:#e8eefc; --code-bg:#f5f3ee;
+  --ok:#1f7a4d; --ok-soft:#e5f4ec; --warn:#a15c00; --warn-soft:#fdf1df; --bad:#b3261e; --bad-soft:#fbe9e7;
+  --c08:#2f5bd3; --c09:#8a3fbf;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#121417; --panel:#1a1d21; --ink:#e7e8ea; --muted:#9aa1ab; --line:#2c3036;
+    --accent:#7aa2ff; --accent-soft:#1e2740; --code-bg:#0f1114;
+    --ok:#5fd19a; --ok-soft:#14291f; --warn:#f0b35a; --warn-soft:#2c2213; --bad:#ff8a80; --bad-soft:#2d1716;
+    --c08:#7aa2ff; --c09:#c38bf0;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:16px}
+body{margin:0; background:var(--bg); color:var(--ink); font:16px/1.65 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:var(--accent)}
+code,pre{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace; font-variant-ligatures:none; font-feature-settings:"liga" 0,"calt" 0}
+:not(pre)>code{background:var(--code-bg); border:1px solid var(--line); padding:.05em .35em; border-radius:5px; font-size:.88em; overflow-wrap:anywhere}
+.layout{display:grid; grid-template-columns:270px minmax(0,1fr); max-width:1280px; margin:0 auto}
+nav.toc{position:sticky; top:0; height:100vh; overflow:auto; padding:28px 18px 40px 24px; border-right:1px solid var(--line); font-size:14px}
+nav.toc .brand{font-weight:700; font-size:17px; margin-bottom:4px}
+nav.toc .sub{color:var(--muted); font-size:13px; margin-bottom:18px}
+nav.toc a{display:block; text-decoration:none; color:var(--muted); padding:4px 8px; border-radius:6px}
+nav.toc a:hover{background:var(--accent-soft); color:var(--ink)}
+nav.toc .grp{margin:16px 0 4px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600; padding-left:8px}
+nav.toc a.l2{padding-left:20px}
+main{padding:40px 48px 120px; min-width:0}
+header.hero{border-bottom:1px solid var(--line); padding-bottom:28px; margin-bottom:12px}
+header.hero h1{font-size:40px; line-height:1.15; margin:0 0 10px; letter-spacing:-.02em}
+header.hero p{color:var(--muted); max-width:760px; margin:0}
+h2{font-size:30px; letter-spacing:-.01em; margin:64px 0 8px; padding-top:8px}
+h3{font-size:22px; margin:44px 0 6px}
+h4{font-size:17px; margin:28px 0 6px}
+section.mod{border-top:4px solid var(--c08); margin-top:56px}
+section.mod.c09{border-top-color:var(--c09)}
+.tag{display:inline-block; font-size:12px; font-weight:600; padding:2px 9px; border-radius:99px; background:var(--accent-soft); color:var(--accent); vertical-align:middle}
+.tag.c09{color:var(--c09)}
+p,li{max-width:820px}
+.code{position:relative; display:flex; background:var(--code-bg); border:1px solid var(--line); border-radius:10px; margin:14px 0 18px; overflow:hidden}
+.code pre{margin:0; padding:14px 16px; overflow:auto; font-size:13.5px; line-height:1.55; flex:1; min-width:0}
+.code pre code.hljs{background:transparent; padding:0}
+.code .gutter{flex:0 0 auto; color:var(--muted); text-align:right; user-select:none; border-right:1px solid var(--line); padding-right:10px; opacity:.7}
+details.src{border:1px solid var(--line); border-radius:10px; background:var(--panel); margin:14px 0}
+details.src>summary{cursor:pointer; padding:10px 14px; font-size:14px; list-style:none}
+details.src>summary::-webkit-details-marker{display:none}
+details.src>summary::before{content:"▸"; display:inline-block; width:1em; color:var(--muted); transition:transform .15s}
+details.src[open]>summary::before{transform:rotate(90deg)}
+details.src .code{margin:0 10px 10px}
+.fname{font-family:"JetBrains Mono",monospace; font-weight:600; font-size:13px}
+.muted{color:var(--muted)}
+.card{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:16px 0}
+.subject{background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--muted); border-radius:10px; padding:14px 20px; margin:16px 0}
+.subject .h{font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:4px}
+.call{border-radius:10px; padding:12px 16px; margin:16px 0; border:1px solid}
+.call.ok{background:var(--ok-soft); border-color:color-mix(in srgb,var(--ok) 35%,transparent)}
+.call.warn{background:var(--warn-soft); border-color:color-mix(in srgb,var(--warn) 35%,transparent)}
+.call.bad{background:var(--bad-soft); border-color:color-mix(in srgb,var(--bad) 35%,transparent)}
+.call .t{font-weight:700; margin-bottom:2px}
+.call.ok .t{color:var(--ok)} .call.warn .t{color:var(--warn)} .call.bad .t{color:var(--bad)}
+.call p:last-child,.card p:last-child,.subject p:last-child{margin-bottom:0}
+.call p:first-of-type{margin-top:0}
+table{border-collapse:collapse; width:100%; font-size:14.5px; margin:14px 0}
+.tw{overflow-x:auto}
+th,td{border-bottom:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{font-size:12.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); font-weight:600}
+.qa{border:1px solid var(--line); border-radius:10px; background:var(--panel); margin:8px 0}
+.qa summary{cursor:pointer; padding:10px 14px; font-weight:600; list-style:none}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary::before{content:"?"; display:inline-grid; place-items:center; width:20px; height:20px; border-radius:50%; background:var(--accent-soft); color:var(--accent); font-size:12px; margin-right:8px}
+.qa .a{padding:0 16px 12px 42px}
+.qa .a p:first-child{margin-top:0}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px}
+.steps{counter-reset:s; list-style:none; padding:0}
+.steps>li{counter-increment:s; position:relative; padding-left:38px; margin:10px 0}
+.steps>li::before{content:counter(s); position:absolute; left:0; top:1px; width:26px; height:26px; border-radius:50%; background:var(--accent); color:var(--bg); display:grid; place-items:center; font-size:13px; font-weight:700}
+.stackviz{display:flex; gap:6px; align-items:flex-end; flex-wrap:wrap}
+.cell{font-family:"JetBrains Mono",monospace; font-size:13px; border:1px solid var(--line); background:var(--panel); padding:3px 8px; border-radius:6px}
+.cell.hl{background:var(--accent-soft); border-color:var(--accent); color:var(--accent); font-weight:600}
+.cell.ghost{border-style:dashed; color:var(--muted)}
+.dates{display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin:10px 0}
+.arrow{color:var(--muted); font-size:13px}
+.kbd{font-family:"JetBrains Mono",monospace; font-size:13px; color:var(--muted)}
+footer{margin-top:80px; color:var(--muted); font-size:13px; border-top:1px solid var(--line); padding-top:18px}
+@media (max-width:900px){
+  .layout{display:block}
+  nav.toc{position:static; height:auto; border-right:none; border-bottom:1px solid var(--line); padding:18px 16px}
+  nav.toc .links{display:none}
+  nav.toc.open .links{display:block}
+  .menu-btn{display:inline-block!important}
+  main{padding:24px 16px 80px}
+  header.hero h1{font-size:30px}
+  h2{font-size:25px}
+}
+.menu-btn{display:none; margin-top:8px; font:inherit; font-size:14px; padding:6px 12px; border-radius:8px; border:1px solid var(--line); background:var(--panel); color:var(--ink); cursor:pointer}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc" id="toc">
+  <div class="brand">CPP 08 – 09</div>
+  <div class="sub">Guía para defender el código</div>
+  <button class="menu-btn" onclick="document.getElementById('toc').classList.toggle('open')">Índice ▾</button>
+  <div class="links">
+    <a href="#como-usar">Cómo usar esta guía</a>
+    <div class="grp">Conceptos base</div>
+    <a href="#stl">La STL en 5 minutos</a>
+    <a href="#templates">Templates y <code>typename</code></a>
+    <a href="#excepciones">Excepciones</a>
+    <a href="#ocf">Forma canónica y C++98</a>
+    <div class="grp">Módulo 08</div>
+    <a href="#c08">Objetivo y reglas</a>
+    <a class="l2" href="#c08-ex00">ex00 · easyfind</a>
+    <a class="l2" href="#c08-ex01">ex01 · Span</a>
+    <a class="l2" href="#c08-ex02">ex02 · MutantStack</a>
+    <div class="grp">Módulo 09</div>
+    <a href="#c09">Objetivo y reglas</a>
+    <a class="l2" href="#c09-ex00">ex00 · Bitcoin Exchange</a>
+    <a class="l2" href="#c09-ex01">ex01 · RPN</a>
+    <a class="l2" href="#c09-ex02">ex02 · PmergeMe</a>
+    <div class="grp">Antes de evaluar</div>
+    <a href="#revisar">Puntos a revisar</a>
+    <a href="#chuleta">Chuleta rápida</a>
+  </div>
+</nav>
+
+<main>
+<header class="hero">
+  <span class="tag">42 · C++ Modules</span>
+  <h1>CPP 08 y 09: objetivos, enunciados y tu código explicado</h1>
+  <p>Para cada ejercicio: qué pide el enunciado, qué concepto quiere enseñarte, cómo lo has resuelto y qué hace cada parte del código. Al final de cada uno hay preguntas típicas de evaluación con su respuesta.</p>
+</header>
+
+<h2 id="como-usar">Cómo usar esta guía</h2>
+<p>Los módulos 08 y 09 son los únicos de la piscina de C++ en los que se permite (y se exige) usar la <strong>STL</strong>. En la defensa casi todas las preguntas van a ir por tres caminos:</p>
+<ol>
+  <li><strong>¿Por qué ese contenedor?</strong> Tienes que saber justificar <code>vector</code>, <code>list</code>, <code>deque</code>, <code>map</code> o <code>stack</code> según cómo se accede a los datos.</li>
+  <li><strong>¿Qué hace esta línea?</strong> Sobre todo en las partes con templates (<code>typename</code>, <code>this-&gt;c</code>) y en los algoritmos (<code>lower_bound</code>, Ford-Johnson).</li>
+  <li><strong>¿Qué pasa si…?</strong> Casos límite: contenedor vacío, valor no encontrado, entrada mal formada, división por cero, desbordamiento.</li>
+</ol>
+<p>Cada ejercicio incluye su fichero completo (pulsa sobre el nombre para desplegarlo) y fragmentos comentados. Todo lo he compilado y ejecutado: las salidas que ves son reales. En la sección <a href="#revisar">Puntos a revisar</a> están los detalles que un evaluador exigente podría encontrar, para que no te pillen por sorpresa.</p>
+
+<!-- ============================================================ -->
+<h2 id="stl">La STL en 5 minutos</h2>
+<p>La <em>Standard Template Library</em> son tres piezas que encajan entre sí:</p>
+<div class="grid2">
+  <div class="card"><strong>Contenedores</strong><p>Guardan datos. Son <em>class templates</em>: <code>std::vector&lt;int&gt;</code>, <code>std::map&lt;std::string, float&gt;</code>…</p></div>
+  <div class="card"><strong>Iteradores</strong><p>Objetos que "apuntan" a un elemento de un contenedor y saben avanzar. Generalizan los punteros: <code>*it</code>, <code>++it</code>, <code>it != end</code>.</p></div>
+  <div class="card"><strong>Algoritmos</strong><p>Funciones de <code>&lt;algorithm&gt;</code> que trabajan sobre un <em>rango</em> <code>[begin, end)</code> de iteradores, sin saber qué contenedor hay debajo: <code>std::find</code>, <code>std::sort</code>, <code>std::min_element</code>…</p></div>
+</div>
+<p>La idea clave: <strong>los algoritmos no conocen los contenedores, solo los iteradores</strong>. Por eso <code>std::find</code> funciona igual con un <code>vector</code>, una <code>list</code> o un <code>deque</code>.</p>
+
+<h4>Contenedores que aparecen en tus ejercicios</h4>
+<div class="tw"><table>
+<tr><th>Contenedor</th><th>Tipo</th><th>Cómo es por dentro</th><th>Acceso por índice</th><th>Insertar en medio</th><th>Dónde lo usas</th></tr>
+<tr><td><code>std::vector</code></td><td>Secuencial</td><td>Array dinámico contiguo</td><td>O(1)</td><td>O(n)</td><td>08/ex00, 08/ex01, 09/ex02</td></tr>
+<tr><td><code>std::deque</code></td><td>Secuencial</td><td>Bloques de memoria enlazados (no contiguo)</td><td>O(1)</td><td>O(n), pero O(1) por delante y por detrás</td><td>08/ex00, 09/ex02</td></tr>
+<tr><td><code>std::list</code></td><td>Secuencial</td><td>Lista doblemente enlazada</td><td>No tiene</td><td>O(1) si ya tienes el iterador</td><td>08/ex00, 08/ex01, 08/ex02 (tests)</td></tr>
+<tr><td><code>std::map</code></td><td>Asociativo</td><td>Árbol rojo-negro, ordenado por clave</td><td>Por clave, O(log n)</td><td>O(log n)</td><td>09/ex00</td></tr>
+<tr><td><code>std::stack</code></td><td>Adaptador</td><td>Envuelve otro contenedor (por defecto <code>std::deque</code>)</td><td>Solo <code>top()</code></td><td>Solo arriba</td><td>08/ex02, 09/ex01</td></tr>
+</table></div>
+
+<h4>Categorías de iteradores</h4>
+<p>No todos los iteradores pueden hacer lo mismo. Esto explica, por ejemplo, por qué en tus tests haces <code>it - vec.begin()</code> con un <code>vector</code> pero no con una <code>list</code>:</p>
+<ul>
+  <li><strong>Bidireccional</strong> (<code>list</code>, <code>map</code>): <code>++it</code> y <code>--it</code>. No puedes restar dos iteradores ni hacer <code>it + 5</code>.</li>
+  <li><strong>Acceso aleatorio</strong> (<code>vector</code>, <code>deque</code>): todo lo anterior, más <code>it + n</code>, <code>it2 - it1</code>, <code>it[n]</code> y comparar con <code>&lt;</code>.</li>
+</ul>
+<p>Un detalle que preguntan mucho: <code>end()</code> <strong>no apunta al último elemento</strong>, sino a la posición <em>siguiente</em> al último. Por eso los rangos son semiabiertos <code>[begin, end)</code> y "no encontrado" se representa devolviendo <code>end()</code>.</p>
+
+<h2 id="templates">Templates y <code>typename</code></h2>
+<p>Un <em>template</em> es un molde: el compilador genera una versión concreta (una <em>instanciación</em>) para cada tipo con el que lo usas. <code>easyfind(vec, 42)</code> y <code>easyfind(lst, 42)</code> generan dos funciones distintas en tiempo de compilación.</p>
+<p><strong>¿Por qué el código de un template va en el <code>.hpp</code>?</strong> Porque para instanciarlo el compilador necesita ver la definición completa en cada <code>.cpp</code> que lo usa. Si la pusieras en un <code>.cpp</code> aparte, el linker no encontraría la versión para tu tipo. Por eso la regla general de 42 ("nada de implementaciones en headers") tiene una excepción explícita para los templates.</p>
+<p><strong>¿Para qué sirve <code>typename</code> delante de <code>T::iterator</code>?</strong> Dentro de un template, <code>T::iterator</code> es un <em>nombre dependiente</em>: depende de <code>T</code>, y el compilador no sabe todavía si es un tipo o, por ejemplo, una variable estática. Por defecto asume que <strong>no</strong> es un tipo. <code>typename</code> le dice "esto es un tipo".</p>
+<div class="code"><pre><code class="language-cpp">typename T::iterator it;       // correcto: "T::iterator es un tipo"
+T::iterator it;                // error: el compilador lo interpreta como un valor</code></pre></div>
+
+<h2 id="excepciones">Excepciones</h2>
+<p>En estos módulos señalas errores lanzando excepciones. Hay dos formas de hacerlo, y en tu código usas las dos:</p>
+<ul>
+  <li><strong>Usar una de la librería estándar</strong>: <code>throw std::runtime_error("mensaje");</code> (en <code>easyfind</code> y en <code>RPN</code>). Está en <code>&lt;stdexcept&gt;</code> y ya guarda el mensaje.</li>
+  <li><strong>Crear tu propia clase</strong> que herede de <code>std::exception</code> y sobrescriba <code>what()</code> (en <code>Span</code>).</li>
+</ul>
+<div class="code"><pre><code class="language-cpp">class FullContainerException : public std::exception
+{
+public:
+    virtual const char* what() const throw();
+};</code></pre></div>
+<p><code>const throw()</code> significa: el método no modifica el objeto (<code>const</code>) y <strong>promete no lanzar excepciones</strong> (<code>throw()</code>, la especificación de excepciones de C++98). Tiene que coincidir con la firma de <code>std::exception::what()</code> para sobrescribirla. Se captura por referencia constante (<code>catch (const std::exception&amp; e)</code>) para no copiar el objeto y para que el polimorfismo funcione: <code>e.what()</code> llama a la versión de la clase hija.</p>
+
+<h2 id="ocf">Forma canónica ortodoxa y C++98</h2>
+<p>Desde el módulo 02, toda clase debe tener: <strong>constructor por defecto, constructor de copia, operador de asignación y destructor</strong>. En tu código lo cumplen <code>BitcoinExchange</code>, <code>RPN</code>, <code>PmergeMe</code> y <code>MutantStack</code>. <code>Span</code> no tiene constructor por defecto (ver <a href="#revisar">Puntos a revisar</a>).</p>
+<p>Restricciones de C++98 que se notan en tu código:</p>
+<ul>
+  <li>No existe <code>auto</code>: escribes el tipo completo del iterador (<code>std::map&lt;std::string, float&gt;::const_iterator</code>).</li>
+  <li>No hay bucles <code>for (x : contenedor)</code>: se recorre con iteradores o índices.</li>
+  <li><code>std::vector&lt;std::pair&lt;int,int&gt; &gt;</code> lleva un espacio en <code>&gt; &gt;</code>, porque en C++98 <code>&gt;&gt;</code> se lee como el operador de desplazamiento.</li>
+  <li>Los <code>ifstream</code> reciben <code>const char*</code>, de ahí el <code>filename.c_str()</code>.</li>
+</ul>
+
+<!-- ============================================================ -->
+<section class="mod" id="c08">
+<h2><span class="tag">Módulo 08</span><br>Contenedores con templates, iteradores y algoritmos</h2>
+<div class="card">
+<p><strong>Objetivo del módulo:</strong> aprender a usar la STL en lugar de reinventarla. Los tres ejercicios se podrían resolver sin STL, pero el enunciado dice explícitamente que <em>usarla es precisamente el objetivo</em> y que sacarás mala nota si no lo haces, aunque el código funcione.</p>
+<ul>
+  <li><strong>ex00</strong>: escribir un algoritmo genérico (function template) que funcione con cualquier contenedor gracias a los iteradores.</li>
+  <li><strong>ex01</strong>: diseñar una clase que use un contenedor por dentro y se apoye en algoritmos (<code>sort</code>, <code>min_element</code>, <code>max_element</code>), y aceptar rangos de iteradores.</li>
+  <li><strong>ex02</strong>: entender qué es un <em>adaptador</em> de contenedor y cómo ampliar una clase de la STL mediante herencia.</li>
+</ul>
+</div>
+<div class="subject">
+<div class="h">Reglas específicas del módulo (enunciado)</div>
+<p>Debes usar la STL, en especial los <strong>contenedores</strong> (vector/list/map…) y los <strong>algoritmos</strong> (cabecera <code>&lt;algorithm&gt;</code>), siempre que sea apropiado y tanto como puedas. Puedes definir los templates en los headers como siempre, o declararlos en el header y escribir la implementación en ficheros <code>.tpp</code>. Los headers son obligatorios; los <code>.tpp</code>, opcionales.</p>
+</div>
+
+<!-- ---------------- C08 ex00 ---------------- -->
+<h3 id="c08-ex00">ex00 · Easy find</h3>
+<div class="subject">
+<div class="h">Enunciado</div>
+<p><strong>Ficheros:</strong> <code>Makefile</code>, <code>main.cpp</code>, <code>easyfind.{h, hpp}</code> y opcional <code>easyfind.tpp</code>.</p>
+<p>Escribe una plantilla de función <code>easyfind</code> que acepte un tipo <code>T</code>. Recibe dos parámetros: el primero de tipo <code>T</code> y el segundo un entero. Suponiendo que <code>T</code> es un <strong>contenedor de enteros</strong>, la función debe encontrar la primera aparición del segundo parámetro en el primero. Si no se encuentra, puedes lanzar una excepción o devolver un valor de error de tu elección (inspírate en cómo se comportan los contenedores estándar). No hace falta gestionar contenedores asociativos. Entrega tus propios tests.</p>
+</div>
+
+<h4>Qué te quiere enseñar</h4>
+<p>Que con un template y un par de iteradores puedes escribir <strong>una sola función que vale para cualquier contenedor secuencial</strong>, y que no hace falta escribir el bucle de búsqueda a mano porque ya existe <code>std::find</code>.</p>
+
+<h4>Cómo lo has resuelto</h4>
+<div class="code"><pre><code class="language-cpp">template &lt;typename T&gt;
+typename T::iterator easyfind(T&amp; container, int value)
+{
+	typename T::iterator it = std::find(container.begin(), container.end(), value);
+	if (it == container.end())
+		throw std::runtime_error("Value not found in container");
+	return it;
+}</code></pre></div>
+<ol class="steps">
+  <li><code>template &lt;typename T&gt;</code>: <code>T</code> será el tipo del contenedor (<code>std::vector&lt;int&gt;</code>, <code>std::list&lt;int&gt;</code>…). El compilador lo deduce solo a partir del argumento.</li>
+  <li><strong>Tipo de retorno <code>typename T::iterator</code></strong>: devuelves un iterador al elemento encontrado, no un <code>bool</code> ni el valor. Así quien llama sabe <em>dónde</em> está y puede usarlo (en el main calculas el índice con <code>it - vec.begin()</code>). Lleva <code>typename</code> porque es un nombre dependiente (ver <a href="#templates">Templates</a>).</li>
+  <li><strong><code>T&amp; container</code></strong>: por referencia, para no copiar el contenedor entero y para que el iterador devuelto apunte al contenedor original, no a una copia que se destruye al salir de la función (eso daría un iterador colgante).</li>
+  <li><strong><code>std::find(begin, end, value)</code></strong>: recorre el rango y devuelve el iterador al primer elemento igual a <code>value</code>, o <code>end</code> si no lo encuentra. Es O(n).</li>
+  <li><strong>Si <code>it == container.end()</code> lanzas <code>std::runtime_error</code></strong>. Elegiste excepción en lugar de devolver <code>end()</code>. Las dos opciones son válidas según el enunciado; la de los contenedores estándar sería devolver <code>end()</code>, pero la excepción obliga a quien llama a gestionar el caso.</li>
+</ol>
+<p><strong>Segunda sobrecarga con <code>const</code>.</strong> Hay una versión casi idéntica que recibe <code>const T&amp;</code> y devuelve <code>typename T::const_iterator</code>. Sin ella, <code>easyfind(cvec, 5)</code> con un <code>const std::vector&lt;int&gt;</code> no compilaría: de un contenedor <code>const</code>, <code>begin()</code> devuelve un <code>const_iterator</code>, que no se puede convertir a <code>iterator</code>. El compilador elige la sobrecarga adecuada según si el argumento es <code>const</code> o no.</p>
+
+<h4>Los tests (main.cpp)</h4>
+<p>Pruebas con <code>vector</code>, <code>list</code> y <code>deque</code>: un valor que existe, uno al principio, uno que no existe (salta la excepción) y la versión <code>const</code>. Con <code>list</code> no calculas el índice porque su iterador es bidireccional y no admite resta.</p>
+<div class="code"><pre><code class="language-text">-- std::vector&lt;int&gt; --
+Found 42 at index 3
+Found 1 at index 0
+Exception (expected): Value not found in container
+-- std::list&lt;int&gt; --
+Found 20 in list
+Exception (expected): Value not found in container
+...
+-- const std::vector&lt;int&gt; --
+Found 5 at index 1</code></pre></div>
+<details class="src"><summary><span class="fname">C08/ex00/easyfind.hpp</span> <span class="muted">· código completo (25 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre><pre><code class="language-cpp">#ifndef EASYFIND_HPP
+# define EASYFIND_HPP
+
+# include &lt;algorithm&gt;
+# include &lt;stdexcept&gt;
+
+template &lt;typename T&gt;
+typename T::iterator easyfind(T&amp; container, int value)
+{
+	typename T::iterator it = std::find(container.begin(), container.end(), value);
+	if (it == container.end())
+		throw std::runtime_error("Value not found in container");
+	return it;
+}
+
+template &lt;typename T&gt;
+typename T::const_iterator easyfind(const T&amp; container, int value)
+{
+	typename T::const_iterator it = std::find(container.begin(), container.end(), value);
+	if (it == container.end())
+		throw std::runtime_error("Value not found in container");
+	return it;
+}
+
+#endif</code></pre></div></details>
+<details class="src"><summary><span class="fname">C08/ex00/main.cpp</span> <span class="muted">· código completo (95 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95</pre><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;list&gt;
+#include &lt;deque&gt;
+#include "easyfind.hpp"
+
+int main(void)
+{
+	std::cout &lt;&lt; "=== easyfind tests ===" &lt;&lt; std::endl;
+
+	// --- vector tests ---
+	std::cout &lt;&lt; "\n-- std::vector&lt;int&gt; --" &lt;&lt; std::endl;
+	std::vector&lt;int&gt; vec;
+	vec.push_back(1);
+	vec.push_back(5);
+	vec.push_back(3);
+	vec.push_back(42);
+	vec.push_back(7);
+
+	try {
+		std::vector&lt;int&gt;::iterator it = easyfind(vec, 42);
+		std::cout &lt;&lt; "Found 42 at index " &lt;&lt; (it - vec.begin()) &lt;&lt; std::endl;
+	} catch (const std::exception&amp; e) {
+		std::cerr &lt;&lt; "Exception: " &lt;&lt; e.what() &lt;&lt; std::endl;
+	}
+
+	try {
+		std::vector&lt;int&gt;::iterator it = easyfind(vec, 1);
+		std::cout &lt;&lt; "Found 1 at index " &lt;&lt; (it - vec.begin()) &lt;&lt; std::endl;
+	} catch (const std::exception&amp; e) {
+		std::cerr &lt;&lt; "Exception: " &lt;&lt; e.what() &lt;&lt; std::endl;
+	}
+
+	try {
+		easyfind(vec, 99);
+		std::cout &lt;&lt; "Found 99 (should not reach here)" &lt;&lt; std::endl;
+	} catch (const std::exception&amp; e) {
+		std::cerr &lt;&lt; "Exception (expected): " &lt;&lt; e.what() &lt;&lt; std::endl;
+	}
+
+	// --- list tests ---
+	std::cout &lt;&lt; "\n-- std::list&lt;int&gt; --" &lt;&lt; std::endl;
+	std::list&lt;int&gt; lst;
+	lst.push_back(10);
+	lst.push_back(20);
+	lst.push_back(30);
+
+	try {
+		std::list&lt;int&gt;::iterator it = easyfind(lst, 20);
+		std::cout &lt;&lt; "Found 20 in list" &lt;&lt; std::endl;
+		(void)it;
+	} catch (const std::exception&amp; e) {
+		std::cerr &lt;&lt; "Exception: " &lt;&lt; e.what() &lt;&lt; std::endl;
+	}
+
+	try {
+		easyfind(lst, 999);
+		std::cout &lt;&lt; "Found 999 (should not reach here)" &lt;&lt; std::endl;
+	} catch (const std::exception&amp; e) {
+		std::cerr &lt;&lt; "Exception (expected): " &lt;&lt; e.what() &lt;&lt; std::endl;
+	}
+
+	// --- deque tests ---
+	std::cout &lt;&lt; "\n-- std::deque&lt;int&gt; --" &lt;&lt; std::endl;
+	std::deque&lt;int&gt; deq;
+	deq.push_back(100);
+	deq.push_back(200);
+	deq.push_back(300);
+
+	try {
+		std::deque&lt;int&gt;::iterator it = easyfind(deq, 100);
+		std::cout &lt;&lt; "Found 100 at index " &lt;&lt; (it - deq.begin()) &lt;&lt; std::endl;
+	} catch (const std::exception&amp; e) {
+		std::cerr &lt;&lt; "Exception: " &lt;&lt; e.what() &lt;&lt; std::endl;
+	}
+
+	try {
+		easyfind(deq, 0);
+		std::cout &lt;&lt; "Found 0 (should not reach here)" &lt;&lt; std::endl;
+	} catch (const std::exception&amp; e) {
+		std::cerr &lt;&lt; "Exception (expected): " &lt;&lt; e.what() &lt;&lt; std::endl;
+	}
+
+	// --- const container test ---
+	std::cout &lt;&lt; "\n-- const std::vector&lt;int&gt; --" &lt;&lt; std::endl;
+	const std::vector&lt;int&gt; cvec(vec);
+	try {
+		std::vector&lt;int&gt;::const_iterator it = easyfind(cvec, 5);
+		std::cout &lt;&lt; "Found 5 at index " &lt;&lt; (it - cvec.begin()) &lt;&lt; std::endl;
+	} catch (const std::exception&amp; e) {
+		std::cerr &lt;&lt; "Exception: " &lt;&lt; e.what() &lt;&lt; std::endl;
+	}
+
+	return 0;
+}</code></pre></div></details>
+<details class="src"><summary><span class="fname">C08/ex00/Makefile</span> <span class="muted">· código completo (25 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre><pre><code class="language-makefile">NAME		= easyfind
+
+CXX			= c++
+CXXFLAGS	= -Wall -Wextra -Werror -std=c++98
+
+SRCS		= main.cpp
+OBJS		= $(SRCS:.cpp=.o)
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $&lt; -o $@
+
+clean:
+	rm -f $(OBJS)
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re</code></pre></div></details>
+
+<h4>Preguntas típicas</h4>
+<details class="qa"><summary>¿Por qué no funciona con <code>std::map</code>?</summary><div class="a"><p>Porque los elementos de un <code>map</code> son <code>std::pair&lt;const Key, Value&gt;</code>, no <code>int</code>. <code>std::find</code> compararía cada <code>pair</code> con un <code>int</code> y no compilaría. Además, en un <code>map</code> lo natural es buscar por clave con <code>map.find(key)</code>, que es O(log n). Por eso el enunciado dice que no hace falta gestionar contenedores asociativos.</p></div></details>
+<details class="qa"><summary>¿Funcionaría con <code>std::stack</code>?</summary><div class="a"><p>No. <code>std::stack</code> no tiene <code>begin()</code>/<code>end()</code> ni tipo <code>iterator</code>, así que no compila. Ese es justo el problema que resuelve el ex02.</p></div></details>
+<details class="qa"><summary>¿Por qué no hay <code>.cpp</code> de easyfind?</summary><div class="a"><p>Porque es un template: su definición tiene que estar visible donde se instancia. El Makefile solo compila <code>main.cpp</code>.</p></div></details>
+<details class="qa"><summary>¿Cuál es la complejidad?</summary><div class="a"><p>O(n): <code>std::find</code> es una búsqueda lineal. No puede ser mejor porque el contenedor no está ordenado.</p></div></details>
+
+<!-- ---------------- C08 ex01 ---------------- -->
+<h3 id="c08-ex01">ex01 · Span</h3>
+<div class="subject">
+<div class="h">Enunciado</div>
+<p><strong>Ficheros:</strong> <code>Makefile</code>, <code>main.cpp</code>, <code>Span.{h, hpp}</code>, <code>Span.cpp</code>.</p>
+<p>Crea una clase <code>Span</code> que pueda guardar un máximo de <code>N</code> enteros. <code>N</code> es un <code>unsigned int</code> y es el único parámetro del constructor. Debe tener <code>addNumber()</code> para añadir un número; si ya hay <code>N</code> elementos, lanza una excepción. Implementa <code>shortestSpan()</code> y <code>longestSpan()</code>, que devuelven la distancia más corta y la más larga entre todos los números guardados. Si hay 0 o 1 números, no hay distancia posible: lanza una excepción. Prueba con al menos 10 000 números. Por último, implementa una función miembro que añada <strong>un rango de iteradores</strong> de una sola vez.</p>
+<p>Con 6, 3, 17, 9, 11 la salida esperada es <code>2</code> y <code>14</code>.</p>
+</div>
+
+<h4>Qué te quiere enseñar</h4>
+<p>A encapsular un contenedor STL dentro de una clase, a resolver problemas con algoritmos (<code>sort</code>, <code>min_element</code>, <code>max_element</code>) en lugar de dobles bucles, y a escribir una función que acepte <strong>cualquier rango de iteradores</strong>, como hacen los constructores y el <code>insert</code> de los contenedores estándar.</p>
+
+<h4>Diseño de la clase</h4>
+<div class="code"><pre><code class="language-cpp">private:
+	unsigned int		_maxSize;   // N: capacidad máxima
+	std::vector&lt;int&gt;	_numbers;   // los números guardados</code></pre></div>
+<p><strong>¿Por qué <code>vector</code>?</strong> Solo se añade al final (<code>push_back</code>, O(1) amortizado), hace falta ordenar (y <code>std::sort</code> necesita iteradores de acceso aleatorio, así que <code>list</code> no vale) y la memoria contigua es lo más rápido de recorrer.</p>
+<p>En el constructor llamas a <code>_numbers.reserve(n)</code>: reserva memoria para <code>n</code> enteros de una vez y así el vector no tiene que realocar mientras se llena. No cambia <code>size()</code>, solo <code>capacity()</code>.</p>
+
+<h4><code>addNumber</code></h4>
+<div class="code"><pre><code class="language-cpp">void Span::addNumber(int n)
+{
+	if (_numbers.size() &gt;= _maxSize)
+		throw FullContainerException();
+	_numbers.push_back(n);
+}</code></pre></div>
+<p>Compruebas la capacidad <em>antes</em> de insertar. El límite lo controlas tú con <code>_maxSize</code>; el vector por sí solo crecería sin límite.</p>
+
+<h4><code>shortestSpan</code>: ordenar y mirar vecinos</h4>
+<div class="code"><pre><code class="language-cpp">int Span::shortestSpan() const
+{
+	if (_numbers.size() &lt; 2)
+		throw NotEnoughNumbersException();
+
+	std::vector&lt;int&gt; sorted(_numbers);          // copia: el método es const
+	std::sort(sorted.begin(), sorted.end());    // O(n log n)
+
+	int shortest = sorted[1] - sorted[0];
+	for (std::vector&lt;int&gt;::size_type i = 2; i &lt; sorted.size(); ++i)
+	{
+		int diff = sorted[i] - sorted[i - 1];
+		if (diff &lt; shortest)
+			shortest = diff;
+	}
+	return shortest;
+}</code></pre></div>
+<p><strong>La idea clave:</strong> una vez ordenados, la distancia mínima siempre está entre dos elementos <strong>consecutivos</strong>. Si <code>a ≤ b ≤ c</code>, entonces <code>c - a ≥ c - b</code>, así que nunca hace falta comparar elementos no adyacentes. Pasas de comparar todos con todos (O(n²)) a ordenar y hacer una pasada: O(n log n).</p>
+<p><strong>¿Por qué una copia?</strong> El método es <code>const</code> (no debe modificar el objeto) y <code>std::sort</code> reordena en el sitio. Copias y ordenas la copia.</p>
+<p>Con 6, 3, 17, 9, 11 → ordenado 3, 6, 9, 11, 17 → diferencias 3, 3, 2, 6 → mínimo <strong>2</strong>.</p>
+
+<h4><code>longestSpan</code>: máximo menos mínimo</h4>
+<div class="code"><pre><code class="language-cpp">int minVal = *std::min_element(_numbers.begin(), _numbers.end());
+int maxVal = *std::max_element(_numbers.begin(), _numbers.end());
+return maxVal - minVal;</code></pre></div>
+<p>La distancia más larga siempre es entre el mayor y el menor. No hace falta ordenar: dos pasadas O(n). <code>min_element</code> y <code>max_element</code> devuelven <em>iteradores</em>, por eso los desreferencias con <code>*</code>. Ejemplo: 17 − 3 = <strong>14</strong>.</p>
+
+<h4><code>addNumbers</code>: rango de iteradores</h4>
+<div class="code"><pre><code class="language-cpp">template &lt;typename Iterator&gt;
+void addNumbers(Iterator begin, Iterator end)
+{
+	while (begin != end)
+	{
+		addNumber(*begin);
+		++begin;
+	}
+}</code></pre></div>
+<p>Es una <strong>función miembro template</strong> dentro de una clase normal. El tipo <code>Iterator</code> se deduce de los argumentos, así que vale para iteradores de <code>vector</code>, <code>list</code>, <code>deque</code> o incluso punteros a un array (<code>arr, arr + 5</code>). Por ser template, su cuerpo está en el <code>.hpp</code>, y eso está permitido. Como reutiliza <code>addNumber</code>, si el rango no cabe lanza <code>FullContainerException</code> cuando se llena.</p>
+
+<h4>Excepciones anidadas</h4>
+<p><code>FullContainerException</code> y <code>NotEnoughNumbersException</code> son clases anidadas dentro de <code>Span</code> que heredan de <code>std::exception</code> y sobrescriben <code>what()</code>. Desde fuera se nombran <code>Span::FullContainerException</code>.</p>
+
+<h4>Los tests</h4>
+<p>Ejemplo del enunciado, Span lleno, Span con 0 y 1 números, <code>addNumbers</code> con <code>vector</code> y con <code>list</code>, <strong>10 000 números</strong> (0…9999 → shortest 1, longest 9999) y constructor de copia (modificar la copia no afecta al original, porque <code>vector</code> hace copia profunda).</p>
+<div class="code"><pre><code class="language-text">-- Subject example --
+shortestSpan() = 2
+longestSpan()  = 14
+...
+-- Large Span (10000 numbers) --
+shortestSpan() = 1
+longestSpan()  = 9999</code></pre></div>
+<details class="src"><summary><span class="fname">C08/ex01/Span.hpp</span> <span class="muted">· código completo (47 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47</pre><pre><code class="language-cpp">#ifndef SPAN_HPP
+# define SPAN_HPP
+
+# include &lt;vector&gt;
+# include &lt;exception&gt;
+
+class Span
+{
+public:
+	Span(unsigned int n);
+	Span(const Span&amp; other);
+	Span&amp; operator=(const Span&amp; other);
+	~Span();
+
+	void addNumber(int n);
+
+	template &lt;typename Iterator&gt;
+	void addNumbers(Iterator begin, Iterator end)
+	{
+		while (begin != end)
+		{
+			addNumber(*begin);
+			++begin;
+		}
+	}
+
+	int shortestSpan() const;
+	int longestSpan() const;
+
+	class FullContainerException : public std::exception
+	{
+	public:
+		virtual const char* what() const throw();
+	};
+
+	class NotEnoughNumbersException : public std::exception
+	{
+	public:
+		virtual const char* what() const throw();
+	};
+
+private:
+	unsigned int	_maxSize;
+	std::vector&lt;int&gt;	_numbers;
+};
+
+#endif</code></pre></div></details>
+<details class="src"><summary><span class="fname">C08/ex01/Span.cpp</span> <span class="muted">· código completo (76 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76</pre><pre><code class="language-cpp">#include "Span.hpp"
+#include &lt;algorithm&gt;
+
+// --- Constructors / Destructor ---
+
+Span::Span(unsigned int n) : _maxSize(n)
+{
+	_numbers.reserve(n);
+}
+
+Span::Span(const Span&amp; other) : _maxSize(other._maxSize), _numbers(other._numbers)
+{
+}
+
+Span&amp; Span::operator=(const Span&amp; other)
+{
+	if (this != &amp;other)
+	{
+		_maxSize = other._maxSize;
+		_numbers = other._numbers;
+	}
+	return *this;
+}
+
+Span::~Span()
+{
+}
+
+// --- Member functions ---
+
+void Span::addNumber(int n)
+{
+	if (_numbers.size() &gt;= _maxSize)
+		throw FullContainerException();
+	_numbers.push_back(n);
+}
+
+int Span::shortestSpan() const
+{
+	if (_numbers.size() &lt; 2)
+		throw NotEnoughNumbersException();
+
+	std::vector&lt;int&gt; sorted(_numbers);
+	std::sort(sorted.begin(), sorted.end());
+
+	int shortest = sorted[1] - sorted[0];
+	for (std::vector&lt;int&gt;::size_type i = 2; i &lt; sorted.size(); ++i)
+	{
+		int diff = sorted[i] - sorted[i - 1];
+		if (diff &lt; shortest)
+			shortest = diff;
+	}
+	return shortest;
+}
+
+int Span::longestSpan() const
+{
+	if (_numbers.size() &lt; 2)
+		throw NotEnoughNumbersException();
+
+	int minVal = *std::min_element(_numbers.begin(), _numbers.end());
+	int maxVal = *std::max_element(_numbers.begin(), _numbers.end());
+	return maxVal - minVal;
+}
+
+// --- Exception messages ---
+
+const char* Span::FullContainerException::what() const throw()
+{
+	return "Span: container is full, cannot add more numbers";
+}
+
+const char* Span::NotEnoughNumbersException::what() const throw()
+{
+	return "Span: need at least 2 numbers to compute a span";
+}</code></pre></div></details>
+<details class="src"><summary><span class="fname">C08/ex01/main.cpp</span> <span class="muted">· código completo (117 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117</pre><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;list&gt;
+#include &lt;cstdlib&gt;
+#include "Span.hpp"
+
+int main(void)
+{
+	std::cout &lt;&lt; "=== Span tests ===" &lt;&lt; std::endl;
+
+	// --- Basic subject example ---
+	std::cout &lt;&lt; "\n-- Subject example --" &lt;&lt; std::endl;
+	{
+		Span sp(5);
+		sp.addNumber(6);
+		sp.addNumber(3);
+		sp.addNumber(17);
+		sp.addNumber(9);
+		sp.addNumber(11);
+		std::cout &lt;&lt; "shortestSpan() = " &lt;&lt; sp.shortestSpan() &lt;&lt; std::endl; // expected 2
+		std::cout &lt;&lt; "longestSpan()  = " &lt;&lt; sp.longestSpan()  &lt;&lt; std::endl; // expected 14
+	}
+
+	// --- Exception: container full ---
+	std::cout &lt;&lt; "\n-- addNumber on full Span --" &lt;&lt; std::endl;
+	{
+		Span sp(2);
+		sp.addNumber(1);
+		sp.addNumber(2);
+		try {
+			sp.addNumber(3);
+			std::cout &lt;&lt; "No exception thrown (should not reach here)" &lt;&lt; std::endl;
+		} catch (const std::exception&amp; e) {
+			std::cerr &lt;&lt; "Exception (expected): " &lt;&lt; e.what() &lt;&lt; std::endl;
+		}
+	}
+
+	// --- Exception: not enough numbers ---
+	std::cout &lt;&lt; "\n-- Span with 0 or 1 numbers --" &lt;&lt; std::endl;
+	{
+		Span sp(5);
+		try {
+			sp.shortestSpan();
+		} catch (const std::exception&amp; e) {
+			std::cerr &lt;&lt; "Exception (expected): " &lt;&lt; e.what() &lt;&lt; std::endl;
+		}
+		sp.addNumber(42);
+		try {
+			sp.longestSpan();
+		} catch (const std::exception&amp; e) {
+			std::cerr &lt;&lt; "Exception (expected): " &lt;&lt; e.what() &lt;&lt; std::endl;
+		}
+	}
+
+	// --- addNumbers with a vector iterator ---
+	std::cout &lt;&lt; "\n-- addNumbers (vector range) --" &lt;&lt; std::endl;
+	{
+		std::vector&lt;int&gt; v;
+		v.push_back(10);
+		v.push_back(50);
+		v.push_back(30);
+		v.push_back(20);
+		v.push_back(40);
+
+		Span sp(10);
+		sp.addNumbers(v.begin(), v.end());
+		std::cout &lt;&lt; "shortestSpan() = " &lt;&lt; sp.shortestSpan() &lt;&lt; std::endl; // expected 10
+		std::cout &lt;&lt; "longestSpan()  = " &lt;&lt; sp.longestSpan()  &lt;&lt; std::endl; // expected 40
+	}
+
+	// --- addNumbers with a list iterator ---
+	std::cout &lt;&lt; "\n-- addNumbers (list range) --" &lt;&lt; std::endl;
+	{
+		std::list&lt;int&gt; lst;
+		lst.push_back(0);
+		lst.push_back(100);
+		lst.push_back(50);
+
+		Span sp(5);
+		sp.addNumbers(lst.begin(), lst.end());
+		std::cout &lt;&lt; "shortestSpan() = " &lt;&lt; sp.shortestSpan() &lt;&lt; std::endl; // expected 50
+		std::cout &lt;&lt; "longestSpan()  = " &lt;&lt; sp.longestSpan()  &lt;&lt; std::endl; // expected 100
+	}
+
+	// --- Large span test ---
+	std::cout &lt;&lt; "\n-- Large Span (10000 numbers) --" &lt;&lt; std::endl;
+	{
+		Span sp(10000);
+		std::vector&lt;int&gt; big;
+		big.reserve(10000);
+		for (int i = 0; i &lt; 10000; ++i)
+			big.push_back(i);
+		sp.addNumbers(big.begin(), big.end());
+		std::cout &lt;&lt; "shortestSpan() = " &lt;&lt; sp.shortestSpan() &lt;&lt; std::endl; // expected 1
+		std::cout &lt;&lt; "longestSpan()  = " &lt;&lt; sp.longestSpan()  &lt;&lt; std::endl; // expected 9999
+	}
+
+	// --- Copy constructor test ---
+	std::cout &lt;&lt; "\n-- Copy constructor --" &lt;&lt; std::endl;
+	{
+		Span sp1(5);
+		sp1.addNumber(1);
+		sp1.addNumber(10);
+		sp1.addNumber(5);
+
+		Span sp2(sp1);
+		std::cout &lt;&lt; "sp1 shortestSpan() = " &lt;&lt; sp1.shortestSpan() &lt;&lt; std::endl;
+		std::cout &lt;&lt; "sp2 shortestSpan() = " &lt;&lt; sp2.shortestSpan() &lt;&lt; std::endl;
+
+		// Modifying sp2 should not affect sp1
+		sp2.addNumber(20);
+		std::cout &lt;&lt; "sp1 longestSpan()  = " &lt;&lt; sp1.longestSpan()  &lt;&lt; std::endl;
+		std::cout &lt;&lt; "sp2 longestSpan()  = " &lt;&lt; sp2.longestSpan()  &lt;&lt; std::endl;
+	}
+
+	return 0;
+}</code></pre></div></details>
+
+<h4>Preguntas típicas</h4>
+<details class="qa"><summary>¿Por qué no usas <code>std::list</code>?</summary><div class="a"><p><code>std::sort</code> requiere iteradores de acceso aleatorio y <code>list</code> solo tiene bidireccionales (tiene su propio <code>list::sort()</code>, pero es más lento por la falta de localidad de memoria). <code>vector</code> es la opción natural.</p></div></details>
+<details class="qa"><summary>¿Por qué no ordenas al insertar y así <code>shortestSpan</code> es más rápido?</summary><div class="a"><p>Sería posible (insertando con <code>lower_bound</code>), pero cada inserción costaría O(n) por el desplazamiento en el vector: O(n²) para llenarlo. Ordenar una vez al consultar, O(n log n), es mejor si se consulta poco.</p></div></details>
+<details class="qa"><summary>¿Qué es <code>reserve</code> y en qué se diferencia de <code>resize</code>?</summary><div class="a"><p><code>reserve(n)</code> solo reserva memoria (cambia <code>capacity</code>). <code>resize(n)</code> crea <code>n</code> elementos (cambia <code>size</code>). Si usaras <code>resize</code>, el vector empezaría con N ceros y <code>addNumber</code> lo vería lleno desde el principio.</p></div></details>
+<details class="qa"><summary>¿Cómo probarías con 100 000 números aleatorios?</summary><div class="a"><p>Rellenar un <code>std::vector&lt;int&gt;</code> con <code>std::rand()</code> (de <code>&lt;cstdlib&gt;</code>, ya incluido en tu main) y pasarlo con <code>sp.addNumbers(v.begin(), v.end())</code>. Es una modificación típica que te pueden pedir en directo.</p></div></details>
+
+<!-- ---------------- C08 ex02 ---------------- -->
+<h3 id="c08-ex02">ex02 · Mutated abomination (MutantStack)</h3>
+<div class="subject">
+<div class="h">Enunciado</div>
+<p><strong>Ficheros:</strong> <code>Makefile</code>, <code>main.cpp</code>, <code>MutantStack.{h, hpp}</code> y opcional <code>MutantStack.tpp</code>.</p>
+<p><code>std::stack</code> es uno de los pocos contenedores de la STL que <strong>no es iterable</strong>. Para arreglarlo, escribe una clase <code>MutantStack</code> <strong>implementada en términos de</strong> <code>std::stack</code>: debe ofrecer todas sus funciones miembro y además <strong>iteradores</strong>. Si ejecutas el main de ejemplo con tu <code>MutantStack</code> y otra vez sustituyéndolo por un <code>std::list</code> (cambiando <code>push</code> por <code>push_back</code>, etc.), las dos salidas deben ser iguales. El ejemplo termina con <code>std::stack&lt;int&gt; s(mstack);</code>, que también debe compilar.</p>
+</div>
+
+<h4>Qué te quiere enseñar</h4>
+<p>Qué es un <strong>adaptador de contenedor</strong>: <code>std::stack</code> no guarda datos por sí mismo, sino que envuelve otro contenedor (por defecto un <code>std::deque</code>) y solo te deja usar la parte de arriba (<code>push</code>, <code>pop</code>, <code>top</code>). Ese contenedor interno es un miembro <strong><code>protected</code></strong> llamado <code>c</code>. Si heredas de <code>std::stack</code>, puedes acceder a <code>c</code> y exponer sus iteradores.</p>
+<div class="code"><pre><code class="language-cpp">// Así está definido std::stack (simplificado):
+template &lt;class T, class Container = std::deque&lt;T&gt; &gt;
+class stack {
+protected:
+    Container c;                  // &lt;- el contenedor real
+public:
+    typedef Container container_type;
+    void push(const T&amp; x) { c.push_back(x); }
+    void pop()            { c.pop_back(); }
+    T&amp;   top()            { return c.back(); }
+    ...
+};</code></pre></div>
+
+<h4>Tu solución, parte a parte</h4>
+<div class="code"><pre><code class="language-cpp">template &lt;typename T&gt;
+class MutantStack : public std::stack&lt;T&gt;</code></pre></div>
+<p><strong>Herencia pública</strong>: un <code>MutantStack</code> <em>es un</em> <code>std::stack</code>. Así heredas gratis <code>push</code>, <code>pop</code>, <code>top</code>, <code>size</code> y <code>empty</code> (todas sus funciones, como pide el enunciado), y además <code>std::stack&lt;int&gt; s(mstack);</code> compila: el constructor de copia de <code>stack</code> recibe un <code>const stack&amp;</code> y un <code>MutantStack</code> se puede pasar como tal (se copia solo la parte de <code>stack</code>, lo que se llama <em>slicing</em>).</p>
+
+<div class="code"><pre><code class="language-cpp">typedef typename std::stack&lt;T&gt;::container_type::iterator               iterator;
+typedef typename std::stack&lt;T&gt;::container_type::const_iterator         const_iterator;
+typedef typename std::stack&lt;T&gt;::container_type::reverse_iterator       reverse_iterator;
+typedef typename std::stack&lt;T&gt;::container_type::const_reverse_iterator const_reverse_iterator;</code></pre></div>
+<p>Defines los tipos de iterador <strong>reutilizando los del contenedor interno</strong>. <code>container_type</code> es <code>std::deque&lt;T&gt;</code>, así que <code>MutantStack&lt;int&gt;::iterator</code> es en realidad <code>std::deque&lt;int&gt;::iterator</code>. No implementas ningún iterador: tomas prestado uno que ya funciona. Hace falta <code>typename</code> porque son nombres dependientes de <code>T</code>.</p>
+
+<div class="code"><pre><code class="language-cpp">iterator begin()              { return this-&gt;c.begin(); }
+iterator end()                { return this-&gt;c.end(); }
+const_iterator begin() const  { return this-&gt;c.begin(); }
+const_iterator end() const    { return this-&gt;c.end(); }</code></pre></div>
+<p>Cada función devuelve el iterador correspondiente del contenedor interno <code>c</code>. Versiones normales y <code>const</code> (para poder iterar un <code>const MutantStack</code>), y también <code>rbegin</code>/<code>rend</code> para recorrer al revés.</p>
+<p><strong>¿Por qué <code>this-&gt;c</code> y no solo <code>c</code>?</strong> Es la pregunta estrella de este ejercicio. La clase base <code>std::stack&lt;T&gt;</code> depende del parámetro <code>T</code>. En la primera fase de compilación del template (antes de saber qué es <code>T</code>), el compilador <strong>no busca nombres dentro de bases dependientes</strong>, así que <code>c</code> a secas daría "use of undeclared identifier". Con <code>this-&gt;c</code> el nombre pasa a depender de <code>T</code> y la búsqueda se aplaza a cuando se instancia el template. Esto se llama <em>two-phase name lookup</em>. También valdría <code>std::stack&lt;T&gt;::c</code>.</p>
+
+<div class="code"><pre><code class="language-cpp">MutantStack() : std::stack&lt;T&gt;() {}
+MutantStack(const MutantStack&amp; other) : std::stack&lt;T&gt;(other) {}
+MutantStack&amp; operator=(const MutantStack&amp; other)
+{
+	if (this != &amp;other)
+		std::stack&lt;T&gt;::operator=(other);
+	return *this;
+}
+~MutantStack() {}</code></pre></div>
+<p>Forma canónica delegando en la clase base: como no añades atributos propios, copiar el <code>stack</code> (que copia su <code>deque</code> interno) es suficiente.</p>
+
+<h4>Orden de iteración</h4>
+<p><code>begin()</code> apunta al <strong>fondo</strong> de la pila (el primer elemento que se metió) y <code>end()</code> está después del <strong>tope</strong>. Por eso el ejemplo del enunciado imprime en el mismo orden que una <code>std::list</code> con <code>push_back</code>: 5, 3, 5, 737, 0. Tu main lo comprueba ejecutando las dos versiones una detrás de otra.</p>
+<div class="code"><pre><code class="language-text">-- Subject example --
+top() = 17
+size() = 1
+Iterating MutantStack:
+5
+3
+5
+737
+0
+-- Equivalent std::list --
+back() = 17
+size() = 1
+Iterating std::list:
+5 ... (idéntico)
+-- Reverse iterators --
+Reverse iterate: 30 20 10</code></pre></div>
+<details class="src"><summary><span class="fname">C08/ex02/MutantStack.hpp</span> <span class="muted">· código completo (42 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre><pre><code class="language-cpp">#ifndef MUTANTSTACK_HPP
+# define MUTANTSTACK_HPP
+
+# include &lt;stack&gt;
+
+template &lt;typename T&gt;
+class MutantStack : public std::stack&lt;T&gt;
+{
+public:
+	// --- Orthodox Canonical Form ---
+	MutantStack() : std::stack&lt;T&gt;() {}
+
+	MutantStack(const MutantStack&amp; other) : std::stack&lt;T&gt;(other) {}
+
+	MutantStack&amp; operator=(const MutantStack&amp; other)
+	{
+		if (this != &amp;other)
+			std::stack&lt;T&gt;::operator=(other);
+		return *this;
+	}
+
+	~MutantStack() {}
+
+	// --- Iterator typedefs from the underlying container ---
+	typedef typename std::stack&lt;T&gt;::container_type::iterator               iterator;
+	typedef typename std::stack&lt;T&gt;::container_type::const_iterator         const_iterator;
+	typedef typename std::stack&lt;T&gt;::container_type::reverse_iterator       reverse_iterator;
+	typedef typename std::stack&lt;T&gt;::container_type::const_reverse_iterator const_reverse_iterator;
+
+	// --- Iterator access ---
+	iterator begin()              { return this-&gt;c.begin(); }
+	iterator end()                { return this-&gt;c.end(); }
+	const_iterator begin() const  { return this-&gt;c.begin(); }
+	const_iterator end() const    { return this-&gt;c.end(); }
+
+	reverse_iterator rbegin()              { return this-&gt;c.rbegin(); }
+	reverse_iterator rend()                { return this-&gt;c.rend(); }
+	const_reverse_iterator rbegin() const  { return this-&gt;c.rbegin(); }
+	const_reverse_iterator rend() const    { return this-&gt;c.rend(); }
+};
+
+#endif</code></pre></div></details>
+<details class="src"><summary><span class="fname">C08/ex02/main.cpp</span> <span class="muted">· código completo (167 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167</pre><pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;list&gt;
+#include "MutantStack.hpp"
+
+int main(void)
+{
+	std::cout &lt;&lt; "=== MutantStack tests ===" &lt;&lt; std::endl;
+
+	// --- Subject example ---
+	std::cout &lt;&lt; "\n-- Subject example --" &lt;&lt; std::endl;
+	{
+		MutantStack&lt;int&gt; mstack;
+
+		mstack.push(5);
+		mstack.push(17);
+
+		std::cout &lt;&lt; "top() = " &lt;&lt; mstack.top() &lt;&lt; std::endl; // 17
+
+		mstack.pop();
+
+		std::cout &lt;&lt; "size() = " &lt;&lt; mstack.size() &lt;&lt; std::endl; // 1
+
+		mstack.push(3);
+		mstack.push(5);
+		mstack.push(737);
+		mstack.push(0);
+
+		MutantStack&lt;int&gt;::iterator it  = mstack.begin();
+		MutantStack&lt;int&gt;::iterator ite = mstack.end();
+
+		++it;
+		--it;
+
+		std::cout &lt;&lt; "Iterating MutantStack:" &lt;&lt; std::endl;
+		while (it != ite)
+		{
+			std::cout &lt;&lt; *it &lt;&lt; std::endl;
+			++it;
+		}
+		// Expected: 5, 3, 5, 737, 0
+	}
+
+	// --- Equivalent std::list comparison ---
+	std::cout &lt;&lt; "\n-- Equivalent std::list --" &lt;&lt; std::endl;
+	{
+		std::list&lt;int&gt; mlist;
+
+		mlist.push_back(5);
+		mlist.push_back(17);
+
+		std::cout &lt;&lt; "back() = " &lt;&lt; mlist.back() &lt;&lt; std::endl;
+
+		mlist.pop_back();
+
+		std::cout &lt;&lt; "size() = " &lt;&lt; mlist.size() &lt;&lt; std::endl;
+
+		mlist.push_back(3);
+		mlist.push_back(5);
+		mlist.push_back(737);
+		mlist.push_back(0);
+
+		std::list&lt;int&gt;::iterator it  = mlist.begin();
+		std::list&lt;int&gt;::iterator ite = mlist.end();
+
+		++it;
+		--it;
+
+		std::cout &lt;&lt; "Iterating std::list:" &lt;&lt; std::endl;
+		while (it != ite)
+		{
+			std::cout &lt;&lt; *it &lt;&lt; std::endl;
+			++it;
+		}
+		// Should match MutantStack output: 5, 3, 5, 737, 0
+	}
+
+	// --- Const iterator test ---
+	std::cout &lt;&lt; "\n-- Const iterators --" &lt;&lt; std::endl;
+	{
+		MutantStack&lt;int&gt; mstack;
+		mstack.push(1);
+		mstack.push(2);
+		mstack.push(3);
+
+		const MutantStack&lt;int&gt; cmstack(mstack);
+		MutantStack&lt;int&gt;::const_iterator cit  = cmstack.begin();
+		MutantStack&lt;int&gt;::const_iterator cite = cmstack.end();
+
+		std::cout &lt;&lt; "Const iterate:";
+		while (cit != cite)
+		{
+			std::cout &lt;&lt; " " &lt;&lt; *cit;
+			++cit;
+		}
+		std::cout &lt;&lt; std::endl; // expected: 1 2 3
+	}
+
+	// --- Reverse iterator test ---
+	std::cout &lt;&lt; "\n-- Reverse iterators --" &lt;&lt; std::endl;
+	{
+		MutantStack&lt;int&gt; mstack;
+		mstack.push(10);
+		mstack.push(20);
+		mstack.push(30);
+
+		MutantStack&lt;int&gt;::reverse_iterator rit  = mstack.rbegin();
+		MutantStack&lt;int&gt;::reverse_iterator rite = mstack.rend();
+
+		std::cout &lt;&lt; "Reverse iterate:";
+		while (rit != rite)
+		{
+			std::cout &lt;&lt; " " &lt;&lt; *rit;
+			++rit;
+		}
+		std::cout &lt;&lt; std::endl; // expected: 30 20 10
+	}
+
+	// --- Copy constructor test ---
+	std::cout &lt;&lt; "\n-- Copy constructor --" &lt;&lt; std::endl;
+	{
+		MutantStack&lt;int&gt; ms1;
+		ms1.push(100);
+		ms1.push(200);
+
+		MutantStack&lt;int&gt; ms2(ms1);
+		ms2.push(300);
+
+		std::cout &lt;&lt; "ms1 size = " &lt;&lt; ms1.size() &lt;&lt; std::endl; // 2
+		std::cout &lt;&lt; "ms2 size = " &lt;&lt; ms2.size() &lt;&lt; std::endl; // 3
+
+		std::cout &lt;&lt; "ms2 contents:";
+		for (MutantStack&lt;int&gt;::iterator it = ms2.begin(); it != ms2.end(); ++it)
+			std::cout &lt;&lt; " " &lt;&lt; *it;
+		std::cout &lt;&lt; std::endl; // expected: 100 200 300
+	}
+
+	// --- Assignment operator test ---
+	std::cout &lt;&lt; "\n-- Assignment operator --" &lt;&lt; std::endl;
+	{
+		MutantStack&lt;int&gt; ms1;
+		ms1.push(7);
+		ms1.push(8);
+
+		MutantStack&lt;int&gt; ms2;
+		ms2.push(99);
+		ms2 = ms1;
+
+		std::cout &lt;&lt; "ms2 after assignment:";
+		for (MutantStack&lt;int&gt;::iterator it = ms2.begin(); it != ms2.end(); ++it)
+			std::cout &lt;&lt; " " &lt;&lt; *it;
+		std::cout &lt;&lt; std::endl; // expected: 7 8
+	}
+
+	// --- stack member functions ---
+	std::cout &lt;&lt; "\n-- Stack member functions --" &lt;&lt; std::endl;
+	{
+		MutantStack&lt;std::string&gt; sstack;
+		sstack.push("hello");
+		sstack.push("world");
+		std::cout &lt;&lt; "top = " &lt;&lt; sstack.top() &lt;&lt; std::endl;
+		std::cout &lt;&lt; "empty = " &lt;&lt; sstack.empty() &lt;&lt; std::endl;
+		sstack.pop();
+		std::cout &lt;&lt; "top after pop = " &lt;&lt; sstack.top() &lt;&lt; std::endl;
+	}
+
+	return 0;
+}</code></pre></div></details>
+
+<h4>Preguntas típicas</h4>
+<details class="qa"><summary>¿Qué contenedor hay debajo de tu MutantStack?</summary><div class="a"><p><code>std::deque&lt;T&gt;</code>, el valor por defecto del segundo parámetro de <code>std::stack</code>. Si quisieras otro, podrías declarar <code>template &lt;typename T, typename C = std::deque&lt;T&gt; &gt; class MutantStack : public std::stack&lt;T, C&gt;</code> y usar <code>MutantStack&lt;int, std::vector&lt;int&gt; &gt;</code>.</p></div></details>
+<details class="qa"><summary><code>std::stack</code> no tiene destructor virtual. ¿Es un problema heredar de él?</summary><div class="a"><p>Solo si borras un <code>MutantStack</code> creado con <code>new</code> a través de un puntero <code>std::stack&lt;T&gt;*</code>: eso sería comportamiento indefinido. En este ejercicio nunca se hace, y como <code>MutantStack</code> no añade atributos, no hay nada extra que liberar. Es la razón por la que en general no se recomienda heredar de contenedores STL, pero aquí el enunciado lo pide (necesitas acceso al miembro <code>protected</code>).</p></div></details>
+<details class="qa"><summary>¿Por qué no hay <code>.cpp</code>?</summary><div class="a"><p>Es un class template: todo va en el header (o en un <code>.tpp</code> incluido desde el header).</p></div></details>
+<details class="qa"><summary>Si haces <code>push</code> mientras iteras, ¿qué pasa?</summary><div class="a"><p>Con <code>deque</code>, un <code>push_back</code> invalida todos los iteradores. Seguir usándolos sería comportamiento indefinido.</p></div></details>
+</section>
+
+<!-- ============================================================ -->
+<section class="mod c09" id="c09">
+<h2><span class="tag c09">Módulo 09</span><br>STL aplicada a problemas reales</h2>
+<div class="card">
+<p><strong>Objetivo del módulo:</strong> pasar de "saber qué es un contenedor" a <strong>elegir el contenedor adecuado para cada problema</strong> y saber justificarlo. Cada ejercicio es un programa completo con entrada del usuario, validación y gestión de errores.</p>
+<ul>
+  <li><strong>ex00 · btc</strong>: búsqueda por clave ordenada → <code>std::map</code> + <code>lower_bound</code>.</li>
+  <li><strong>ex01 · RPN</strong>: evaluación de expresiones postfijas → <code>std::stack</code>.</li>
+  <li><strong>ex02 · PmergeMe</strong>: implementar el algoritmo Ford-Johnson en dos contenedores distintos (<code>std::vector</code> y <code>std::deque</code>) y comparar sus tiempos.</li>
+</ul>
+</div>
+<div class="subject">
+<div class="h">Reglas específicas del módulo (enunciado)</div>
+<p>Es obligatorio usar contenedores estándar en cada ejercicio. <strong>Un contenedor que ya hayas usado no se puede volver a usar en el resto del módulo.</strong> Al menos un contenedor por ejercicio, excepto el ex02, que necesita dos. Cada programa lleva su Makefile con <code>-Wall -Wextra -Werror</code>, con <code>c++</code>, sin relink y con las reglas <code>$(NAME)</code>, <code>all</code>, <code>clean</code>, <code>fclean</code> y <code>re</code>.</p>
+</div>
+<p>Tu reparto: <strong>ex00 → <code>map</code></strong>, <strong>ex01 → <code>stack</code></strong>, <strong>ex02 → <code>vector</code> + <code>deque</code></strong>. Prepárate para la pregunta sobre <code>stack</code> y <code>deque</code> (ver <a href="#revisar">Puntos a revisar</a>).</p>
+
+<!-- ---------------- C09 ex00 ---------------- -->
+<h3 id="c09-ex00">ex00 · Bitcoin Exchange</h3>
+<div class="subject">
+<div class="h">Enunciado</div>
+<p><strong>Ficheros:</strong> <code>Makefile</code>, <code>main.cpp</code>, <code>BitcoinExchange.{cpp, hpp}</code>. <strong>Programa:</strong> <code>btc</code>.</p>
+<p>Crea un programa que muestre el valor de una cantidad de bitcoins en una fecha. Usa una base de datos CSV (proporcionada con el enunciado) con el precio del bitcoin a lo largo del tiempo. El programa recibe como argumento un segundo fichero con fechas y cantidades a evaluar:</p>
+<ul>
+  <li>Cada línea tiene el formato <code>"date | value"</code>.</li>
+  <li>Una fecha válida tiene el formato <code>Year-Month-Day</code>.</li>
+  <li>Un valor válido es un float o un entero positivo entre 0 y 1000.</li>
+</ul>
+<p>Muestra el valor multiplicado por la tasa de cambio de esa fecha. <strong>Si la fecha no existe en la BD, usa la fecha anterior más cercana</strong> (la inferior, no la superior). Gestiona los errores con un mensaje adecuado.</p>
+<div class="code"><pre><code class="language-text">$&gt; ./btc
+Error: could not open file.
+$&gt; ./btc input.txt
+2011-01-03 =&gt; 3 = 0.9
+2011-01-03 =&gt; 2 = 0.6
+2011-01-03 =&gt; 1 = 0.3
+2011-01-03 =&gt; 1.2 = 0.36
+2011-01-09 =&gt; 1 = 0.32
+Error: not a positive number.
+Error: bad input =&gt; 2001-42-42
+2012-01-11 =&gt; 1 = 7.1
+Error: too large a number.</code></pre></div>
+</div>
+
+<h4>Qué te quiere enseñar</h4>
+<p>A usar un <strong>contenedor asociativo ordenado</strong> como base de datos en memoria y a aprovechar que está ordenado para buscar "la clave más cercana por debajo" en O(log n) con <code>lower_bound</code>.</p>
+
+<h4>Estructura y flujo</h4>
+<ol class="steps">
+  <li><code>main</code> comprueba que hay exactamente un argumento, crea un <code>BitcoinExchange</code>, carga <code>"data.csv"</code> y procesa el fichero del usuario.</li>
+  <li><code>loadDatabase</code> lee el CSV línea a línea y llena el <code>std::map&lt;std::string, float&gt;</code> <code>_database</code> (fecha → precio).</li>
+  <li><code>processInput</code> lee el fichero de entrada, valida cada línea (separador, fecha, valor, rango) e imprime el resultado o el error correspondiente.</li>
+  <li><code>getRate</code> encuentra el precio de una fecha o el de la anterior más cercana.</li>
+</ol>
+
+<h4>¿Por qué <code>std::map&lt;std::string, float&gt;</code>?</h4>
+<ul>
+  <li>Cada fecha tiene un único precio: relación <strong>clave → valor</strong>.</li>
+  <li><code>map</code> mantiene las claves <strong>ordenadas</strong> (internamente es un árbol binario equilibrado). Búsqueda, inserción y <code>lower_bound</code> son O(log n).</li>
+  <li><strong>El truco:</strong> las fechas en formato <code>YYYY-MM-DD</code> (con ceros a la izquierda) se ordenan igual como texto que como fechas. <code>"2011-01-09" &lt; "2012-01-11"</code> comparando carácter a carácter. Por eso puedes usar <code>std::string</code> como clave sin convertir nada.</li>
+</ul>
+
+<h4>Cargar la base de datos</h4>
+<div class="code"><pre><code class="language-cpp">std::ifstream file(filename.c_str());
+...
+std::getline(file, line);                 // salta la cabecera "date,exchange_rate"
+while (std::getline(file, line))
+{
+    std::size_t sep = line.find(',');
+    if (sep == std::string::npos)         // línea sin coma: se ignora
+        continue;
+    std::string date    = line.substr(0, sep);
+    std::string rateStr = line.substr(sep + 1);
+    float rate = static_cast&lt;float&gt;(std::atof(rateStr.c_str()));
+    _database[date] = rate;               // inserta (o sobrescribe) la clave
+}</code></pre></div>
+<p><code>std::getline</code> lee hasta el salto de línea. <code>find</code> devuelve la posición del separador o <code>std::string::npos</code> si no está. <code>_database[date] = rate</code> usa el <code>operator[]</code> del map: si la clave no existe la crea; si existe, la sobrescribe.</p>
+
+<h4><code>getRate</code>: el corazón del ejercicio</h4>
+<div class="code"><pre><code class="language-cpp">float BitcoinExchange::getRate(const std::string &amp;date) const
+{
+    std::map&lt;std::string, float&gt;::const_iterator it = _database.lower_bound(date);
+
+    if (it != _database.end() &amp;&amp; it-&gt;first == date)
+        return it-&gt;second;          // 1) la fecha existe tal cual
+
+    if (it == _database.begin())
+        return -1.0f;               // 2) no hay ninguna fecha anterior
+
+    --it;                           // 3) retrocede a la anterior más cercana
+    return it-&gt;second;
+}</code></pre></div>
+<p><code>lower_bound(clave)</code> devuelve un iterador al <strong>primer elemento cuya clave es ≥ la buscada</strong>. Ejemplo con fechas de la BD 2011‑01‑03, 2011‑01‑07, 2011‑01‑10 y buscando <code>2011-01-09</code>:</p>
+<div class="dates">
+  <span class="cell">2011-01-03</span><span class="cell">2011-01-07</span><span class="cell hl">2011-01-10</span><span class="arrow">← <code>lower_bound("2011-01-09")</code> (la primera ≥)</span>
+</div>
+<div class="dates">
+  <span class="cell">2011-01-03</span><span class="cell hl">2011-01-07</span><span class="cell">2011-01-10</span><span class="arrow">← tras <code>--it</code>: la anterior más cercana ✔</span>
+</div>
+<p>Tres casos: si encuentra la fecha exacta la devuelve; si el resultado es <code>begin()</code> significa que todas las fechas de la BD son posteriores (la fecha es anterior a 2009) y no hay precio posible; en cualquier otro caso retrocede uno. Si la fecha es posterior a todas, <code>lower_bound</code> devuelve <code>end()</code> y <code>--it</code> lleva a la última, que es justo lo que queremos.</p>
+<p>Devuelve <code>-1.0f</code> como valor centinela de "no hay fecha". Funciona porque ningún precio real es negativo (en 2009 hay precios de 0, pero 0 no es menor que 0).</p>
+
+<h4>Validación de la entrada</h4>
+<p><code>processInput</code> procesa cada línea en este orden (cada error hace <code>continue</code> y pasa a la siguiente línea):</p>
+<div class="tw"><table>
+<tr><th>Comprobación</th><th>Cómo</th><th>Mensaje</th></tr>
+<tr><td>Separador <code>" | "</code></td><td><code>line.find(" | ")</code> devuelve <code>npos</code></td><td><code>Error: bad input => línea</code></td></tr>
+<tr><td>Fecha válida</td><td><code>isValidDate</code>: longitud 10, guiones en las posiciones 4 y 7, resto dígitos, mes 1‑12, día 1‑31</td><td><code>Error: bad input => línea</code></td></tr>
+<tr><td>Valor numérico y no negativo</td><td><code>isValidValue</code>: signo <code>-</code> opcional, dígitos, como mucho un <code>.</code>; después <code>atof</code></td><td><code>Error: not a positive number.</code></td></tr>
+<tr><td>Valor ≤ 1000</td><td><code>value &gt; 1000.0f</code></td><td><code>Error: too large a number.</code></td></tr>
+<tr><td>Hay fecha en la BD</td><td><code>getRate</code> devuelve <code>-1</code></td><td><code>Error: bad input => fecha</code></td></tr>
+</table></div>
+<p>En <code>isValidValue</code> el valor se devuelve a través de un <strong>parámetro por referencia</strong> (<code>float &amp;value</code>): la función devuelve <code>bool</code> (válido o no) y además rellena el número. Fíjate en que <code>2147483648</code> pasa la validación de formato y luego cae en "too large a number", como en el ejemplo del enunciado.</p>
+
+<h4>Salida real con el input del enunciado</h4>
+<div class="code"><pre><code class="language-text">2011-01-03 =&gt; 3 = 0.9
+2011-01-03 =&gt; 2 = 0.6
+2011-01-03 =&gt; 1 = 0.3
+2011-01-03 =&gt; 1.2 = 0.36
+2011-01-09 =&gt; 1 = 0.32
+Error: not a positive number.
+Error: bad input =&gt; 2001-42-42
+2012-01-11 =&gt; 1 = 5.5        &lt;- el enunciado da 7.1 (ver "Puntos a revisar": data.csv)
+Error: too large a number.</code></pre></div>
+<details class="src"><summary><span class="fname">C09/ex00/BitcoinExchange.hpp</span> <span class="muted">· código completo (26 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre><pre><code class="language-cpp">#ifndef BITCOINEXCHANGE_HPP
+#define BITCOINEXCHANGE_HPP
+
+#include &lt;map&gt;
+#include &lt;string&gt;
+
+class BitcoinExchange
+{
+public:
+    BitcoinExchange();
+    BitcoinExchange(const BitcoinExchange &amp;other);
+    BitcoinExchange &amp;operator=(const BitcoinExchange &amp;other);
+    ~BitcoinExchange();
+
+    void loadDatabase(const std::string &amp;filename);
+    void processInput(const std::string &amp;filename);
+
+private:
+    std::map&lt;std::string, float&gt; _database;
+
+    float getRate(const std::string &amp;date) const;
+    bool  isValidDate(const std::string &amp;date) const;
+    bool  isValidValue(const std::string &amp;valueStr, float &amp;value) const;
+};
+
+#endif</code></pre></div></details>
+<details class="src"><summary><span class="fname">C09/ex00/BitcoinExchange.cpp</span> <span class="muted">· código completo (203 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203</pre><pre><code class="language-cpp">#include "BitcoinExchange.hpp"
+#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+
+BitcoinExchange::BitcoinExchange() {}
+
+BitcoinExchange::BitcoinExchange(const BitcoinExchange &amp;other)
+    : _database(other._database) {}
+
+BitcoinExchange &amp;BitcoinExchange::operator=(const BitcoinExchange &amp;other)
+{
+    if (this != &amp;other)
+        _database = other._database;
+    return *this;
+}
+
+BitcoinExchange::~BitcoinExchange() {}
+
+void BitcoinExchange::loadDatabase(const std::string &amp;filename)
+{
+    std::ifstream file(filename.c_str());
+    if (!file.is_open())
+    {
+        std::cout &lt;&lt; "Error: could not open file." &lt;&lt; std::endl;
+        return;
+    }
+
+    std::string line;
+    std::getline(file, line); // skip header
+
+    while (std::getline(file, line))
+    {
+        if (line.empty())
+            continue;
+
+        std::size_t sep = line.find(',');
+        if (sep == std::string::npos)
+            continue;
+
+        std::string date = line.substr(0, sep);
+        std::string rateStr = line.substr(sep + 1);
+
+        float rate = static_cast&lt;float&gt;(std::atof(rateStr.c_str()));
+        _database[date] = rate;
+    }
+    file.close();
+}
+
+float BitcoinExchange::getRate(const std::string &amp;date) const
+{
+    std::map&lt;std::string, float&gt;::const_iterator it = _database.lower_bound(date);
+
+    if (it != _database.end() &amp;&amp; it-&gt;first == date)
+        return it-&gt;second;
+
+    if (it == _database.begin())
+        return -1.0f; // no earlier date exists
+
+    --it;
+    return it-&gt;second;
+}
+
+bool BitcoinExchange::isValidDate(const std::string &amp;date) const
+{
+    if (date.size() != 10)
+        return false;
+    if (date[4] != '-' || date[7] != '-')
+        return false;
+
+    for (int i = 0; i &lt; 10; ++i)
+    {
+        if (i == 4 || i == 7)
+            continue;
+        if (date[i] &lt; '0' || date[i] &gt; '9')
+            return false;
+    }
+
+    int month = std::atoi(date.substr(5, 2).c_str());
+    int day   = std::atoi(date.substr(8, 2).c_str());
+
+    if (month &lt; 1 || month &gt; 12)
+        return false;
+    if (day &lt; 1 || day &gt; 31)
+        return false;
+
+    return true;
+}
+
+bool BitcoinExchange::isValidValue(const std::string &amp;valueStr, float &amp;value) const
+{
+    if (valueStr.empty())
+        return false;
+
+    // Check for leading whitespace
+    std::size_t start = valueStr.find_first_not_of(" \t");
+    if (start == std::string::npos)
+        return false;
+
+    std::string trimmed = valueStr.substr(start);
+
+    // Validate characters: optional leading '-', digits, optional single '.'
+    std::size_t i = 0;
+    bool negative = false;
+    if (trimmed[i] == '-')
+    {
+        negative = true;
+        ++i;
+    }
+
+    bool hasDot = false;
+    bool hasDigit = false;
+    for (; i &lt; trimmed.size(); ++i)
+    {
+        if (trimmed[i] == '.')
+        {
+            if (hasDot)
+                return false;
+            hasDot = true;
+        }
+        else if (trimmed[i] &gt;= '0' &amp;&amp; trimmed[i] &lt;= '9')
+        {
+            hasDigit = true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    if (!hasDigit)
+        return false;
+
+    value = static_cast&lt;float&gt;(std::atof(trimmed.c_str()));
+
+    if (negative || value &lt; 0.0f)
+        return false; // not a positive number (handled as "not a positive number")
+
+    return true;
+}
+
+void BitcoinExchange::processInput(const std::string &amp;filename)
+{
+    std::ifstream file(filename.c_str());
+    if (!file.is_open())
+    {
+        std::cout &lt;&lt; "Error: could not open file." &lt;&lt; std::endl;
+        return;
+    }
+
+    std::string line;
+    std::getline(file, line); // skip header
+
+    while (std::getline(file, line))
+    {
+        if (line.empty())
+            continue;
+
+        std::size_t sep = line.find(" | ");
+        if (sep == std::string::npos)
+        {
+            std::cout &lt;&lt; "Error: bad input =&gt; " &lt;&lt; line &lt;&lt; std::endl;
+            continue;
+        }
+
+        std::string date     = line.substr(0, sep);
+        std::string valueStr = line.substr(sep + 3);
+
+        if (!isValidDate(date))
+        {
+            std::cout &lt;&lt; "Error: bad input =&gt; " &lt;&lt; line &lt;&lt; std::endl;
+            continue;
+        }
+
+        float value = 0.0f;
+        if (!isValidValue(valueStr, value))
+        {
+            // Determine which error: negative or bad format
+            std::size_t start = valueStr.find_first_not_of(" \t");
+            if (start != std::string::npos &amp;&amp; valueStr[start] == '-')
+                std::cout &lt;&lt; "Error: not a positive number." &lt;&lt; std::endl;
+            else
+                std::cout &lt;&lt; "Error: not a positive number." &lt;&lt; std::endl;
+            continue;
+        }
+
+        if (value &gt; 1000.0f)
+        {
+            std::cout &lt;&lt; "Error: too large a number." &lt;&lt; std::endl;
+            continue;
+        }
+
+        float rate = getRate(date);
+        if (rate &lt; 0.0f)
+        {
+            std::cout &lt;&lt; "Error: bad input =&gt; " &lt;&lt; date &lt;&lt; std::endl;
+            continue;
+        }
+
+        std::cout &lt;&lt; date &lt;&lt; " =&gt; " &lt;&lt; value &lt;&lt; " = " &lt;&lt; value * rate &lt;&lt; std::endl;
+    }
+    file.close();
+}</code></pre></div></details>
+<details class="src"><summary><span class="fname">C09/ex00/main.cpp</span> <span class="muted">· código completo (17 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre><pre><code class="language-cpp">#include "BitcoinExchange.hpp"
+#include &lt;iostream&gt;
+
+int main(int argc, char **argv)
+{
+    if (argc != 2)
+    {
+        std::cout &lt;&lt; "Usage: btc &lt;input_file&gt;" &lt;&lt; std::endl;
+        return 1;
+    }
+
+    BitcoinExchange btc;
+    btc.loadDatabase("data.csv");
+    btc.processInput(argv[1]);
+
+    return 0;
+}</code></pre></div></details>
+
+<h4>Preguntas típicas</h4>
+<details class="qa"><summary>¿Por qué no un <code>vector</code> de pares?</summary><div class="a"><p>Funcionaría si lo ordenas y usas <code>std::lower_bound</code>, pero tendrías que ordenarlo tú y gestionar duplicados. <code>map</code> te da el orden y la unicidad de claves automáticamente y tiene su propio <code>lower_bound</code> en O(log n).</p></div></details>
+<details class="qa"><summary>¿Qué diferencia hay entre <code>lower_bound</code> y <code>upper_bound</code>?</summary><div class="a"><p><code>lower_bound(k)</code>: primer elemento con clave ≥ k. <code>upper_bound(k)</code>: primer elemento con clave &gt; k. Otra forma válida de escribir <code>getRate</code> sería <code>it = upper_bound(date); --it;</code> (comprobando antes que <code>it != begin()</code>), y así no necesitas el caso de la coincidencia exacta.</p></div></details>
+<details class="qa"><summary>¿Por qué usar <code>map.lower_bound</code> y no <code>std::lower_bound</code>?</summary><div class="a"><p>El método del map aprovecha la estructura de árbol: O(log n). <code>std::lower_bound</code> con iteradores bidireccionales tiene que avanzar paso a paso: O(n) movimientos.</p></div></details>
+<details class="qa"><summary>¿Qué pasa con <code>2011-02-30</code>?</summary><div class="a"><p>Tu <code>isValidDate</code> solo comprueba que el día esté entre 1 y 31, así que la acepta y usa el precio del 2011‑02‑28 (o anterior). Ver <a href="#revisar">Puntos a revisar</a> para añadir días por mes y años bisiestos.</p></div></details>
+
+<!-- ---------------- C09 ex01 ---------------- -->
+<h3 id="c09-ex01">ex01 · Reverse Polish Notation (RPN)</h3>
+<div class="subject">
+<div class="h">Enunciado</div>
+<p><strong>Ficheros:</strong> <code>Makefile</code>, <code>main.cpp</code>, <code>RPN.{cpp, hpp}</code>. <strong>Programa:</strong> <code>RPN</code>.</p>
+<p>Recibe como argumento una expresión en notación polaca inversa. Los números de la entrada son siempre menores que 10 (el cálculo y el resultado no tienen esa restricción). Muestra el resultado en la salida estándar; si hay un error, muestra un mensaje en la salida de error. Debe gestionar los tokens <code>+ - / *</code>. No hace falta gestionar paréntesis ni decimales. No puedes usar el contenedor del ejercicio anterior.</p>
+<div class="code"><pre><code class="language-text">$&gt; ./RPN "8 9 * 9 - 9 - 9 - 4 - 1 +"
+42
+$&gt; ./RPN "7 7 * 7 -"
+42
+$&gt; ./RPN "1 2 * 2 / 2 * 2 4 - +"
+0
+$&gt; ./RPN "(1 + 1)"
+Error</code></pre></div>
+</div>
+
+<h4>Qué te quiere enseñar</h4>
+<p>Que una <strong>pila</strong> (LIFO: el último en entrar es el primero en salir) es la estructura perfecta para evaluar expresiones. En notación polaca inversa el operador va <em>detrás</em> de sus operandos (<code>3 4 +</code> en lugar de <code>3 + 4</code>), así que no hacen falta paréntesis ni reglas de precedencia.</p>
+
+<h4>El algoritmo</h4>
+<ol class="steps">
+  <li>Lee la expresión token a token (separados por espacios).</li>
+  <li>Si es un número, apílalo.</li>
+  <li>Si es un operador, desapila dos números, opera y apila el resultado.</li>
+  <li>Al terminar, en la pila debe quedar exactamente un número: el resultado.</li>
+</ol>
+<p>Traza de <code>"7 7 * 7 -"</code>:</p>
+<div class="tw"><table>
+<tr><th>Token</th><th>Acción</th><th>Pila (fondo → tope)</th></tr>
+<tr><td><code>7</code></td><td>push 7</td><td><div class="stackviz"><span class="cell hl">7</span></div></td></tr>
+<tr><td><code>7</code></td><td>push 7</td><td><div class="stackviz"><span class="cell">7</span><span class="cell hl">7</span></div></td></tr>
+<tr><td><code>*</code></td><td>b = 7, a = 7 → push a * b</td><td><div class="stackviz"><span class="cell hl">49</span></div></td></tr>
+<tr><td><code>7</code></td><td>push 7</td><td><div class="stackviz"><span class="cell">49</span><span class="cell hl">7</span></div></td></tr>
+<tr><td><code>-</code></td><td>b = 7, a = 49 → push a − b</td><td><div class="stackviz"><span class="cell hl">42</span></div></td></tr>
+</table></div>
+
+<h4>El código</h4>
+<div class="code"><pre><code class="language-cpp">std::istringstream iss(expression);
+std::string token;
+while (iss &gt;&gt; token)
+{
+    if (token.size() == 1 &amp;&amp; token[0] &gt;= '0' &amp;&amp; token[0] &lt;= '9')
+        _stack.push(token[0] - '0');
+    else if (token == "+" || token == "-" || token == "*" || token == "/")
+    {
+        if (_stack.size() &lt; 2)
+            throw std::runtime_error("Error");
+        int b = _stack.top(); _stack.pop();   // b: el de arriba (segundo operando)
+        int a = _stack.top(); _stack.pop();   // a: el de abajo (primer operando)
+        ...
+        if (b == 0) throw std::runtime_error("Error");   // solo en la división
+        _stack.push(result);
+    }
+    else
+        throw std::runtime_error("Error");
+}
+if (_stack.size() != 1)
+    throw std::runtime_error("Error");
+return _stack.top();</code></pre></div>
+<ul>
+  <li><strong><code>std::istringstream</code> + <code>&gt;&gt;</code></strong>: convierte el string en un flujo y el operador <code>&gt;&gt;</code> extrae palabras separadas por espacios, saltándose los espacios repetidos. Es la forma C++ de tokenizar.</li>
+  <li><strong><code>token.size() == 1</code></strong>: garantiza que solo se aceptan dígitos sueltos (0‑9), como dice el enunciado. <code>"12"</code> da error.</li>
+  <li><strong><code>token[0] - '0'</code></strong>: convierte el carácter a su valor numérico ('7' es 55 en ASCII, '0' es 48 → 7).</li>
+  <li><strong>El orden importa:</strong> lo primero que sacas es <code>b</code> (el operando de la derecha). En <code>"9 3 -"</code> la pila es [9, 3]: sacas b = 3 y luego a = 9 → 9 − 3 = 6. Si los invirtieras darías −6.</li>
+  <li><strong>Errores</strong>: menos de dos operandos al encontrar un operador, división por cero, token desconocido (por ejemplo <code>(</code>) o que no quede exactamente un valor al final. Se lanzan como <code>std::runtime_error("Error")</code> y el <code>main</code> los captura y los imprime por <code>std::cerr</code>.</li>
+  <li>Al principio de <code>evaluate</code> vacías la pila por si el objeto se reutiliza (<code>std::stack</code> no tiene <code>clear()</code>, por eso el bucle de <code>pop</code>).</li>
+</ul>
+<div class="code"><pre><code class="language-text">"8 9 * 9 - 9 - 9 - 4 - 1 +"  -&gt; 42
+"7 7 * 7 -"                  -&gt; 42
+"1 2 * 2 / 2 * 2 4 - +"      -&gt; 0
+"(1 + 1)"                    -&gt; Error
+"1 0 /"                      -&gt; Error   (división por cero)
+"1 +"                        -&gt; Error   (faltan operandos)
+"1 2"                        -&gt; Error   (sobran operandos)
+""                           -&gt; Error
+"12 3 +"                     -&gt; Error   (número de dos cifras)</code></pre></div>
+<details class="src"><summary><span class="fname">C09/ex01/RPN.hpp</span> <span class="muted">· código completo (21 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre><pre><code class="language-cpp">#ifndef RPN_HPP
+#define RPN_HPP
+
+#include &lt;stack&gt;
+#include &lt;string&gt;
+
+class RPN
+{
+public:
+    RPN();
+    RPN(const RPN &amp;other);
+    RPN &amp;operator=(const RPN &amp;other);
+    ~RPN();
+
+    int evaluate(const std::string &amp;expression);
+
+private:
+    std::stack&lt;int&gt; _stack;
+};
+
+#endif</code></pre></div></details>
+<details class="src"><summary><span class="fname">C09/ex01/RPN.cpp</span> <span class="muted">· código completo (66 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66</pre><pre><code class="language-cpp">#include "RPN.hpp"
+#include &lt;sstream&gt;
+#include &lt;stdexcept&gt;
+
+RPN::RPN() {}
+
+RPN::RPN(const RPN &amp;other) : _stack(other._stack) {}
+
+RPN &amp;RPN::operator=(const RPN &amp;other)
+{
+    if (this != &amp;other)
+        _stack = other._stack;
+    return *this;
+}
+
+RPN::~RPN() {}
+
+int RPN::evaluate(const std::string &amp;expression)
+{
+    // Clear stack from any previous evaluation
+    while (!_stack.empty())
+        _stack.pop();
+
+    std::istringstream iss(expression);
+    std::string token;
+
+    while (iss &gt;&gt; token)
+    {
+        if (token.size() == 1 &amp;&amp; token[0] &gt;= '0' &amp;&amp; token[0] &lt;= '9')
+        {
+            _stack.push(token[0] - '0');
+        }
+        else if (token == "+" || token == "-" || token == "*" || token == "/")
+        {
+            if (_stack.size() &lt; 2)
+                throw std::runtime_error("Error");
+
+            int b = _stack.top(); _stack.pop();
+            int a = _stack.top(); _stack.pop();
+
+            int result = 0;
+            if (token == "+")
+                result = a + b;
+            else if (token == "-")
+                result = a - b;
+            else if (token == "*")
+                result = a * b;
+            else if (token == "/")
+            {
+                if (b == 0)
+                    throw std::runtime_error("Error");
+                result = a / b;
+            }
+            _stack.push(result);
+        }
+        else
+        {
+            throw std::runtime_error("Error");
+        }
+    }
+
+    if (_stack.size() != 1)
+        throw std::runtime_error("Error");
+
+    return _stack.top();
+}</code></pre></div></details>
+<details class="src"><summary><span class="fname">C09/ex01/main.cpp</span> <span class="muted">· código completo (25 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre><pre><code class="language-cpp">#include "RPN.hpp"
+#include &lt;iostream&gt;
+
+int main(int argc, char **argv)
+{
+    if (argc != 2)
+    {
+        std::cerr &lt;&lt; "Usage: RPN \"&lt;expression&gt;\"" &lt;&lt; std::endl;
+        return 1;
+    }
+
+    RPN rpn;
+    try
+    {
+        int result = rpn.evaluate(argv[1]);
+        std::cout &lt;&lt; result &lt;&lt; std::endl;
+    }
+    catch (const std::exception &amp;e)
+    {
+        std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;
+        return 1;
+    }
+
+    return 0;
+}</code></pre></div></details>
+
+<h4>Preguntas típicas</h4>
+<details class="qa"><summary>¿Por qué <code>stack</code> y no otro contenedor?</summary><div class="a"><p>Porque el algoritmo solo necesita acceder al último elemento añadido. <code>stack</code> expresa exactamente esa intención y no permite hacer nada más, lo que evita errores.</p></div></details>
+<details class="qa"><summary>¿La división es entera?</summary><div class="a"><p>Sí, se trabaja con <code>int</code>, así que <code>"7 2 /"</code> da 3 (trunca hacia cero). El enunciado dice que no hace falta gestionar decimales.</p></div></details>
+<details class="qa"><summary>¿Y los números negativos en la entrada?</summary><div class="a"><p>No se aceptan: <code>"-3"</code> tiene longitud 2 y no es un operador, así que da Error. Para obtener un negativo se escribe <code>"0 3 -"</code>. Los resultados intermedios sí pueden ser negativos.</p></div></details>
+<details class="qa"><summary>¿Qué pasa si el resultado no cabe en un <code>int</code>?</summary><div class="a"><p>Hay desbordamiento (comportamiento indefinido con enteros con signo). Por ejemplo, multiplicar diez nueves da un número sin sentido. Ver <a href="#revisar">Puntos a revisar</a>.</p></div></details>
+
+<!-- ---------------- C09 ex02 ---------------- -->
+<h3 id="c09-ex02">ex02 · PmergeMe (Ford-Johnson)</h3>
+<div class="subject">
+<div class="h">Enunciado</div>
+<p><strong>Ficheros:</strong> <code>Makefile</code>, <code>main.cpp</code>, <code>PmergeMe.{cpp, hpp}</code>. <strong>Programa:</strong> <code>PmergeMe</code>.</p>
+<p>Recibe una secuencia de enteros positivos como argumentos y la ordena con el algoritmo <strong>merge-insert sort (Ford-Johnson)</strong>, descrito en <em>The Art of Computer Programming</em>, vol. 3, pág. 184. Si hay un error, muestra un mensaje por la salida de error. Debe usar <strong>al menos dos contenedores distintos</strong> y aguantar al menos 3000 enteros. Se recomienda implementar el algoritmo para cada contenedor y no usar una función genérica. No puedes usar los contenedores de los ejercicios anteriores. La gestión de duplicados queda a tu criterio.</p>
+<p>Salida: (1) texto + secuencia sin ordenar, (2) texto + secuencia ordenada, (3) tiempo con el primer contenedor, (4) tiempo con el segundo. El tiempo debe incluir <strong>tanto la ordenación como la gestión de datos</strong>, con una precisión que permita ver la diferencia entre contenedores.</p>
+<div class="code"><pre><code class="language-text">$&gt; ./PmergeMe 3 5 9 7 4
+Before: 3 5 9 7 4
+After:  3 4 5 7 9
+Time to process a range of  5 elements with std::[..] :  0.00031 us
+Time to process a range of  5 elements with std::[..] :  0.00014 us
+$&gt; ./PmergeMe "-1" "2"
+Error</code></pre></div>
+</div>
+
+<h4>Qué te quiere enseñar</h4>
+<p>Dos cosas: (1) a implementar un algoritmo no trivial que <strong>minimiza el número de comparaciones</strong>, y (2) a ver en la práctica cómo afecta el contenedor al rendimiento del mismo algoritmo (<code>vector</code> con memoria contigua frente a <code>deque</code> por bloques).</p>
+
+<h4>La idea de Ford-Johnson, explicada sin código</h4>
+<p>Ford-Johnson (1959) fue durante décadas el algoritmo de ordenación por comparación conocido que menos comparaciones hacía en el peor caso. No es el más rápido en tiempo real (mueve muchos datos), pero compara muy poco. Pasos:</p>
+<ol class="steps">
+  <li><strong>Emparejar.</strong> Agrupa los elementos de dos en dos. Si el número es impar, aparta el último (el <em>straggler</em>, rezagado).</li>
+  <li><strong>Comparar cada pareja.</strong> El mayor es el <em>ganador</em> (<code>a</code>) y el menor el <em>perdedor</em> (<code>b</code>). Una comparación por pareja.</li>
+  <li><strong>Ordenar los ganadores recursivamente</strong> con el mismo algoritmo. Ahora tienes la "cadena principal" ordenada: a₁ ≤ a₂ ≤ … ≤ aₙ.</li>
+  <li><strong>Insertar b₁ al principio gratis.</strong> b₁ ≤ a₁ y a₁ es el menor de la cadena, así que b₁ va delante sin comparar.</li>
+  <li><strong>Insertar el resto de perdedores con búsqueda binaria</strong>, cada uno solo en la parte de la cadena que está a la izquierda de su ganador (porque bₖ ≤ aₖ). El orden en que se insertan sigue la <strong>secuencia de Jacobsthal</strong>.</li>
+  <li><strong>Insertar el straggler</strong> con búsqueda binaria en toda la cadena.</li>
+</ol>
+
+<h4>¿Por qué el orden de Jacobsthal?</h4>
+<p>Una búsqueda binaria en un rango de 2ᵏ − 1 elementos cuesta exactamente k comparaciones; en un rango de 2ᵏ elementos ya cuesta k + 1. Ford-Johnson elige el orden de inserción para que cada búsqueda caiga en un rango de tamaño 2ᵏ − 1, sin desperdiciar comparaciones. Los números de Jacobsthal (0, 1, 1, 3, 5, 11, 21, 43…, con J(n) = J(n−1) + 2·J(n−2)) marcan los grupos. El orden ideal es:</p>
+<p class="kbd">b₃ b₂ · b₅ b₄ · b₁₁ b₁₀ b₉ b₈ b₇ b₆ · b₂₁ … b₁₂ · …</p>
+<p>Dentro de cada grupo se inserta de mayor a menor índice: así, insertar bₖ no "empuja" el rango de búsqueda de los bⱼ con j &lt; k del mismo grupo.</p>
+
+<h4>Ejemplo completo: <code>3 5 9 7 4</code></h4>
+<div class="tw"><table>
+<tr><th>Paso</th><th>Estado</th></tr>
+<tr><td>Impar → apartar straggler</td><td>secuencia <span class="cell">3</span> <span class="cell">5</span> <span class="cell">9</span> <span class="cell">7</span>, straggler <span class="cell ghost">4</span></td></tr>
+<tr><td>Parejas (ganador, perdedor)</td><td>(5, 3) y (9, 7)</td></tr>
+<tr><td>Ordenar ganadores (recursión)</td><td>[5, 9] (n = 2: un solo <code>swap</code> si hace falta)</td></tr>
+<tr><td>Cadena + b₁ delante</td><td><span class="cell hl">3</span> <span class="cell">5</span> <span class="cell">9</span></td></tr>
+<tr><td>Insertar b₂ = 7 buscando solo hasta su ganador 9</td><td><span class="cell">3</span> <span class="cell">5</span> <span class="cell hl">7</span> <span class="cell">9</span></td></tr>
+<tr><td>Insertar straggler 4 en toda la cadena</td><td><span class="cell">3</span> <span class="cell hl">4</span> <span class="cell">5</span> <span class="cell">7</span> <span class="cell">9</span></td></tr>
+</table></div>
+
+<h4>Tu implementación, función a función</h4>
+<p><strong>Parseo y validación (<code>sortAndDisplay</code>).</strong></p>
+<div class="code"><pre><code class="language-cpp">std::istringstream iss(argv[i]);
+long val;
+iss &gt;&gt; val;
+if (iss.fail() || !iss.eof() || val &lt; 0)   // no numérico, basura detrás, o negativo
+{
+    std::cerr &lt;&lt; "Error" &lt;&lt; std::endl;
+    return;
+}
+_vec.push_back(static_cast&lt;int&gt;(val));
+_deq.push_back(static_cast&lt;int&gt;(val));</code></pre></div>
+<p><code>iss.fail()</code> detecta que no empieza por un número (<code>"abc"</code>, <code>""</code>); <code>!iss.eof()</code> detecta restos detrás (<code>"12abc"</code>); <code>val &lt; 0</code> rechaza negativos. Los duplicados se aceptan (decisión libre según el enunciado). Los datos se guardan en los dos contenedores.</p>
+
+<p><strong>Medición del tiempo.</strong> <code>gettimeofday</code> antes y después de ordenar cada contenedor; la diferencia en microsegundos es <code>(seg_fin − seg_ini)·10⁶ + (us_fin − us_ini)</code>.</p>
+
+<p><strong><code>fordJohnsonVec</code> (y su gemela <code>fordJohnsonDeq</code>).</strong></p>
+<div class="code"><pre><code class="language-cpp">if (n &lt;= 1) return;                                  // caso base
+if (n == 2) { if (seq[0] &gt; seq[1]) std::swap(seq[0], seq[1]); return; }
+
+bool hasStraggler = (n % 2 != 0);                    // 1) apartar el impar
+if (hasStraggler) { straggler = seq.back(); seq.pop_back(); }
+
+for (size_t i = 0; i &lt; numPairs; ++i)                // 2) parejas (ganador, perdedor)
+    pairs[i] = (a &gt;= b) ? std::make_pair(a, b) : std::make_pair(b, a);
+
+fordJohnsonVec(winners);                             // 3) recursión sobre los ganadores
+
+// re-asocia cada ganador ordenado con su pareja original (búsqueda por valor)
+...
+chain = ganadores ordenados;
+chain.insert(chain.begin(), pairs[0].second);        // 4) b1 delante, sin comparar
+insertLosersVec(chain, pairs, *this);                // 5) resto de perdedores (Jacobsthal)
+if (hasStraggler)
+    binaryInsertVec(chain, straggler, chain.size()); // 6) straggler
+seq = chain;</code></pre></div>
+<ul>
+  <li><strong><code>std::pair&lt;int,int&gt;</code></strong> guarda (ganador, perdedor). <code>first</code> es el mayor.</li>
+  <li><strong>Re-asociar tras la recursión:</strong> la llamada recursiva solo ordena los valores de los ganadores y "pierde" a qué perdedor iba unido cada uno. Lo recuperas buscando, para cada ganador ordenado, la primera pareja no usada con ese valor (<code>matched[]</code> evita usar dos veces la misma pareja si hay duplicados).</li>
+  <li><strong><code>insertLosersVec</code></strong> recorre los grupos de Jacobsthal, y para cada perdedor localiza la posición de su ganador en la cadena y limita la búsqueda binaria a <code>[0, posición_ganador]</code>. Al final hay un bucle de seguridad que inserta cualquier perdedor que se haya quedado sin insertar.</li>
+</ul>
+
+<p><strong><code>binaryInsertVec</code>: búsqueda binaria + inserción.</strong></p>
+<div class="code"><pre><code class="language-cpp">size_t lo = 0, hi = end;
+while (lo &lt; hi)
+{
+    size_t mid = lo + (hi - lo) / 2;    // evita overflow de (lo + hi)
+    if (seq[mid] &lt; val) lo = mid + 1;
+    else                hi = mid;
+}
+seq.insert(seq.begin() + lo, val);</code></pre></div>
+<p>Encuentra la primera posición cuyo elemento es ≥ <code>val</code> dentro de <code>[0, end)</code>: es lo mismo que hace <code>std::lower_bound</code>, escrito a mano. Luego <code>insert</code> desplaza los elementos siguientes.</p>
+
+<h4>¿Por qué <code>vector</code> y <code>deque</code>?</h4>
+<p>Los dos tienen acceso por índice en O(1), necesario para la búsqueda binaria. <code>vector</code> es un bloque contiguo: muy amigable con la caché. <code>deque</code> son varios bloques: el acceso por índice es O(1) pero con una indirección extra, e insertar por delante (<code>push_front</code>, que usas para b₁) es O(1). En la práctica <code>vector</code> suele salir algo más rápido. Con 3000 números aleatorios obtuve:</p>
+<div class="code"><pre><code class="language-text">Time to process a range of 3000 elements with std::vector : 26169 us
+Time to process a range of 3000 elements with std::deque  : 26601 us</code></pre></div>
+<details class="src"><summary><span class="fname">C09/ex02/PmergeMe.hpp</span> <span class="muted">· código completo (31 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre><pre><code class="language-cpp">#ifndef PMERGEME_HPP
+#define PMERGEME_HPP
+
+#include &lt;vector&gt;
+#include &lt;deque&gt;
+
+class PmergeMe
+{
+public:
+    PmergeMe();
+    PmergeMe(const PmergeMe &amp;other);
+    PmergeMe &amp;operator=(const PmergeMe &amp;other);
+    ~PmergeMe();
+
+    void sortAndDisplay(int argc, char **argv);
+
+    void binaryInsertVec(std::vector&lt;int&gt; &amp;seq, int val, size_t end);
+    void binaryInsertDeq(std::deque&lt;int&gt; &amp;seq, int val, size_t end);
+
+private:
+    std::vector&lt;int&gt; _vec;
+    std::deque&lt;int&gt;  _deq;
+
+    void sortVector();
+    void sortDeque();
+
+    void fordJohnsonVec(std::vector&lt;int&gt; &amp;seq);
+    void fordJohnsonDeq(std::deque&lt;int&gt; &amp;seq);
+};
+
+#endif</code></pre></div></details>
+<details class="src"><summary><span class="fname">C09/ex02/PmergeMe.cpp</span> <span class="muted">· código completo (424 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424</pre><pre><code class="language-cpp">#include "PmergeMe.hpp"
+#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+#include &lt;algorithm&gt;
+#include &lt;sys/time.h&gt;
+
+PmergeMe::PmergeMe() {}
+
+PmergeMe::PmergeMe(const PmergeMe &amp;other)
+    : _vec(other._vec), _deq(other._deq) {}
+
+PmergeMe &amp;PmergeMe::operator=(const PmergeMe &amp;other)
+{
+    if (this != &amp;other)
+    {
+        _vec = other._vec;
+        _deq = other._deq;
+    }
+    return *this;
+}
+
+PmergeMe::~PmergeMe() {}
+
+// ---------------------------------------------------------------------------
+// Jacobsthal sequence: J(0)=0, J(1)=1, J(n)=J(n-1)+2*J(n-2)
+// ---------------------------------------------------------------------------
+static size_t jacobsthal(size_t n)
+{
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+    size_t prev2 = 0, prev1 = 1, cur = 0;
+    for (size_t i = 2; i &lt;= n; ++i)
+    {
+        cur = prev1 + 2 * prev2;
+        prev2 = prev1;
+        prev1 = cur;
+    }
+    return cur;
+}
+
+// ---------------------------------------------------------------------------
+// Binary insertion: insert val into chain in position [0..end)
+// ---------------------------------------------------------------------------
+void PmergeMe::binaryInsertVec(std::vector&lt;int&gt; &amp;seq, int val, size_t end)
+{
+    if (end &gt; seq.size())
+        end = seq.size();
+    size_t lo = 0, hi = end;
+    while (lo &lt; hi)
+    {
+        size_t mid = lo + (hi - lo) / 2;
+        if (seq[mid] &lt; val)
+            lo = mid + 1;
+        else
+            hi = mid;
+    }
+    seq.insert(seq.begin() + static_cast&lt;std::vector&lt;int&gt;::difference_type&gt;(lo), val);
+}
+
+void PmergeMe::binaryInsertDeq(std::deque&lt;int&gt; &amp;seq, int val, size_t end)
+{
+    if (end &gt; seq.size())
+        end = seq.size();
+    size_t lo = 0, hi = end;
+    while (lo &lt; hi)
+    {
+        size_t mid = lo + (hi - lo) / 2;
+        if (seq[mid] &lt; val)
+            lo = mid + 1;
+        else
+            hi = mid;
+    }
+    seq.insert(seq.begin() + static_cast&lt;std::deque&lt;int&gt;::difference_type&gt;(lo), val);
+}
+
+// ---------------------------------------------------------------------------
+// Insert losers into a sorted chain using Jacobsthal order.
+// pairs[] is sorted by first (winner). pairs[0].second is already in chain.
+// We insert pairs[i].second for i &gt;= 1.
+// The upper search bound for pairs[i].second is the position of pairs[i].first
+// in chain (the loser is guaranteed &lt;= its paired winner).
+// ---------------------------------------------------------------------------
+static void insertLosersVec(std::vector&lt;int&gt; &amp;chain,
+                             const std::vector&lt;std::pair&lt;int,int&gt; &gt; &amp;pairs,
+                             PmergeMe &amp;pm)
+{
+    size_t pendingSize = pairs.size() - 1; // pairs[0].second already in chain
+    if (pendingSize == 0)
+        return;
+
+    std::vector&lt;bool&gt; inserted(pendingSize, false);
+
+    // Jacobsthal groups: indices go jPrev..jCurr-1 inserted high-to-low
+    size_t jacobIdx = 2;
+    while (true)
+    {
+        size_t jCurr = jacobsthal(jacobIdx);
+        size_t jPrev = jacobsthal(jacobIdx - 1);
+
+        if (jPrev &gt;= pendingSize)
+            break;
+
+        size_t hiIdx = (jCurr &lt;= pendingSize) ? jCurr - 1 : pendingSize - 1;
+
+        // Insert from hiIdx down to jPrev (inclusive)
+        for (size_t idx = hiIdx + 1; idx &gt; jPrev; --idx)
+        {
+            size_t i = idx - 1; // 0-based index into pending (pending[i] = pairs[i+1].second)
+            if (i &lt; pendingSize &amp;&amp; !inserted[i])
+            {
+                int val          = pairs[i + 1].second;
+                int pairedWinner = pairs[i + 1].first;
+
+                // Find pairedWinner in chain — upper bound is its index (inclusive)
+                size_t upperBound = chain.size();
+                for (size_t k = 0; k &lt; chain.size(); ++k)
+                {
+                    if (chain[k] == pairedWinner)
+                    {
+                        upperBound = k + 1; // search includes up to winner position
+                        break;
+                    }
+                }
+                pm.binaryInsertVec(chain, val, upperBound);
+                inserted[i] = true;
+            }
+        }
+        ++jacobIdx;
+    }
+
+    // Flush remaining (shouldn't happen if Jacobsthal covers all, but safety net)
+    for (size_t i = 0; i &lt; pendingSize; ++i)
+    {
+        if (!inserted[i])
+        {
+            int val          = pairs[i + 1].second;
+            int pairedWinner = pairs[i + 1].first;
+            size_t upperBound = chain.size();
+            for (size_t k = 0; k &lt; chain.size(); ++k)
+            {
+                if (chain[k] == pairedWinner)
+                {
+                    upperBound = k + 1;
+                    break;
+                }
+            }
+            pm.binaryInsertVec(chain, val, upperBound);
+        }
+    }
+}
+
+static void insertLosersDeq(std::deque&lt;int&gt; &amp;chain,
+                             const std::vector&lt;std::pair&lt;int,int&gt; &gt; &amp;pairs,
+                             PmergeMe &amp;pm)
+{
+    size_t pendingSize = pairs.size() - 1;
+    if (pendingSize == 0)
+        return;
+
+    std::vector&lt;bool&gt; inserted(pendingSize, false);
+
+    size_t jacobIdx = 2;
+    while (true)
+    {
+        size_t jCurr = jacobsthal(jacobIdx);
+        size_t jPrev = jacobsthal(jacobIdx - 1);
+
+        if (jPrev &gt;= pendingSize)
+            break;
+
+        size_t hiIdx = (jCurr &lt;= pendingSize) ? jCurr - 1 : pendingSize - 1;
+
+        for (size_t idx = hiIdx + 1; idx &gt; jPrev; --idx)
+        {
+            size_t i = idx - 1;
+            if (i &lt; pendingSize &amp;&amp; !inserted[i])
+            {
+                int val          = pairs[i + 1].second;
+                int pairedWinner = pairs[i + 1].first;
+
+                size_t upperBound = chain.size();
+                for (size_t k = 0; k &lt; chain.size(); ++k)
+                {
+                    if (chain[k] == pairedWinner)
+                    {
+                        upperBound = k + 1;
+                        break;
+                    }
+                }
+                pm.binaryInsertDeq(chain, val, upperBound);
+                inserted[i] = true;
+            }
+        }
+        ++jacobIdx;
+    }
+
+    for (size_t i = 0; i &lt; pendingSize; ++i)
+    {
+        if (!inserted[i])
+        {
+            int val          = pairs[i + 1].second;
+            int pairedWinner = pairs[i + 1].first;
+            size_t upperBound = chain.size();
+            for (size_t k = 0; k &lt; chain.size(); ++k)
+            {
+                if (chain[k] == pairedWinner)
+                {
+                    upperBound = k + 1;
+                    break;
+                }
+            }
+            pm.binaryInsertDeq(chain, val, upperBound);
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Ford-Johnson for std::vector
+// ---------------------------------------------------------------------------
+void PmergeMe::fordJohnsonVec(std::vector&lt;int&gt; &amp;seq)
+{
+    size_t n = seq.size();
+    if (n &lt;= 1)
+        return;
+
+    if (n == 2)
+    {
+        if (seq[0] &gt; seq[1])
+            std::swap(seq[0], seq[1]);
+        return;
+    }
+
+    bool hasStraggler = (n % 2 != 0);
+    int  straggler    = 0;
+    if (hasStraggler)
+    {
+        straggler = seq.back();
+        seq.pop_back();
+    }
+
+    // Build (winner, loser) pairs — winner &gt;= loser
+    size_t numPairs = seq.size() / 2;
+    std::vector&lt;std::pair&lt;int,int&gt; &gt; pairs(numPairs);
+    for (size_t i = 0; i &lt; numPairs; ++i)
+    {
+        int a = seq[2 * i];
+        int b = seq[2 * i + 1];
+        pairs[i] = (a &gt;= b) ? std::make_pair(a, b) : std::make_pair(b, a);
+    }
+
+    // Recursively sort winners
+    std::vector&lt;int&gt; winners;
+    winners.reserve(numPairs);
+    for (size_t i = 0; i &lt; numPairs; ++i)
+        winners.push_back(pairs[i].first);
+
+    fordJohnsonVec(winners); // sorts in place
+
+    // Rebuild pairs sorted by winner, preserving loser correspondence.
+    // Match each winner (now sorted) to its original pair by value.
+    // If there are duplicate winners, we match them in the order they appear
+    // (stable match by first unmatched).
+    std::vector&lt;bool&gt; matched(numPairs, false);
+    std::vector&lt;std::pair&lt;int,int&gt; &gt; sortedPairs(numPairs);
+    for (size_t i = 0; i &lt; numPairs; ++i)
+    {
+        for (size_t j = 0; j &lt; numPairs; ++j)
+        {
+            if (!matched[j] &amp;&amp; pairs[j].first == winners[i])
+            {
+                sortedPairs[i] = pairs[j];
+                matched[j] = true;
+                break;
+            }
+        }
+    }
+    pairs = sortedPairs;
+
+    // Build chain starting with all winners
+    std::vector&lt;int&gt; chain;
+    chain.reserve(2 * numPairs + 1);
+    for (size_t i = 0; i &lt; numPairs; ++i)
+        chain.push_back(pairs[i].first);
+
+    // Prepend pairs[0].second — it is &lt;= pairs[0].first (the minimum winner)
+    chain.insert(chain.begin(), pairs[0].second);
+
+    // Insert remaining losers using Jacobsthal order
+    insertLosersVec(chain, pairs, *this);
+
+    // Insert straggler with binary search over full chain
+    if (hasStraggler)
+        binaryInsertVec(chain, straggler, chain.size());
+
+    seq = chain;
+}
+
+// ---------------------------------------------------------------------------
+// Ford-Johnson for std::deque (identical algorithm, different container)
+// ---------------------------------------------------------------------------
+void PmergeMe::fordJohnsonDeq(std::deque&lt;int&gt; &amp;seq)
+{
+    size_t n = seq.size();
+    if (n &lt;= 1)
+        return;
+
+    if (n == 2)
+    {
+        if (seq[0] &gt; seq[1])
+            std::swap(seq[0], seq[1]);
+        return;
+    }
+
+    bool hasStraggler = (n % 2 != 0);
+    int  straggler    = 0;
+    if (hasStraggler)
+    {
+        straggler = seq.back();
+        seq.pop_back();
+    }
+
+    size_t numPairs = seq.size() / 2;
+    std::vector&lt;std::pair&lt;int,int&gt; &gt; pairs(numPairs);
+    for (size_t i = 0; i &lt; numPairs; ++i)
+    {
+        int a = seq[2 * i];
+        int b = seq[2 * i + 1];
+        pairs[i] = (a &gt;= b) ? std::make_pair(a, b) : std::make_pair(b, a);
+    }
+
+    std::deque&lt;int&gt; winners;
+    for (size_t i = 0; i &lt; numPairs; ++i)
+        winners.push_back(pairs[i].first);
+
+    fordJohnsonDeq(winners);
+
+    std::vector&lt;bool&gt; matched(numPairs, false);
+    std::vector&lt;std::pair&lt;int,int&gt; &gt; sortedPairs(numPairs);
+    for (size_t i = 0; i &lt; numPairs; ++i)
+    {
+        for (size_t j = 0; j &lt; numPairs; ++j)
+        {
+            if (!matched[j] &amp;&amp; pairs[j].first == winners[i])
+            {
+                sortedPairs[i] = pairs[j];
+                matched[j] = true;
+                break;
+            }
+        }
+    }
+    pairs = sortedPairs;
+
+    std::deque&lt;int&gt; chain;
+    for (size_t i = 0; i &lt; numPairs; ++i)
+        chain.push_back(pairs[i].first);
+
+    chain.push_front(pairs[0].second);
+
+    insertLosersDeq(chain, pairs, *this);
+
+    if (hasStraggler)
+        binaryInsertDeq(chain, straggler, chain.size());
+
+    seq = chain;
+}
+
+// ---------------------------------------------------------------------------
+// Public interface
+// ---------------------------------------------------------------------------
+void PmergeMe::sortVector()
+{
+    fordJohnsonVec(_vec);
+}
+
+void PmergeMe::sortDeque()
+{
+    fordJohnsonDeq(_deq);
+}
+
+void PmergeMe::sortAndDisplay(int argc, char **argv)
+{
+    for (int i = 1; i &lt; argc; ++i)
+    {
+        std::istringstream iss(argv[i]);
+        long val;
+        iss &gt;&gt; val;
+        if (iss.fail() || !iss.eof() || val &lt; 0)
+        {
+            std::cerr &lt;&lt; "Error" &lt;&lt; std::endl;
+            return;
+        }
+        _vec.push_back(static_cast&lt;int&gt;(val));
+        _deq.push_back(static_cast&lt;int&gt;(val));
+    }
+
+    std::cout &lt;&lt; "Before:";
+    for (size_t i = 0; i &lt; _vec.size(); ++i)
+        std::cout &lt;&lt; " " &lt;&lt; _vec[i];
+    std::cout &lt;&lt; std::endl;
+
+    struct timeval tstart, tend;
+    gettimeofday(&amp;tstart, NULL);
+    sortVector();
+    gettimeofday(&amp;tend, NULL);
+    double vecTime = (tend.tv_sec - tstart.tv_sec) * 1e6
+                   + (tend.tv_usec - tstart.tv_usec);
+
+    gettimeofday(&amp;tstart, NULL);
+    sortDeque();
+    gettimeofday(&amp;tend, NULL);
+    double deqTime = (tend.tv_sec - tstart.tv_sec) * 1e6
+                   + (tend.tv_usec - tstart.tv_usec);
+
+    std::cout &lt;&lt; "After: ";
+    for (size_t i = 0; i &lt; _vec.size(); ++i)
+        std::cout &lt;&lt; " " &lt;&lt; _vec[i];
+    std::cout &lt;&lt; std::endl;
+
+    size_t n = _vec.size();
+    std::cout &lt;&lt; "Time to process a range of " &lt;&lt; n
+              &lt;&lt; " elements with std::vector : " &lt;&lt; vecTime &lt;&lt; " us" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "Time to process a range of " &lt;&lt; n
+              &lt;&lt; " elements with std::deque  : " &lt;&lt; deqTime &lt;&lt; " us" &lt;&lt; std::endl;
+}</code></pre></div></details>
+<details class="src"><summary><span class="fname">C09/ex02/main.cpp</span> <span class="muted">· código completo (16 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre><pre><code class="language-cpp">#include "PmergeMe.hpp"
+#include &lt;iostream&gt;
+
+int main(int argc, char **argv)
+{
+    if (argc &lt; 2)
+    {
+        std::cerr &lt;&lt; "Usage: PmergeMe &lt;positive integers...&gt;" &lt;&lt; std::endl;
+        return 1;
+    }
+
+    PmergeMe pm;
+    pm.sortAndDisplay(argc, argv);
+
+    return 0;
+}</code></pre></div></details>
+
+<h4>Preguntas típicas</h4>
+<details class="qa"><summary>¿Por qué Ford-Johnson y no <code>std::sort</code>?</summary><div class="a"><p>Porque el enunciado lo exige. El objetivo es implementar un algoritmo concreto que minimiza comparaciones, no el más rápido en la práctica. <code>std::sort</code> (introsort) suele ser más rápido en tiempo pero hace más comparaciones.</p></div></details>
+<details class="qa"><summary>¿Cuántas comparaciones hace?</summary><div class="a"><p>Para n elementos, como mucho ∑ₖ₌₁ⁿ ⌈log₂(3k/4)⌉. Por ejemplo: 21 elementos → 66 comparaciones; 3000 → 30 546 como máximo, muy cerca del mínimo teórico log₂(3000!) ≈ 30 331.</p></div></details>
+<details class="qa"><summary>¿Qué es la secuencia de Jacobsthal y cómo se calcula?</summary><div class="a"><p>J(0) = 0, J(1) = 1, J(n) = J(n−1) + 2·J(n−2): 0, 1, 1, 3, 5, 11, 21, 43, 85… Tu función <code>jacobsthal</code> la calcula de forma iterativa con dos variables (<code>prev1</code>, <code>prev2</code>). Marca los límites de los grupos de inserción.</p></div></details>
+<details class="qa"><summary>¿Por qué el perdedor solo se busca hasta su ganador?</summary><div class="a"><p>Porque sabemos que bₖ ≤ aₖ: su posición final está a la izquierda de aₖ. Reducir el rango ahorra comparaciones, y con el orden de Jacobsthal ese rango tiene como mucho 2ᵏ − 1 elementos.</p></div></details>
+<details class="qa"><summary>¿Qué incluye el tiempo medido?</summary><div class="a"><p>En tu código, solo la llamada a <code>sortVector()</code> / <code>sortDeque()</code>. El enunciado dice que debe incluir también la gestión de datos (el parseo y la carga en el contenedor). Ver <a href="#revisar">Puntos a revisar</a>.</p></div></details>
+</section>
+
+<!-- ============================================================ -->
+<h2 id="revisar">Puntos a revisar antes de la evaluación</h2>
+<p>He compilado y probado todo. Funciona con los ejemplos de los enunciados, pero al probar casos límite encontré estos detalles. Están ordenados de más a menos probable que te los pregunten. No he modificado nada de tu código; si quieres te ayudo a corregirlos.</p>
+
+<div class="call bad"><div class="t">C09/ex00 · El <code>data.csv</code> no es el oficial</div>
+<p>Tu <code>data.csv</code> tiene 54 filas inventadas (salta de 2013 a 2021) en lugar de las ~1600 del fichero que viene con el enunciado. Por eso <code>2012-01-11 =&gt; 1</code> da <code>5.5</code> en vez del <code>7.1</code> del ejemplo. El evaluador usará el CSV oficial (y probablemente te pida que lo pongas): tu código lo leerá bien porque el formato es el mismo, pero sustitúyelo antes para que la salida coincida.</p></div>
+
+<div class="call bad"><div class="t">C09/ex02 · Números mayores que <code>INT_MAX</code> se corrompen</div>
+<p>Parseas a <code>long</code> y haces <code>static_cast&lt;int&gt;</code> sin comprobar el límite. <code>./PmergeMe 4294967297 1</code> imprime <code>Before: 1 1</code>: el número se convierte en 1. Arreglo: añadir <code>|| val &gt; INT_MAX</code> (de <code>&lt;climits&gt;</code>) a la condición de error.</p></div>
+
+<div class="call warn"><div class="t">C09/ex02 · El orden de Jacobsthal tiene un desfase de uno</div>
+<p>Instrumenté <code>insertLosersVec</code> con 22 elementos (11 parejas). El orden real de inserción es <code>b4 b3 · b6 b5 · b11 b10 b9 b8 b7</code> y <code>b2</code> se inserta al final en el bucle de seguridad. El orden canónico es <code>b3 b2 · b5 b4 · b11 … b6</code>. <strong>El resultado sigue saliendo bien ordenado</strong> (cada perdedor se inserta con búsqueda binaria limitada por su ganador), pero no es exactamente el orden de Ford-Johnson y hace alguna comparación de más. Si el evaluador cuenta comparaciones, se notará. La causa: el índice <code>i</code> corresponde a <code>b(i+2)</code>, así que el grupo debería ir de <code>J(k)−2</code> hasta <code>J(k−1)−1</code>, y el código usa <code>J(k)−1</code> hasta <code>J(k−1)</code>.</p></div>
+
+<div class="call warn"><div class="t">C09/ex02 · El tiempo no incluye la gestión de datos</div>
+<p>El enunciado pide medir "el tiempo de todas las operaciones, tanto la ordenación como la gestión de datos". Ahora solo mides la ordenación. Además, <code>gettimeofday</code> tiene resolución de microsegundos: con 5 números a veces da <code>0 us</code> para los dos contenedores, y entonces no se ve la diferencia. Sería mejor medir también la carga de <code>argv</code> en cada contenedor y mostrar decimales (por ejemplo, convirtiendo a milisegundos con <code>std::fixed</code>).</p></div>
+
+<div class="call warn"><div class="t">Módulo 09 · <code>std::stack</code> usa <code>std::deque</code> por dentro</div>
+<p>La regla dice que un contenedor usado no se puede reutilizar. <code>std::stack&lt;int&gt;</code> (ex01) está implementado sobre <code>std::deque&lt;int&gt;</code>, y luego usas <code>deque</code> en el ex02. Muchos evaluadores lo aceptan (<code>stack</code> es un adaptador, un tipo distinto), pero es una pregunta frecuente. Para cortar la discusión: <code>std::stack&lt;int, std::list&lt;int&gt; &gt;</code> en el RPN. Ojo también: <code>fordJohnsonDeq</code> usa un <code>std::vector</code> de parejas como apoyo, así que el algoritmo "con deque" no es 100 % deque.</p></div>
+
+<div class="call warn"><div class="t">C09/ex00 · Detalles de validación y formato</div>
+<ul style="margin:4px 0 0">
+  <li>Un valor no numérico (<code>2011-01-03 | abc</code>) imprime <code>Error: not a positive number.</code> En <code>processInput</code> las dos ramas del <code>if</code> imprimen el mismo mensaje; la segunda debería ser <code>Error: bad input =&gt; ...</code>.</li>
+  <li><code>isValidDate</code> no comprueba días por mes ni años bisiestos: <code>2011-02-30</code> se acepta.</li>
+  <li>Con importes grandes la salida sale en notación científica: <code>2021-09-01 | 1000</code> → <code>4.4e+07</code>. Se arregla con <code>std::fixed</code> y <code>std::setprecision</code>, o usando <code>double</code>.</li>
+  <li><code>./btc</code> sin argumentos imprime <code>Usage: ...</code>; el enunciado muestra <code>Error: could not open file.</code></li>
+  <li>Si no se puede abrir <code>data.csv</code>, el programa continúa con la BD vacía (y todas las líneas dan "bad input").</li>
+</ul></div>
+
+<div class="call warn"><div class="t">C08/ex01 · <code>Span</code> sin constructor por defecto y posible overflow</div>
+<p>La forma canónica pide constructor por defecto; puedes añadir <code>Span()</code> con <code>_maxSize(0)</code>, o justificar que un Span sin N no tiene sentido. Además, <code>longestSpan</code> con <code>INT_MIN</code> e <code>INT_MAX</code> desborda <code>int</code> al restar. Si te lo preguntan: devolver <code>long</code> o <code>unsigned int</code> y restar convirtiendo antes a <code>long</code>.</p></div>
+
+<div class="call ok"><div class="t">C09/ex01 · Desbordamiento en RPN (menor)</div>
+<p><code>"9 9 9 9 9 9 9 9 9 9 * * * * * * * * *"</code> da <code>-808182895</code> (9¹⁰ no cabe en <code>int</code>). El enunciado no lo exige, pero puedes calcular en <code>long</code> y comprobar límites si te lo piden.</p></div>
+
+<!-- ============================================================ -->
+<h2 id="chuleta">Chuleta rápida</h2>
+<div class="tw"><table>
+<tr><th>Ejercicio</th><th>Concepto clave</th><th>Contenedor / algoritmo</th><th>Frase para la defensa</th></tr>
+<tr><td>08/ex00 easyfind</td><td>Function template genérico</td><td><code>std::find</code></td><td>"Funciona con cualquier contenedor secuencial porque solo uso iteradores; devuelvo un iterador o lanzo excepción."</td></tr>
+<tr><td>08/ex01 Span</td><td>Clase sobre un contenedor + rango de iteradores</td><td><code>vector</code>, <code>sort</code>, <code>min/max_element</code></td><td>"Tras ordenar, la distancia mínima siempre está entre vecinos; la máxima es max − min."</td></tr>
+<tr><td>08/ex02 MutantStack</td><td>Adaptadores, miembro <code>protected c</code></td><td><code>stack</code> sobre <code>deque</code></td><td>"Heredo de <code>std::stack</code> y expongo los iteradores de su contenedor interno <code>c</code>; uso <code>this-&gt;c</code> por la búsqueda en dos fases."</td></tr>
+<tr><td>09/ex00 btc</td><td>BD ordenada, búsqueda de la clave anterior</td><td><code>map</code>, <code>lower_bound</code></td><td>"Las fechas ISO se ordenan igual como texto; <code>lower_bound</code> y un paso atrás dan la fecha anterior en O(log n)."</td></tr>
+<tr><td>09/ex01 RPN</td><td>Evaluación con pila (LIFO)</td><td><code>stack</code></td><td>"Número → push; operador → pop b, pop a, push a∘b; al final queda un único valor."</td></tr>
+<tr><td>09/ex02 PmergeMe</td><td>Ford-Johnson, comparar contenedores</td><td><code>vector</code> + <code>deque</code></td><td>"Emparejo, ordeno ganadores recursivamente e inserto perdedores con búsqueda binaria en orden de Jacobsthal."</td></tr>
+</table></div>
+
+<footer>Guía generada a partir del código del repositorio · módulos C++ 08 y 09 de 42.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/makefile.min.js"></script>
+<script>
+  if (window.hljs) { document.querySelectorAll('pre code').forEach(function (el) { hljs.highlightElement(el); }); }
+  document.querySelectorAll('nav.toc a').forEach(function (a) {
+    a.addEventListener('click', function () { document.getElementById('toc').classList.remove('open'); });
+  });
+</script>
+</body>
+</html>
