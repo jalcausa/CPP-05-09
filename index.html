@@ -132,7 +132,7 @@ footer{margin-top:80px; color:var(--muted); font-size:13px; border-top:1px solid
     <a class="l2" href="#c09-ex01">ex01 · RPN</a>
     <a class="l2" href="#c09-ex02">ex02 · PmergeMe</a>
     <div class="grp">Antes de evaluar</div>
-    <a href="#revisar">Puntos a revisar</a>
+    <a href="#correcciones">Correcciones aplicadas</a>
     <a href="#chuleta">Chuleta rápida</a>
   </div>
 </nav>
@@ -151,7 +151,7 @@ footer{margin-top:80px; color:var(--muted); font-size:13px; border-top:1px solid
   <li><strong>¿Qué hace esta línea?</strong> Sobre todo en las partes con templates (<code>typename</code>, <code>this-&gt;c</code>) y en los algoritmos (<code>lower_bound</code>, Ford-Johnson).</li>
   <li><strong>¿Qué pasa si…?</strong> Casos límite: contenedor vacío, valor no encontrado, entrada mal formada, división por cero, desbordamiento.</li>
 </ol>
-<p>Cada ejercicio incluye su fichero completo (pulsa sobre el nombre para desplegarlo) y fragmentos comentados. Todo lo he compilado y ejecutado: las salidas que ves son reales. En la sección <a href="#revisar">Puntos a revisar</a> están los detalles que un evaluador exigente podría encontrar, para que no te pillen por sorpresa.</p>
+<p>Cada ejercicio incluye su fichero completo (pulsa sobre el nombre para desplegarlo) y fragmentos comentados. Todo lo he compilado y ejecutado: las salidas que ves son reales. En <a href="#correcciones">Correcciones aplicadas</a> tienes los cambios que se hicieron tras revisar el código: qué fallaba, cómo se arregló y cómo se comprobó. Conócelos bien, porque también forman parte del código que vas a defender.</p>
 
 <!-- ============================================================ -->
 <h2 id="stl">La STL en 5 minutos</h2>
@@ -167,8 +167,8 @@ footer{margin-top:80px; color:var(--muted); font-size:13px; border-top:1px solid
 <div class="tw"><table>
 <tr><th>Contenedor</th><th>Tipo</th><th>Cómo es por dentro</th><th>Acceso por índice</th><th>Insertar en medio</th><th>Dónde lo usas</th></tr>
 <tr><td><code>std::vector</code></td><td>Secuencial</td><td>Array dinámico contiguo</td><td>O(1)</td><td>O(n)</td><td>08/ex00, 08/ex01, 09/ex02</td></tr>
-<tr><td><code>std::deque</code></td><td>Secuencial</td><td>Bloques de memoria enlazados (no contiguo)</td><td>O(1)</td><td>O(n), pero O(1) por delante y por detrás</td><td>08/ex00, 09/ex02</td></tr>
-<tr><td><code>std::list</code></td><td>Secuencial</td><td>Lista doblemente enlazada</td><td>No tiene</td><td>O(1) si ya tienes el iterador</td><td>08/ex00, 08/ex01, 08/ex02 (tests)</td></tr>
+<tr><td><code>std::deque</code></td><td>Secuencial</td><td>Bloques de memoria enlazados (no contiguo)</td><td>O(1)</td><td>O(n), pero O(1) por delante y por detrás</td><td>08/ex00, 08/ex02 (dentro de MutantStack), 09/ex02</td></tr>
+<tr><td><code>std::list</code></td><td>Secuencial</td><td>Lista doblemente enlazada</td><td>No tiene</td><td>O(1) si ya tienes el iterador</td><td>08/ex00, 08/ex01, 08/ex02 (tests), 09/ex01 (debajo del <code>stack</code>)</td></tr>
 <tr><td><code>std::map</code></td><td>Asociativo</td><td>Árbol rojo-negro, ordenado por clave</td><td>Por clave, O(log n)</td><td>O(log n)</td><td>09/ex00</td></tr>
 <tr><td><code>std::stack</code></td><td>Adaptador</td><td>Envuelve otro contenedor (por defecto <code>std::deque</code>)</td><td>Solo <code>top()</code></td><td>Solo arriba</td><td>08/ex02, 09/ex01</td></tr>
 </table></div>
@@ -202,10 +202,10 @@ public:
 <p><code>const throw()</code> significa: el método no modifica el objeto (<code>const</code>) y <strong>promete no lanzar excepciones</strong> (<code>throw()</code>, la especificación de excepciones de C++98). Tiene que coincidir con la firma de <code>std::exception::what()</code> para sobrescribirla. Se captura por referencia constante (<code>catch (const std::exception&amp; e)</code>) para no copiar el objeto y para que el polimorfismo funcione: <code>e.what()</code> llama a la versión de la clase hija.</p>
 
 <h2 id="ocf">Forma canónica ortodoxa y C++98</h2>
-<p>Desde el módulo 02, toda clase debe tener: <strong>constructor por defecto, constructor de copia, operador de asignación y destructor</strong>. En tu código lo cumplen <code>BitcoinExchange</code>, <code>RPN</code>, <code>PmergeMe</code> y <code>MutantStack</code>. <code>Span</code> no tiene constructor por defecto (ver <a href="#revisar">Puntos a revisar</a>).</p>
+<p>Desde el módulo 02, toda clase debe tener: <strong>constructor por defecto, constructor de copia, operador de asignación y destructor</strong>. Todas tus clases la cumplen: <code>Span</code>, <code>MutantStack</code>, <code>BitcoinExchange</code>, <code>RPN</code> y <code>PmergeMe</code>. A <code>Span</code> se le añadió el constructor por defecto en la revisión.</p>
 <p>Restricciones de C++98 que se notan en tu código:</p>
 <ul>
-  <li>No existe <code>auto</code>: escribes el tipo completo del iterador (<code>std::map&lt;std::string, float&gt;::const_iterator</code>).</li>
+  <li>No existe <code>auto</code>: escribes el tipo completo del iterador (<code>std::map&lt;std::string, double&gt;::const_iterator</code>).</li>
   <li>No hay bucles <code>for (x : contenedor)</code>: se recorre con iteradores o índices.</li>
   <li><code>std::vector&lt;std::pair&lt;int,int&gt; &gt;</code> lleva un espacio en <code>&gt; &gt;</code>, porque en C++98 <code>&gt;&gt;</code> se lee como el operador de desplazamiento.</li>
   <li>Los <code>ifstream</code> reciben <code>const char*</code>, de ahí el <code>filename.c_str()</code>.</li>
@@ -580,6 +580,7 @@ re: fclean all
 	std::vector&lt;int&gt;	_numbers;   // los números guardados</code></pre></div>
 <p><strong>¿Por qué <code>vector</code>?</strong> Solo se añade al final (<code>push_back</code>, O(1) amortizado), hace falta ordenar (y <code>std::sort</code> necesita iteradores de acceso aleatorio, así que <code>list</code> no vale) y la memoria contigua es lo más rápido de recorrer.</p>
 <p>En el constructor llamas a <code>_numbers.reserve(n)</code>: reserva memoria para <code>n</code> enteros de una vez y así el vector no tiene que realocar mientras se llena. No cambia <code>size()</code>, solo <code>capacity()</code>.</p>
+<p>También hay un <strong>constructor por defecto</strong> <code>Span()</code>, que crea un Span de capacidad 0 (cualquier <code>addNumber</code> lanzará excepción). Existe para cumplir la forma canónica ortodoxa. Un Span útil se crea siempre con <code>Span(n)</code>.</p>
 
 <h4><code>addNumber</code></h4>
 <div class="code"><pre><code class="language-cpp">void Span::addNumber(int n)
@@ -591,7 +592,7 @@ re: fclean all
 <p>Compruebas la capacidad <em>antes</em> de insertar. El límite lo controlas tú con <code>_maxSize</code>; el vector por sí solo crecería sin límite.</p>
 
 <h4><code>shortestSpan</code>: ordenar y mirar vecinos</h4>
-<div class="code"><pre><code class="language-cpp">int Span::shortestSpan() const
+<div class="code"><pre><code class="language-cpp">long Span::shortestSpan() const
 {
 	if (_numbers.size() &lt; 2)
 		throw NotEnoughNumbersException();
@@ -599,10 +600,10 @@ re: fclean all
 	std::vector&lt;int&gt; sorted(_numbers);          // copia: el método es const
 	std::sort(sorted.begin(), sorted.end());    // O(n log n)
 
-	int shortest = sorted[1] - sorted[0];
+	long shortest = static_cast&lt;long&gt;(sorted[1]) - sorted[0];
 	for (std::vector&lt;int&gt;::size_type i = 2; i &lt; sorted.size(); ++i)
 	{
-		int diff = sorted[i] - sorted[i - 1];
+		long diff = static_cast&lt;long&gt;(sorted[i]) - sorted[i - 1];
 		if (diff &lt; shortest)
 			shortest = diff;
 	}
@@ -615,34 +616,48 @@ re: fclean all
 <h4><code>longestSpan</code>: máximo menos mínimo</h4>
 <div class="code"><pre><code class="language-cpp">int minVal = *std::min_element(_numbers.begin(), _numbers.end());
 int maxVal = *std::max_element(_numbers.begin(), _numbers.end());
-return maxVal - minVal;</code></pre></div>
+return static_cast&lt;long&gt;(maxVal) - minVal;</code></pre></div>
 <p>La distancia más larga siempre es entre el mayor y el menor. No hace falta ordenar: dos pasadas O(n). <code>min_element</code> y <code>max_element</code> devuelven <em>iteradores</em>, por eso los desreferencias con <code>*</code>. Ejemplo: 17 − 3 = <strong>14</strong>.</p>
+<p><strong>¿Por qué <code>long</code>?</strong> La distancia entre dos <code>int</code> puede no caber en un <code>int</code>: entre <code>INT_MIN</code> y <code>INT_MAX</code> hay 4 294 967 295. Si restas en <code>int</code>, se desborda (comportamiento indefinido) y sale un número sin sentido. Por eso se convierte uno de los operandos a <code>long</code> <em>antes</em> de restar: así la resta entera se hace en <code>long</code>. Convertir el resultado después ya no serviría, porque el desbordamiento habría ocurrido.</p>
 
 <h4><code>addNumbers</code>: rango de iteradores</h4>
 <div class="code"><pre><code class="language-cpp">template &lt;typename Iterator&gt;
 void addNumbers(Iterator begin, Iterator end)
 {
+	// Comprueba que todo el rango cabe antes de añadir nada
+	if (static_cast&lt;unsigned long&gt;(std::distance(begin, end))
+		&gt; _maxSize - _numbers.size())
+		throw FullContainerException();
 	while (begin != end)
 	{
 		addNumber(*begin);
 		++begin;
 	}
 }</code></pre></div>
-<p>Es una <strong>función miembro template</strong> dentro de una clase normal. El tipo <code>Iterator</code> se deduce de los argumentos, así que vale para iteradores de <code>vector</code>, <code>list</code>, <code>deque</code> o incluso punteros a un array (<code>arr, arr + 5</code>). Por ser template, su cuerpo está en el <code>.hpp</code>, y eso está permitido. Como reutiliza <code>addNumber</code>, si el rango no cabe lanza <code>FullContainerException</code> cuando se llena.</p>
+<p>Es una <strong>función miembro template</strong> dentro de una clase normal. El tipo <code>Iterator</code> se deduce de los argumentos, así que vale para iteradores de <code>vector</code>, <code>list</code>, <code>deque</code> o incluso punteros a un array (<code>arr, arr + 5</code>). Por ser template, su cuerpo está en el <code>.hpp</code>, y eso está permitido.</p>
+<p><code>std::distance(begin, end)</code> (de <code>&lt;iterator&gt;</code>) cuenta cuántos elementos hay en el rango. Se compara con el hueco libre (<code>_maxSize - _numbers.size()</code>) <strong>antes</strong> de insertar. Así, si el rango no cabe, se lanza la excepción y el Span queda <strong>exactamente como estaba</strong>, sin rellenarse a medias. Esto se conoce como <em>garantía fuerte</em> ante excepciones.</p>
 
 <h4>Excepciones anidadas</h4>
 <p><code>FullContainerException</code> y <code>NotEnoughNumbersException</code> son clases anidadas dentro de <code>Span</code> que heredan de <code>std::exception</code> y sobrescriben <code>what()</code>. Desde fuera se nombran <code>Span::FullContainerException</code>.</p>
 
 <h4>Los tests</h4>
-<p>Ejemplo del enunciado, Span lleno, Span con 0 y 1 números, <code>addNumbers</code> con <code>vector</code> y con <code>list</code>, <strong>10 000 números</strong> (0…9999 → shortest 1, longest 9999) y constructor de copia (modificar la copia no afecta al original, porque <code>vector</code> hace copia profunda).</p>
+<p>Ejemplo del enunciado, Span lleno, Span con 0 y 1 números, <code>addNumbers</code> con <code>vector</code> y con <code>list</code>, <strong>10 000 números</strong> (0…9999 → shortest 1, longest 9999), constructor de copia (modificar la copia no afecta al original, porque <code>vector</code> hace copia profunda), valores extremos <code>INT_MIN</code>/<code>INT_MAX</code>, un rango que no cabe y <strong>20 000 números aleatorios</strong>.</p>
 <div class="code"><pre><code class="language-text">-- Subject example --
 shortestSpan() = 2
 longestSpan()  = 14
 ...
 -- Large Span (10000 numbers) --
 shortestSpan() = 1
-longestSpan()  = 9999</code></pre></div>
-<details class="src"><summary><span class="fname">C08/ex01/Span.hpp</span> <span class="muted">· código completo (47 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+longestSpan()  = 9999
+...
+-- INT_MIN / INT_MAX --
+shortestSpan() = 4294967295
+longestSpan()  = 4294967295
+
+-- addNumbers range too big --
+Exception (expected): Span: container is full, cannot add more numbers
+longestSpan()  = 9</code></pre></div>
+<details class="src"><summary><span class="fname">C08/ex01/Span.hpp</span> <span class="muted">· código completo (55 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
 4
@@ -688,15 +703,25 @@ longestSpan()  = 9999</code></pre></div>
 44
 45
 46
-47</pre><pre><code class="language-cpp">#ifndef SPAN_HPP
+47
+48
+49
+50
+51
+52
+53
+54
+55</pre><pre><code class="language-cpp">#ifndef SPAN_HPP
 # define SPAN_HPP
 
 # include &lt;vector&gt;
 # include &lt;exception&gt;
+# include &lt;iterator&gt;
 
 class Span
 {
 public:
+	Span();
 	Span(unsigned int n);
 	Span(const Span&amp; other);
 	Span&amp; operator=(const Span&amp; other);
@@ -707,6 +732,11 @@ public:
 	template &lt;typename Iterator&gt;
 	void addNumbers(Iterator begin, Iterator end)
 	{
+		// Check the whole range fits before adding anything, so that a failed
+		// call leaves the Span unchanged
+		if (static_cast&lt;unsigned long&gt;(std::distance(begin, end))
+			&gt; _maxSize - _numbers.size())
+			throw FullContainerException();
 		while (begin != end)
 		{
 			addNumber(*begin);
@@ -714,8 +744,9 @@ public:
 		}
 	}
 
-	int shortestSpan() const;
-	int longestSpan() const;
+	// long: the difference between INT_MIN and INT_MAX does not fit in an int
+	long shortestSpan() const;
+	long longestSpan() const;
 
 	class FullContainerException : public std::exception
 	{
@@ -735,7 +766,7 @@ private:
 };
 
 #endif</code></pre></div></details>
-<details class="src"><summary><span class="fname">C08/ex01/Span.cpp</span> <span class="muted">· código completo (76 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+<details class="src"><summary><span class="fname">C08/ex01/Span.cpp</span> <span class="muted">· código completo (80 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
 4
@@ -810,10 +841,18 @@ private:
 73
 74
 75
-76</pre><pre><code class="language-cpp">#include "Span.hpp"
+76
+77
+78
+79
+80</pre><pre><code class="language-cpp">#include "Span.hpp"
 #include &lt;algorithm&gt;
 
 // --- Constructors / Destructor ---
+
+Span::Span() : _maxSize(0)
+{
+}
 
 Span::Span(unsigned int n) : _maxSize(n)
 {
@@ -847,7 +886,7 @@ void Span::addNumber(int n)
 	_numbers.push_back(n);
 }
 
-int Span::shortestSpan() const
+long Span::shortestSpan() const
 {
 	if (_numbers.size() &lt; 2)
 		throw NotEnoughNumbersException();
@@ -855,24 +894,24 @@ int Span::shortestSpan() const
 	std::vector&lt;int&gt; sorted(_numbers);
 	std::sort(sorted.begin(), sorted.end());
 
-	int shortest = sorted[1] - sorted[0];
+	long shortest = static_cast&lt;long&gt;(sorted[1]) - sorted[0];
 	for (std::vector&lt;int&gt;::size_type i = 2; i &lt; sorted.size(); ++i)
 	{
-		int diff = sorted[i] - sorted[i - 1];
+		long diff = static_cast&lt;long&gt;(sorted[i]) - sorted[i - 1];
 		if (diff &lt; shortest)
 			shortest = diff;
 	}
 	return shortest;
 }
 
-int Span::longestSpan() const
+long Span::longestSpan() const
 {
 	if (_numbers.size() &lt; 2)
 		throw NotEnoughNumbersException();
 
 	int minVal = *std::min_element(_numbers.begin(), _numbers.end());
 	int maxVal = *std::max_element(_numbers.begin(), _numbers.end());
-	return maxVal - minVal;
+	return static_cast&lt;long&gt;(maxVal) - minVal;
 }
 
 // --- Exception messages ---
@@ -886,7 +925,7 @@ const char* Span::NotEnoughNumbersException::what() const throw()
 {
 	return "Span: need at least 2 numbers to compute a span";
 }</code></pre></div></details>
-<details class="src"><summary><span class="fname">C08/ex01/main.cpp</span> <span class="muted">· código completo (117 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+<details class="src"><summary><span class="fname">C08/ex01/main.cpp</span> <span class="muted">· código completo (157 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
 4
@@ -1002,10 +1041,51 @@ const char* Span::NotEnoughNumbersException::what() const throw()
 114
 115
 116
-117</pre><pre><code class="language-cpp">#include &lt;iostream&gt;
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157</pre><pre><code class="language-cpp">#include &lt;iostream&gt;
 #include &lt;vector&gt;
 #include &lt;list&gt;
 #include &lt;cstdlib&gt;
+#include &lt;climits&gt;
 #include "Span.hpp"
 
 int main(void)
@@ -1117,6 +1197,45 @@ int main(void)
 		std::cout &lt;&lt; "sp2 longestSpan()  = " &lt;&lt; sp2.longestSpan()  &lt;&lt; std::endl;
 	}
 
+	// --- Extreme values: the span does not fit in an int ---
+	std::cout &lt;&lt; "\n-- INT_MIN / INT_MAX --" &lt;&lt; std::endl;
+	{
+		Span sp(2);
+		sp.addNumber(INT_MIN);
+		sp.addNumber(INT_MAX);
+		std::cout &lt;&lt; "shortestSpan() = " &lt;&lt; sp.shortestSpan() &lt;&lt; std::endl; // expected 4294967295
+		std::cout &lt;&lt; "longestSpan()  = " &lt;&lt; sp.longestSpan()  &lt;&lt; std::endl; // expected 4294967295
+	}
+
+	// --- addNumbers with a range that does not fit ---
+	std::cout &lt;&lt; "\n-- addNumbers range too big --" &lt;&lt; std::endl;
+	{
+		std::vector&lt;int&gt; v(5, 7);
+		Span sp(4);
+		sp.addNumber(1);
+		try {
+			sp.addNumbers(v.begin(), v.end());
+			std::cout &lt;&lt; "No exception thrown (should not reach here)" &lt;&lt; std::endl;
+		} catch (const std::exception&amp; e) {
+			std::cerr &lt;&lt; "Exception (expected): " &lt;&lt; e.what() &lt;&lt; std::endl;
+		}
+		sp.addNumber(10); // the failed call added nothing, so there is still room
+		std::cout &lt;&lt; "longestSpan()  = " &lt;&lt; sp.longestSpan() &lt;&lt; std::endl; // expected 9
+	}
+
+	// --- Random numbers ---
+	std::cout &lt;&lt; "\n-- 20000 random numbers --" &lt;&lt; std::endl;
+	{
+		std::srand(42);
+		std::vector&lt;int&gt; v;
+		for (int i = 0; i &lt; 20000; ++i)
+			v.push_back(std::rand());
+		Span sp(20000);
+		sp.addNumbers(v.begin(), v.end());
+		std::cout &lt;&lt; "shortestSpan() = " &lt;&lt; sp.shortestSpan() &lt;&lt; std::endl;
+		std::cout &lt;&lt; "longestSpan()  = " &lt;&lt; sp.longestSpan()  &lt;&lt; std::endl;
+	}
+
 	return 0;
 }</code></pre></div></details>
 
@@ -1124,7 +1243,9 @@ int main(void)
 <details class="qa"><summary>¿Por qué no usas <code>std::list</code>?</summary><div class="a"><p><code>std::sort</code> requiere iteradores de acceso aleatorio y <code>list</code> solo tiene bidireccionales (tiene su propio <code>list::sort()</code>, pero es más lento por la falta de localidad de memoria). <code>vector</code> es la opción natural.</p></div></details>
 <details class="qa"><summary>¿Por qué no ordenas al insertar y así <code>shortestSpan</code> es más rápido?</summary><div class="a"><p>Sería posible (insertando con <code>lower_bound</code>), pero cada inserción costaría O(n) por el desplazamiento en el vector: O(n²) para llenarlo. Ordenar una vez al consultar, O(n log n), es mejor si se consulta poco.</p></div></details>
 <details class="qa"><summary>¿Qué es <code>reserve</code> y en qué se diferencia de <code>resize</code>?</summary><div class="a"><p><code>reserve(n)</code> solo reserva memoria (cambia <code>capacity</code>). <code>resize(n)</code> crea <code>n</code> elementos (cambia <code>size</code>). Si usaras <code>resize</code>, el vector empezaría con N ceros y <code>addNumber</code> lo vería lleno desde el principio.</p></div></details>
-<details class="qa"><summary>¿Cómo probarías con 100 000 números aleatorios?</summary><div class="a"><p>Rellenar un <code>std::vector&lt;int&gt;</code> con <code>std::rand()</code> (de <code>&lt;cstdlib&gt;</code>, ya incluido en tu main) y pasarlo con <code>sp.addNumbers(v.begin(), v.end())</code>. Es una modificación típica que te pueden pedir en directo.</p></div></details>
+<details class="qa"><summary>¿Cómo probarías con 100 000 números aleatorios?</summary><div class="a"><p>Como en el último test del main: <code>std::srand(...)</code>, rellenar un <code>std::vector&lt;int&gt;</code> con <code>std::rand()</code> y pasarlo con <code>sp.addNumbers(v.begin(), v.end())</code>. Para 100 000 basta con cambiar el 20000 en los dos sitios. Es una modificación típica que te pueden pedir en directo.</p></div></details>
+<details class="qa"><summary>¿Por qué <code>shortestSpan</code> devuelve <code>long</code> y no <code>int</code>?</summary><div class="a"><p>Porque la diferencia entre dos <code>int</code> puede llegar a 2³² − 1, que no cabe en un <code>int</code>. En macOS y Linux de 64 bits <code>long</code> ocupa 64 bits. El enunciado no fija el tipo de retorno, y <code>std::cout &lt;&lt; sp.shortestSpan()</code> sigue funcionando igual.</p></div></details>
+<details class="qa"><summary>¿Para qué sirve un <code>Span()</code> sin parámetros si no se puede llenar?</summary><div class="a"><p>Solo para cumplir la forma canónica ortodoxa exigida desde el módulo 02. Un Span por defecto tiene capacidad 0. Se podría asignar después: <code>Span s; s = Span(10);</code>.</p></div></details>
 
 <!-- ---------------- C08 ex02 ---------------- -->
 <h3 id="c08-ex02">ex02 · Mutated abomination (MutantStack)</h3>
@@ -1635,7 +1756,9 @@ int main(void)
 <div class="h">Reglas específicas del módulo (enunciado)</div>
 <p>Es obligatorio usar contenedores estándar en cada ejercicio. <strong>Un contenedor que ya hayas usado no se puede volver a usar en el resto del módulo.</strong> Al menos un contenedor por ejercicio, excepto el ex02, que necesita dos. Cada programa lleva su Makefile con <code>-Wall -Wextra -Werror</code>, con <code>c++</code>, sin relink y con las reglas <code>$(NAME)</code>, <code>all</code>, <code>clean</code>, <code>fclean</code> y <code>re</code>.</p>
 </div>
-<p>Tu reparto: <strong>ex00 → <code>map</code></strong>, <strong>ex01 → <code>stack</code></strong>, <strong>ex02 → <code>vector</code> + <code>deque</code></strong>. Prepárate para la pregunta sobre <code>stack</code> y <code>deque</code> (ver <a href="#revisar">Puntos a revisar</a>).</p>
+<p>Tu reparto: <strong>ex00 → <code>map</code></strong>, <strong>ex01 → <code>stack</code> sobre <code>list</code></strong>, <strong>ex02 → <code>vector</code> + <code>deque</code></strong>.</p>
+<div class="call ok"><div class="t">Pregunta frecuente: ¿no estás reutilizando <code>deque</code>?</div>
+<p><code>std::stack&lt;int&gt;</code> está implementado por defecto sobre <code>std::deque&lt;int&gt;</code>. Si el RPN usara el <code>stack</code> por defecto, un evaluador estricto podría decir que el <code>deque</code> ya se usó en el ex01. Por eso el RPN declara <code>std::stack&lt;int, std::list&lt;int&gt; &gt;</code>: el segundo parámetro del template elige el contenedor interno. Así, en el módulo 09 cada contenedor aparece en un único ejercicio: <code>map</code> (ex00), <code>stack</code>+<code>list</code> (ex01), <code>vector</code>+<code>deque</code> (ex02).</p></div>
 
 <!-- ---------------- C09 ex00 ---------------- -->
 <h3 id="c09-ex00">ex00 · Bitcoin Exchange</h3>
@@ -1668,13 +1791,13 @@ Error: too large a number.</code></pre></div>
 
 <h4>Estructura y flujo</h4>
 <ol class="steps">
-  <li><code>main</code> comprueba que hay exactamente un argumento, crea un <code>BitcoinExchange</code>, carga <code>"data.csv"</code> y procesa el fichero del usuario.</li>
-  <li><code>loadDatabase</code> lee el CSV línea a línea y llena el <code>std::map&lt;std::string, float&gt;</code> <code>_database</code> (fecha → precio).</li>
+  <li><code>main</code> comprueba que hay exactamente un argumento; si no, imprime <code>Error: could not open file.</code>, como en el ejemplo del enunciado. Después crea un <code>BitcoinExchange</code> y carga <code>"data.csv"</code>. Si la base de datos no se puede abrir o está vacía, muestra un error y termina, porque sin precios no tiene sentido seguir.</li>
+  <li><code>loadDatabase</code> lee el CSV línea a línea, llena el <code>std::map&lt;std::string, double&gt;</code> <code>_database</code> (fecha → precio) y devuelve <code>bool</code> para indicar si ha ido bien.</li>
   <li><code>processInput</code> lee el fichero de entrada, valida cada línea (separador, fecha, valor, rango) e imprime el resultado o el error correspondiente.</li>
   <li><code>getRate</code> encuentra el precio de una fecha o el de la anterior más cercana.</li>
 </ol>
 
-<h4>¿Por qué <code>std::map&lt;std::string, float&gt;</code>?</h4>
+<h4>¿Por qué <code>std::map&lt;std::string, double&gt;</code>?</h4>
 <ul>
   <li>Cada fecha tiene un único precio: relación <strong>clave → valor</strong>.</li>
   <li><code>map</code> mantiene las claves <strong>ordenadas</strong> (internamente es un árbol binario equilibrado). Búsqueda, inserción y <code>lower_bound</code> son O(log n).</li>
@@ -1683,30 +1806,34 @@ Error: too large a number.</code></pre></div>
 
 <h4>Cargar la base de datos</h4>
 <div class="code"><pre><code class="language-cpp">std::ifstream file(filename.c_str());
-...
+if (!file.is_open())
+    return false;                         // main mostrará el error y saldrá
 std::getline(file, line);                 // salta la cabecera "date,exchange_rate"
 while (std::getline(file, line))
 {
+    line = trimRight(line);               // quita espacios y '\r' finales
+    if (line.empty())
+        continue;
     std::size_t sep = line.find(',');
     if (sep == std::string::npos)         // línea sin coma: se ignora
         continue;
     std::string date    = line.substr(0, sep);
     std::string rateStr = line.substr(sep + 1);
-    float rate = static_cast&lt;float&gt;(std::atof(rateStr.c_str()));
-    _database[date] = rate;               // inserta (o sobrescribe) la clave
-}</code></pre></div>
+    _database[date] = std::atof(rateStr.c_str());   // inserta (o sobrescribe)
+}
+return !_database.empty();</code></pre></div>
 <p><code>std::getline</code> lee hasta el salto de línea. <code>find</code> devuelve la posición del separador o <code>std::string::npos</code> si no está. <code>_database[date] = rate</code> usa el <code>operator[]</code> del map: si la clave no existe la crea; si existe, la sobrescribe.</p>
 
 <h4><code>getRate</code>: el corazón del ejercicio</h4>
-<div class="code"><pre><code class="language-cpp">float BitcoinExchange::getRate(const std::string &amp;date) const
+<div class="code"><pre><code class="language-cpp">double BitcoinExchange::getRate(const std::string &amp;date) const
 {
-    std::map&lt;std::string, float&gt;::const_iterator it = _database.lower_bound(date);
+    std::map&lt;std::string, double&gt;::const_iterator it = _database.lower_bound(date);
 
     if (it != _database.end() &amp;&amp; it-&gt;first == date)
         return it-&gt;second;          // 1) la fecha existe tal cual
 
     if (it == _database.begin())
-        return -1.0f;               // 2) no hay ninguna fecha anterior
+        return -1.0;                // 2) no hay ninguna fecha anterior
 
     --it;                           // 3) retrocede a la anterior más cercana
     return it-&gt;second;
@@ -1719,19 +1846,35 @@ while (std::getline(file, line))
   <span class="cell">2011-01-03</span><span class="cell hl">2011-01-07</span><span class="cell">2011-01-10</span><span class="arrow">← tras <code>--it</code>: la anterior más cercana ✔</span>
 </div>
 <p>Tres casos: si encuentra la fecha exacta la devuelve; si el resultado es <code>begin()</code> significa que todas las fechas de la BD son posteriores (la fecha es anterior a 2009) y no hay precio posible; en cualquier otro caso retrocede uno. Si la fecha es posterior a todas, <code>lower_bound</code> devuelve <code>end()</code> y <code>--it</code> lleva a la última, que es justo lo que queremos.</p>
-<p>Devuelve <code>-1.0f</code> como valor centinela de "no hay fecha". Funciona porque ningún precio real es negativo (en 2009 hay precios de 0, pero 0 no es menor que 0).</p>
+<p>Devuelve <code>-1.0</code> como valor centinela de "no hay fecha". Funciona porque ningún precio real es negativo (en 2009 hay precios de 0, pero 0 no es menor que 0).</p>
 
 <h4>Validación de la entrada</h4>
-<p><code>processInput</code> procesa cada línea en este orden (cada error hace <code>continue</code> y pasa a la siguiente línea):</p>
+<p><code>processInput</code> salta la primera línea solo si es exactamente la cabecera <code>date | value</code>. Así, un fichero sin cabecera no pierde su primera línea. Después procesa cada línea en este orden (cada error hace <code>continue</code> y pasa a la siguiente):</p>
 <div class="tw"><table>
 <tr><th>Comprobación</th><th>Cómo</th><th>Mensaje</th></tr>
 <tr><td>Separador <code>" | "</code></td><td><code>line.find(" | ")</code> devuelve <code>npos</code></td><td><code>Error: bad input => línea</code></td></tr>
-<tr><td>Fecha válida</td><td><code>isValidDate</code>: longitud 10, guiones en las posiciones 4 y 7, resto dígitos, mes 1‑12, día 1‑31</td><td><code>Error: bad input => línea</code></td></tr>
-<tr><td>Valor numérico y no negativo</td><td><code>isValidValue</code>: signo <code>-</code> opcional, dígitos, como mucho un <code>.</code>; después <code>atof</code></td><td><code>Error: not a positive number.</code></td></tr>
-<tr><td>Valor ≤ 1000</td><td><code>value &gt; 1000.0f</code></td><td><code>Error: too large a number.</code></td></tr>
+<tr><td>Fecha válida</td><td><code>isValidDate</code>: longitud 10, guiones en las posiciones 4 y 7, resto dígitos, mes 1‑12 y día entre 1 y el máximo de ese mes (febrero 29 solo en bisiesto)</td><td><code>Error: bad input => línea</code></td></tr>
+<tr><td>Valor con formato numérico</td><td><code>parseValue</code>: signo <code>-</code> opcional, dígitos, como mucho un <code>.</code>; después <code>atof</code></td><td><code>Error: bad input => línea</code></td></tr>
+<tr><td>Valor no negativo</td><td><code>value &lt; 0.0</code></td><td><code>Error: not a positive number.</code></td></tr>
+<tr><td>Valor ≤ 1000</td><td><code>value &gt; 1000.0</code></td><td><code>Error: too large a number.</code></td></tr>
 <tr><td>Hay fecha en la BD</td><td><code>getRate</code> devuelve <code>-1</code></td><td><code>Error: bad input => fecha</code></td></tr>
 </table></div>
-<p>En <code>isValidValue</code> el valor se devuelve a través de un <strong>parámetro por referencia</strong> (<code>float &amp;value</code>): la función devuelve <code>bool</code> (válido o no) y además rellena el número. Fíjate en que <code>2147483648</code> pasa la validación de formato y luego cae en "too large a number", como en el ejemplo del enunciado.</p>
+<p>Se distingue entre <strong>formato incorrecto</strong> (<code>abc</code>, <code>1.2.3</code>, vacío → <em>bad input</em>) y <strong>número negativo</strong> (<code>-1</code> → <em>not a positive number</em>). Por eso <code>parseValue</code> acepta el signo <code>-</code>: deja pasar el número para que luego se compruebe el signo y se dé el mensaje correcto.</p>
+<p>En <code>parseValue</code> el valor se devuelve a través de un <strong>parámetro por referencia</strong> (<code>double &amp;value</code>): la función devuelve <code>bool</code> (formato válido o no) y además rellena el número. <code>2147483648</code> tiene un formato válido y luego cae en "too large a number", como en el ejemplo del enunciado.</p>
+<h4>Fechas: días por mes y años bisiestos</h4>
+<div class="code"><pre><code class="language-cpp">static bool isLeapYear(int year)
+{
+    return (year % 4 == 0 &amp;&amp; year % 100 != 0) || year % 400 == 0;
+}
+...
+static const int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+int maxDay = daysInMonth[month - 1];
+if (month == 2 &amp;&amp; isLeapYear(year))
+    maxDay = 29;
+return day &gt;= 1 &amp;&amp; day &lt;= maxDay;</code></pre></div>
+<p>Un año es bisiesto si es divisible entre 4, salvo los divisibles entre 100, que solo lo son si también son divisibles entre 400 (2000 sí, 1900 no). Así, <code>2012-02-29</code> es válida y <code>2011-02-29</code> o <code>2011-02-30</code> dan <em>bad input</em>.</p>
+<h4>Precisión de la salida</h4>
+<p>Los precios y los valores se guardan en <code>double</code>, y antes de imprimir se hace <code>std::cout.precision(10)</code> (al terminar se restaura el valor anterior). Con la precisión por defecto (6 cifras significativas), <code>1000 × 47115.93</code> salía en notación científica: <code>4.71159e+07</code>. Con 10 cifras sale <code>47115930</code>, y los casos del enunciado siguen saliendo <code>0.9</code>, <code>0.36</code> o <code>7.1</code>. Además, <code>trimRight</code> elimina un <code>'\r'</code> final, así que también funcionan ficheros guardados con saltos de línea de Windows.</p>
 
 <h4>Salida real con el input del enunciado</h4>
 <div class="code"><pre><code class="language-text">2011-01-03 =&gt; 3 = 0.9
@@ -1741,8 +1884,17 @@ while (std::getline(file, line))
 2011-01-09 =&gt; 1 = 0.32
 Error: not a positive number.
 Error: bad input =&gt; 2001-42-42
-2012-01-11 =&gt; 1 = 5.5        &lt;- el enunciado da 7.1 (ver "Puntos a revisar": data.csv)
+2012-01-11 =&gt; 1 = 7.1
 Error: too large a number.</code></pre></div>
+<p>Es idéntica a la del enunciado. Algunos casos límite más:</p>
+<div class="code"><pre><code class="language-text">2011-02-30 | 5      -&gt; Error: bad input =&gt; 2011-02-30 | 5
+2012-02-29 | 1      -&gt; 2012-02-29 =&gt; 1 = 4.98          (2012 es bisiesto)
+2011-01-03 | abc    -&gt; Error: bad input =&gt; 2011-01-03 | abc
+2011-01-03 | -0.5   -&gt; Error: not a positive number.
+2008-01-01 | 1      -&gt; Error: bad input =&gt; 2008-01-01    (anterior a la BD)
+2022-03-29 | 1000   -&gt; 2022-03-29 =&gt; 1000 = 47115930
+2030-01-01 | 2      -&gt; 2030-01-01 =&gt; 2 = 94231.86        (usa la última fecha)
+./btc               -&gt; Error: could not open file.</code></pre></div>
 <details class="src"><summary><span class="fname">C09/ex00/BitcoinExchange.hpp</span> <span class="muted">· código completo (26 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
@@ -1782,19 +1934,19 @@ public:
     BitcoinExchange &amp;operator=(const BitcoinExchange &amp;other);
     ~BitcoinExchange();
 
-    void loadDatabase(const std::string &amp;filename);
-    void processInput(const std::string &amp;filename);
+    bool loadDatabase(const std::string &amp;filename);
+    void processInput(const std::string &amp;filename) const;
 
 private:
-    std::map&lt;std::string, float&gt; _database;
+    std::map&lt;std::string, double&gt; _database;
 
-    float getRate(const std::string &amp;date) const;
-    bool  isValidDate(const std::string &amp;date) const;
-    bool  isValidValue(const std::string &amp;valueStr, float &amp;value) const;
+    double getRate(const std::string &amp;date) const;
+    bool   isValidDate(const std::string &amp;date) const;
+    bool   parseValue(const std::string &amp;valueStr, double &amp;value) const;
 };
 
 #endif</code></pre></div></details>
-<details class="src"><summary><span class="fname">C09/ex00/BitcoinExchange.cpp</span> <span class="muted">· código completo (203 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+<details class="src"><summary><span class="fname">C09/ex00/BitcoinExchange.cpp</span> <span class="muted">· código completo (207 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
 4
@@ -1996,7 +2148,11 @@ private:
 200
 201
 202
-203</pre><pre><code class="language-cpp">#include "BitcoinExchange.hpp"
+203
+204
+205
+206
+207</pre><pre><code class="language-cpp">#include "BitcoinExchange.hpp"
 #include &lt;fstream&gt;
 #include &lt;iostream&gt;
 #include &lt;cstdlib&gt;
@@ -2015,20 +2171,27 @@ BitcoinExchange &amp;BitcoinExchange::operator=(const BitcoinExchange &amp;other
 
 BitcoinExchange::~BitcoinExchange() {}
 
-void BitcoinExchange::loadDatabase(const std::string &amp;filename)
+// Removes trailing spaces, tabs and '\r' (files saved with Windows line endings)
+static std::string trimRight(const std::string &amp;s)
+{
+    std::size_t end = s.find_last_not_of(" \t\r");
+    if (end == std::string::npos)
+        return "";
+    return s.substr(0, end + 1);
+}
+
+bool BitcoinExchange::loadDatabase(const std::string &amp;filename)
 {
     std::ifstream file(filename.c_str());
     if (!file.is_open())
-    {
-        std::cout &lt;&lt; "Error: could not open file." &lt;&lt; std::endl;
-        return;
-    }
+        return false;
 
     std::string line;
-    std::getline(file, line); // skip header
+    std::getline(file, line); // skip header "date,exchange_rate"
 
     while (std::getline(file, line))
     {
+        line = trimRight(line);
         if (line.empty())
             continue;
 
@@ -2039,24 +2202,29 @@ void BitcoinExchange::loadDatabase(const std::string &amp;filename)
         std::string date = line.substr(0, sep);
         std::string rateStr = line.substr(sep + 1);
 
-        float rate = static_cast&lt;float&gt;(std::atof(rateStr.c_str()));
-        _database[date] = rate;
+        _database[date] = std::atof(rateStr.c_str());
     }
     file.close();
+    return !_database.empty();
 }
 
-float BitcoinExchange::getRate(const std::string &amp;date) const
+double BitcoinExchange::getRate(const std::string &amp;date) const
 {
-    std::map&lt;std::string, float&gt;::const_iterator it = _database.lower_bound(date);
+    std::map&lt;std::string, double&gt;::const_iterator it = _database.lower_bound(date);
 
     if (it != _database.end() &amp;&amp; it-&gt;first == date)
         return it-&gt;second;
 
     if (it == _database.begin())
-        return -1.0f; // no earlier date exists
+        return -1.0; // no earlier date exists
 
     --it;
     return it-&gt;second;
+}
+
+static bool isLeapYear(int year)
+{
+    return (year % 4 == 0 &amp;&amp; year % 100 != 0) || year % 400 == 0;
 }
 
 bool BitcoinExchange::isValidDate(const std::string &amp;date) const
@@ -2074,37 +2242,34 @@ bool BitcoinExchange::isValidDate(const std::string &amp;date) const
             return false;
     }
 
+    int year  = std::atoi(date.substr(0, 4).c_str());
     int month = std::atoi(date.substr(5, 2).c_str());
     int day   = std::atoi(date.substr(8, 2).c_str());
 
     if (month &lt; 1 || month &gt; 12)
         return false;
-    if (day &lt; 1 || day &gt; 31)
-        return false;
 
-    return true;
+    static const int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int maxDay = daysInMonth[month - 1];
+    if (month == 2 &amp;&amp; isLeapYear(year))
+        maxDay = 29;
+
+    return day &gt;= 1 &amp;&amp; day &lt;= maxDay;
 }
 
-bool BitcoinExchange::isValidValue(const std::string &amp;valueStr, float &amp;value) const
+// Checks that valueStr is a number: optional '-', digits and at most one '.'.
+// Returns false if the format is wrong. The sign and range are checked by the caller.
+bool BitcoinExchange::parseValue(const std::string &amp;valueStr, double &amp;value) const
 {
-    if (valueStr.empty())
-        return false;
-
-    // Check for leading whitespace
     std::size_t start = valueStr.find_first_not_of(" \t");
     if (start == std::string::npos)
         return false;
 
     std::string trimmed = valueStr.substr(start);
 
-    // Validate characters: optional leading '-', digits, optional single '.'
     std::size_t i = 0;
-    bool negative = false;
     if (trimmed[i] == '-')
-    {
-        negative = true;
         ++i;
-    }
 
     bool hasDot = false;
     bool hasDigit = false;
@@ -2117,27 +2282,19 @@ bool BitcoinExchange::isValidValue(const std::string &amp;valueStr, float &amp;v
             hasDot = true;
         }
         else if (trimmed[i] &gt;= '0' &amp;&amp; trimmed[i] &lt;= '9')
-        {
             hasDigit = true;
-        }
         else
-        {
             return false;
-        }
     }
 
     if (!hasDigit)
         return false;
 
-    value = static_cast&lt;float&gt;(std::atof(trimmed.c_str()));
-
-    if (negative || value &lt; 0.0f)
-        return false; // not a positive number (handled as "not a positive number")
-
+    value = std::atof(trimmed.c_str());
     return true;
 }
 
-void BitcoinExchange::processInput(const std::string &amp;filename)
+void BitcoinExchange::processInput(const std::string &amp;filename) const
 {
     std::ifstream file(filename.c_str());
     if (!file.is_open())
@@ -2146,11 +2303,20 @@ void BitcoinExchange::processInput(const std::string &amp;filename)
         return;
     }
 
-    std::string line;
-    std::getline(file, line); // skip header
+    // Enough significant digits to avoid scientific notation (e.g. 4.4e+07)
+    std::streamsize oldPrecision = std::cout.precision(10);
 
+    std::string line;
+    bool firstLine = true;
     while (std::getline(file, line))
     {
+        line = trimRight(line);
+        if (firstLine)
+        {
+            firstLine = false;
+            if (line == "date | value")
+                continue; // header
+        }
         if (line.empty())
             continue;
 
@@ -2164,32 +2330,25 @@ void BitcoinExchange::processInput(const std::string &amp;filename)
         std::string date     = line.substr(0, sep);
         std::string valueStr = line.substr(sep + 3);
 
-        if (!isValidDate(date))
+        double value = 0.0;
+        if (!isValidDate(date) || !parseValue(valueStr, value))
         {
             std::cout &lt;&lt; "Error: bad input =&gt; " &lt;&lt; line &lt;&lt; std::endl;
             continue;
         }
-
-        float value = 0.0f;
-        if (!isValidValue(valueStr, value))
+        if (value &lt; 0.0)
         {
-            // Determine which error: negative or bad format
-            std::size_t start = valueStr.find_first_not_of(" \t");
-            if (start != std::string::npos &amp;&amp; valueStr[start] == '-')
-                std::cout &lt;&lt; "Error: not a positive number." &lt;&lt; std::endl;
-            else
-                std::cout &lt;&lt; "Error: not a positive number." &lt;&lt; std::endl;
+            std::cout &lt;&lt; "Error: not a positive number." &lt;&lt; std::endl;
             continue;
         }
-
-        if (value &gt; 1000.0f)
+        if (value &gt; 1000.0)
         {
             std::cout &lt;&lt; "Error: too large a number." &lt;&lt; std::endl;
             continue;
         }
 
-        float rate = getRate(date);
-        if (rate &lt; 0.0f)
+        double rate = getRate(date);
+        if (rate &lt; 0.0)
         {
             std::cout &lt;&lt; "Error: bad input =&gt; " &lt;&lt; date &lt;&lt; std::endl;
             continue;
@@ -2197,9 +2356,10 @@ void BitcoinExchange::processInput(const std::string &amp;filename)
 
         std::cout &lt;&lt; date &lt;&lt; " =&gt; " &lt;&lt; value &lt;&lt; " = " &lt;&lt; value * rate &lt;&lt; std::endl;
     }
+    std::cout.precision(oldPrecision);
     file.close();
 }</code></pre></div></details>
-<details class="src"><summary><span class="fname">C09/ex00/main.cpp</span> <span class="muted">· código completo (17 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+<details class="src"><summary><span class="fname">C09/ex00/main.cpp</span> <span class="muted">· código completo (21 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
 4
@@ -2215,19 +2375,27 @@ void BitcoinExchange::processInput(const std::string &amp;filename)
 14
 15
 16
-17</pre><pre><code class="language-cpp">#include "BitcoinExchange.hpp"
+17
+18
+19
+20
+21</pre><pre><code class="language-cpp">#include "BitcoinExchange.hpp"
 #include &lt;iostream&gt;
 
 int main(int argc, char **argv)
 {
     if (argc != 2)
     {
-        std::cout &lt;&lt; "Usage: btc &lt;input_file&gt;" &lt;&lt; std::endl;
+        std::cout &lt;&lt; "Error: could not open file." &lt;&lt; std::endl;
         return 1;
     }
 
     BitcoinExchange btc;
-    btc.loadDatabase("data.csv");
+    if (!btc.loadDatabase("data.csv"))
+    {
+        std::cout &lt;&lt; "Error: could not load database data.csv." &lt;&lt; std::endl;
+        return 1;
+    }
     btc.processInput(argv[1]);
 
     return 0;
@@ -2237,7 +2405,9 @@ int main(int argc, char **argv)
 <details class="qa"><summary>¿Por qué no un <code>vector</code> de pares?</summary><div class="a"><p>Funcionaría si lo ordenas y usas <code>std::lower_bound</code>, pero tendrías que ordenarlo tú y gestionar duplicados. <code>map</code> te da el orden y la unicidad de claves automáticamente y tiene su propio <code>lower_bound</code> en O(log n).</p></div></details>
 <details class="qa"><summary>¿Qué diferencia hay entre <code>lower_bound</code> y <code>upper_bound</code>?</summary><div class="a"><p><code>lower_bound(k)</code>: primer elemento con clave ≥ k. <code>upper_bound(k)</code>: primer elemento con clave &gt; k. Otra forma válida de escribir <code>getRate</code> sería <code>it = upper_bound(date); --it;</code> (comprobando antes que <code>it != begin()</code>), y así no necesitas el caso de la coincidencia exacta.</p></div></details>
 <details class="qa"><summary>¿Por qué usar <code>map.lower_bound</code> y no <code>std::lower_bound</code>?</summary><div class="a"><p>El método del map aprovecha la estructura de árbol: O(log n). <code>std::lower_bound</code> con iteradores bidireccionales tiene que avanzar paso a paso: O(n) movimientos.</p></div></details>
-<details class="qa"><summary>¿Qué pasa con <code>2011-02-30</code>?</summary><div class="a"><p>Tu <code>isValidDate</code> solo comprueba que el día esté entre 1 y 31, así que la acepta y usa el precio del 2011‑02‑28 (o anterior). Ver <a href="#revisar">Puntos a revisar</a> para añadir días por mes y años bisiestos.</p></div></details>
+<details class="qa"><summary>¿Qué pasa con <code>2011-02-30</code>?</summary><div class="a"><p>Da <code>Error: bad input</code>: <code>isValidDate</code> comprueba el número de días de cada mes y si el año es bisiesto.</p></div></details>
+<details class="qa"><summary>¿Por qué <code>double</code> y no <code>float</code>?</summary><div class="a"><p><code>float</code> solo tiene unas 7 cifras significativas. Con precios como 47115.93 multiplicados por cantidades con decimales se pierde precisión, y al imprimir con más cifras aparecerían restos del redondeo (<code>0.9000000358</code>). <code>double</code> tiene unas 15‑16 cifras, de sobra para este programa.</p></div></details>
+<details class="qa"><summary>¿Qué pasa si ejecuto <code>btc</code> desde otra carpeta?</summary><div class="a"><p><code>"data.csv"</code> es una ruta relativa al directorio actual. Si no lo encuentra, <code>loadDatabase</code> devuelve <code>false</code> y el programa muestra <code>Error: could not load database data.csv.</code> y termina. Hay que ejecutarlo desde <code>ex00/</code>.</p></div></details>
 
 <!-- ---------------- C09 ex01 ---------------- -->
 <h3 id="c09-ex01">ex01 · Reverse Polish Notation (RPN)</h3>
@@ -2276,7 +2446,11 @@ Error</code></pre></div>
 </table></div>
 
 <h4>El código</h4>
-<div class="code"><pre><code class="language-cpp">std::istringstream iss(expression);
+<div class="code"><pre><code class="language-cpp">// RPN.hpp
+std::stack&lt;int, std::list&lt;int&gt; &gt; _stack;      // pila implementada sobre una lista
+
+// RPN.cpp
+std::istringstream iss(expression);
 std::string token;
 while (iss &gt;&gt; token)
 {
@@ -2286,11 +2460,14 @@ while (iss &gt;&gt; token)
     {
         if (_stack.size() &lt; 2)
             throw std::runtime_error("Error");
-        int b = _stack.top(); _stack.pop();   // b: el de arriba (segundo operando)
-        int a = _stack.top(); _stack.pop();   // a: el de abajo (primer operando)
-        ...
+        long b = _stack.top(); _stack.pop();  // b: el de arriba (segundo operando)
+        long a = _stack.top(); _stack.pop();  // a: el de abajo (primer operando)
+        long result = 0;
+        ...                                   // + - * /  (en long)
         if (b == 0) throw std::runtime_error("Error");   // solo en la división
-        _stack.push(result);
+        if (result &gt; INT_MAX || result &lt; INT_MIN)
+            throw std::runtime_error("Error");           // no cabe en un int
+        _stack.push(static_cast&lt;int&gt;(result));
     }
     else
         throw std::runtime_error("Error");
@@ -2303,7 +2480,9 @@ return _stack.top();</code></pre></div>
   <li><strong><code>token.size() == 1</code></strong>: garantiza que solo se aceptan dígitos sueltos (0‑9), como dice el enunciado. <code>"12"</code> da error.</li>
   <li><strong><code>token[0] - '0'</code></strong>: convierte el carácter a su valor numérico ('7' es 55 en ASCII, '0' es 48 → 7).</li>
   <li><strong>El orden importa:</strong> lo primero que sacas es <code>b</code> (el operando de la derecha). En <code>"9 3 -"</code> la pila es [9, 3]: sacas b = 3 y luego a = 9 → 9 − 3 = 6. Si los invirtieras darías −6.</li>
-  <li><strong>Errores</strong>: menos de dos operandos al encontrar un operador, división por cero, token desconocido (por ejemplo <code>(</code>) o que no quede exactamente un valor al final. Se lanzan como <code>std::runtime_error("Error")</code> y el <code>main</code> los captura y los imprime por <code>std::cerr</code>.</li>
+  <li><strong><code>std::stack&lt;int, std::list&lt;int&gt; &gt;</code></strong>: el segundo parámetro de <code>std::stack</code> elige el contenedor que usa por dentro. Por defecto es <code>std::deque</code>, pero aquí se usa <code>std::list</code> para dejar <code>deque</code> libre para el ex02. <code>list</code> tiene <code>push_back</code>, <code>pop_back</code> y <code>back</code>, que es todo lo que <code>stack</code> necesita.</li>
+  <li><strong>Desbordamiento</strong>: las operaciones se hacen en <code>long</code> (64 bits), donde el producto o la suma de dos <code>int</code> siempre cabe. Si el resultado se sale del rango de <code>int</code>, es un error. Sin esto, <code>9 9 9 9 9 9 9 9 9 9 * * * * * * * * *</code> (9¹⁰) daba <code>-808182895</code>.</li>
+  <li><strong>Errores</strong>: menos de dos operandos al encontrar un operador, división por cero, desbordamiento, token desconocido (por ejemplo <code>(</code>) o que no quede exactamente un valor al final. Se lanzan como <code>std::runtime_error("Error")</code> y el <code>main</code> los captura y los imprime por <code>std::cerr</code>.</li>
   <li>Al principio de <code>evaluate</code> vacías la pila por si el objeto se reutiliza (<code>std::stack</code> no tiene <code>clear()</code>, por eso el bucle de <code>pop</code>).</li>
 </ul>
 <div class="code"><pre><code class="language-text">"8 9 * 9 - 9 - 9 - 4 - 1 +"  -&gt; 42
@@ -2314,8 +2493,10 @@ return _stack.top();</code></pre></div>
 "1 +"                        -&gt; Error   (faltan operandos)
 "1 2"                        -&gt; Error   (sobran operandos)
 ""                           -&gt; Error
-"12 3 +"                     -&gt; Error   (número de dos cifras)</code></pre></div>
-<details class="src"><summary><span class="fname">C09/ex01/RPN.hpp</span> <span class="muted">· código completo (21 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+"12 3 +"                     -&gt; Error   (número de dos cifras)
+"9 9 9 9 9 9 9 9 9 * * * * * * * *"        -&gt; 387420489   (9⁹ cabe en un int)
+"9 9 9 9 9 9 9 9 9 9 * * * * * * * * *"    -&gt; Error       (9¹⁰ no cabe)</code></pre></div>
+<details class="src"><summary><span class="fname">C09/ex01/RPN.hpp</span> <span class="muted">· código completo (24 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
 4
@@ -2335,10 +2516,14 @@ return _stack.top();</code></pre></div>
 18
 19
 20
-21</pre><pre><code class="language-cpp">#ifndef RPN_HPP
+21
+22
+23
+24</pre><pre><code class="language-cpp">#ifndef RPN_HPP
 #define RPN_HPP
 
 #include &lt;stack&gt;
+#include &lt;list&gt;
 #include &lt;string&gt;
 
 class RPN
@@ -2352,11 +2537,13 @@ public:
     int evaluate(const std::string &amp;expression);
 
 private:
-    std::stack&lt;int&gt; _stack;
+    // std::stack uses std::deque by default; std::list is used instead so that
+    // deque stays available for ex02 (a container cannot be reused in the module).
+    std::stack&lt;int, std::list&lt;int&gt; &gt; _stack;
 };
 
 #endif</code></pre></div></details>
-<details class="src"><summary><span class="fname">C09/ex01/RPN.cpp</span> <span class="muted">· código completo (66 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+<details class="src"><summary><span class="fname">C09/ex01/RPN.cpp</span> <span class="muted">· código completo (70 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
 4
@@ -2421,9 +2608,14 @@ private:
 63
 64
 65
-66</pre><pre><code class="language-cpp">#include "RPN.hpp"
+66
+67
+68
+69
+70</pre><pre><code class="language-cpp">#include "RPN.hpp"
 #include &lt;sstream&gt;
 #include &lt;stdexcept&gt;
+#include &lt;climits&gt;
 
 RPN::RPN() {}
 
@@ -2458,10 +2650,11 @@ int RPN::evaluate(const std::string &amp;expression)
             if (_stack.size() &lt; 2)
                 throw std::runtime_error("Error");
 
-            int b = _stack.top(); _stack.pop();
-            int a = _stack.top(); _stack.pop();
+            long b = _stack.top(); _stack.pop();
+            long a = _stack.top(); _stack.pop();
 
-            int result = 0;
+            // Computed in long so that an int overflow can be detected
+            long result = 0;
             if (token == "+")
                 result = a + b;
             else if (token == "-")
@@ -2474,7 +2667,9 @@ int RPN::evaluate(const std::string &amp;expression)
                     throw std::runtime_error("Error");
                 result = a / b;
             }
-            _stack.push(result);
+            if (result &gt; INT_MAX || result &lt; INT_MIN)
+                throw std::runtime_error("Error");
+            _stack.push(static_cast&lt;int&gt;(result));
         }
         else
         {
@@ -2539,9 +2734,10 @@ int main(int argc, char **argv)
 
 <h4>Preguntas típicas</h4>
 <details class="qa"><summary>¿Por qué <code>stack</code> y no otro contenedor?</summary><div class="a"><p>Porque el algoritmo solo necesita acceder al último elemento añadido. <code>stack</code> expresa exactamente esa intención y no permite hacer nada más, lo que evita errores.</p></div></details>
+<details class="qa"><summary>¿Por qué <code>std::list</code> debajo del <code>stack</code>?</summary><div class="a"><p>Por la regla de no reutilizar contenedores: el <code>stack</code> por defecto usa <code>deque</code>, y <code>deque</code> se usa en el ex02. Con <code>list</code> no hay discusión posible. Funcionalmente es igual: <code>push</code>, <code>pop</code> y <code>top</code> son O(1) con cualquiera de los dos.</p></div></details>
 <details class="qa"><summary>¿La división es entera?</summary><div class="a"><p>Sí, se trabaja con <code>int</code>, así que <code>"7 2 /"</code> da 3 (trunca hacia cero). El enunciado dice que no hace falta gestionar decimales.</p></div></details>
 <details class="qa"><summary>¿Y los números negativos en la entrada?</summary><div class="a"><p>No se aceptan: <code>"-3"</code> tiene longitud 2 y no es un operador, así que da Error. Para obtener un negativo se escribe <code>"0 3 -"</code>. Los resultados intermedios sí pueden ser negativos.</p></div></details>
-<details class="qa"><summary>¿Qué pasa si el resultado no cabe en un <code>int</code>?</summary><div class="a"><p>Hay desbordamiento (comportamiento indefinido con enteros con signo). Por ejemplo, multiplicar diez nueves da un número sin sentido. Ver <a href="#revisar">Puntos a revisar</a>.</p></div></details>
+<details class="qa"><summary>¿Qué pasa si el resultado no cabe en un <code>int</code>?</summary><div class="a"><p>Se muestra <code>Error</code>. Cada operación se calcula en <code>long</code> y se comprueba contra <code>INT_MIN</code>/<code>INT_MAX</code> (de <code>&lt;climits&gt;</code>) antes de apilar el resultado. El desbordamiento de enteros con signo es comportamiento indefinido en C++, así que hay que detectarlo antes de que ocurra, no después.</p></div></details>
 
 <!-- ---------------- C09 ex02 ---------------- -->
 <h3 id="c09-ex02">ex02 · PmergeMe (Ford-Johnson)</h3>
@@ -2570,7 +2766,7 @@ Error</code></pre></div>
   <li><strong>Ordenar los ganadores recursivamente</strong> con el mismo algoritmo. Ahora tienes la "cadena principal" ordenada: a₁ ≤ a₂ ≤ … ≤ aₙ.</li>
   <li><strong>Insertar b₁ al principio gratis.</strong> b₁ ≤ a₁ y a₁ es el menor de la cadena, así que b₁ va delante sin comparar.</li>
   <li><strong>Insertar el resto de perdedores con búsqueda binaria</strong>, cada uno solo en la parte de la cadena que está a la izquierda de su ganador (porque bₖ ≤ aₖ). El orden en que se insertan sigue la <strong>secuencia de Jacobsthal</strong>.</li>
-  <li><strong>Insertar el straggler</strong> con búsqueda binaria en toda la cadena.</li>
+  <li><strong>El straggler</strong> se trata como un perdedor más, el último (b<sub>n/2+1</sub>), pero sin ganador: se inserta en su turno de Jacobsthal buscando en toda la cadena.</li>
 </ol>
 
 <h4>¿Por qué el orden de Jacobsthal?</h4>
@@ -2585,25 +2781,34 @@ Error</code></pre></div>
 <tr><td>Parejas (ganador, perdedor)</td><td>(5, 3) y (9, 7)</td></tr>
 <tr><td>Ordenar ganadores (recursión)</td><td>[5, 9] (n = 2: un solo <code>swap</code> si hace falta)</td></tr>
 <tr><td>Cadena + b₁ delante</td><td><span class="cell hl">3</span> <span class="cell">5</span> <span class="cell">9</span></td></tr>
-<tr><td>Insertar b₂ = 7 buscando solo hasta su ganador 9</td><td><span class="cell">3</span> <span class="cell">5</span> <span class="cell hl">7</span> <span class="cell">9</span></td></tr>
-<tr><td>Insertar straggler 4 en toda la cadena</td><td><span class="cell">3</span> <span class="cell hl">4</span> <span class="cell">5</span> <span class="cell">7</span> <span class="cell">9</span></td></tr>
+<tr><td>Pendientes: b₂ = 7 y b₃ = straggler 4. El grupo de Jacobsthal (b₃, b₂) se inserta de mayor a menor índice</td><td>orden: b₃ y luego b₂</td></tr>
+<tr><td>Insertar b₃ = 4 (sin ganador → toda la cadena)</td><td><span class="cell">3</span> <span class="cell hl">4</span> <span class="cell">5</span> <span class="cell">9</span></td></tr>
+<tr><td>Insertar b₂ = 7 buscando solo antes de su ganador 9</td><td><span class="cell">3</span> <span class="cell">4</span> <span class="cell">5</span> <span class="cell hl">7</span> <span class="cell">9</span></td></tr>
 </table></div>
+<p>Total: 2 comparaciones para las parejas, 1 en la recursión, 2 para insertar el 4 y 2 para el 7: <strong>7 comparaciones</strong>, justo el mínimo de Ford-Johnson para 5 elementos.</p>
 
 <h4>Tu implementación, función a función</h4>
-<p><strong>Parseo y validación (<code>sortAndDisplay</code>).</strong></p>
-<div class="code"><pre><code class="language-cpp">std::istringstream iss(argv[i]);
-long val;
-iss &gt;&gt; val;
-if (iss.fail() || !iss.eof() || val &lt; 0)   // no numérico, basura detrás, o negativo
+<p><strong>Parseo y validación (<code>parseNumber</code>).</strong></p>
+<div class="code"><pre><code class="language-cpp">bool PmergeMe::parseNumber(const char *str, int &amp;out)
 {
-    std::cerr &lt;&lt; "Error" &lt;&lt; std::endl;
-    return;
-}
-_vec.push_back(static_cast&lt;int&gt;(val));
-_deq.push_back(static_cast&lt;int&gt;(val));</code></pre></div>
-<p><code>iss.fail()</code> detecta que no empieza por un número (<code>"abc"</code>, <code>""</code>); <code>!iss.eof()</code> detecta restos detrás (<code>"12abc"</code>); <code>val &lt; 0</code> rechaza negativos. Los duplicados se aceptan (decisión libre según el enunciado). Los datos se guardan en los dos contenedores.</p>
+    std::istringstream iss(str);
+    long val;
+    iss &gt;&gt; val;
+    if (iss.fail() || !iss.eof() || val &lt; 0 || val &gt; INT_MAX)
+        return false;
+    out = static_cast&lt;int&gt;(val);
+    return true;
+}</code></pre></div>
+<p><code>iss.fail()</code> detecta que no empieza por un número (<code>"abc"</code>, <code>""</code>) o que no cabe ni en un <code>long</code>; <code>!iss.eof()</code> detecta restos detrás (<code>"12abc"</code>); <code>val &lt; 0</code> rechaza negativos y <code>val &gt; INT_MAX</code> rechaza los que no caben en un <code>int</code>. Se lee en <code>long</code> justamente para poder comparar con <code>INT_MAX</code>: si se leyera en <code>int</code>, el valor ya estaría corrompido. Los duplicados se aceptan (decisión libre según el enunciado).</p>
 
-<p><strong>Medición del tiempo.</strong> <code>gettimeofday</code> antes y después de ordenar cada contenedor; la diferencia en microsegundos es <code>(seg_fin − seg_ini)·10⁶ + (us_fin − us_ini)</code>.</p>
+<p><strong>Medición del tiempo (<code>sortAndDisplay</code>).</strong></p>
+<ol class="steps">
+  <li>Primero se validan todos los argumentos. Si alguno falla, se muestra <code>Error</code> y no se hace nada más.</li>
+  <li>Se imprime la línea <code>Before:</code>.</li>
+  <li><strong>Cronómetro del vector:</strong> <code>gettimeofday</code> → parsear los argumentos y rellenar el <code>vector</code> → <code>fordJohnsonVec</code> → <code>gettimeofday</code>.</li>
+  <li><strong>Cronómetro del deque:</strong> lo mismo con el <code>deque</code>.</li>
+</ol>
+<p>Así cada tiempo incluye la <strong>gestión de datos</strong> (convertir el texto y llenar el contenedor) y la <strong>ordenación</strong>, como pide el enunciado. La diferencia en microsegundos se calcula como <code>(seg_fin − seg_ini)·10⁶ + (us_fin − us_ini)</code>.</p>
 
 <p><strong><code>fordJohnsonVec</code> (y su gemela <code>fordJohnsonDeq</code>).</strong></p>
 <div class="code"><pre><code class="language-cpp">if (n &lt;= 1) return;                                  // caso base
@@ -2619,17 +2824,48 @@ fordJohnsonVec(winners);                             // 3) recursión sobre los 
 
 // re-asocia cada ganador ordenado con su pareja original (búsqueda por valor)
 ...
-chain = ganadores ordenados;
-chain.insert(chain.begin(), pairs[0].second);        // 4) b1 delante, sin comparar
-insertLosersVec(chain, pairs, *this);                // 5) resto de perdedores (Jacobsthal)
-if (hasStraggler)
-    binaryInsertVec(chain, straggler, chain.size()); // 6) straggler
+chain.push_back(sortedPairs[0].second);              // 4) b1 delante, sin comparar
+for (i...) chain.push_back(sortedPairs[i].first);    //    + los ganadores ordenados
+insertLosersVec(chain, sortedPairs,                  // 5) resto de perdedores y el
+                hasStraggler, straggler);            //    straggler, en orden Jacobsthal
 seq = chain;</code></pre></div>
 <ul>
   <li><strong><code>std::pair&lt;int,int&gt;</code></strong> guarda (ganador, perdedor). <code>first</code> es el mayor.</li>
-  <li><strong>Re-asociar tras la recursión:</strong> la llamada recursiva solo ordena los valores de los ganadores y "pierde" a qué perdedor iba unido cada uno. Lo recuperas buscando, para cada ganador ordenado, la primera pareja no usada con ese valor (<code>matched[]</code> evita usar dos veces la misma pareja si hay duplicados).</li>
-  <li><strong><code>insertLosersVec</code></strong> recorre los grupos de Jacobsthal, y para cada perdedor localiza la posición de su ganador en la cadena y limita la búsqueda binaria a <code>[0, posición_ganador]</code>. Al final hay un bucle de seguridad que inserta cualquier perdedor que se haya quedado sin insertar.</li>
+  <li><strong>Re-asociar tras la recursión:</strong> la llamada recursiva solo ordena los valores de los ganadores y "pierde" a qué perdedor iba unido cada uno. Lo recuperas buscando, para cada ganador ordenado, la primera pareja no usada con ese valor (<code>used[]</code> evita usar dos veces la misma pareja si hay duplicados).</li>
+  <li><strong><code>insertLosersVec</code></strong> recorre los grupos de Jacobsthal (ver abajo). Para cada perdedor localiza su ganador en la cadena con <code>std::find</code> y limita la búsqueda binaria a <code>[0, posición_ganador)</code>.</li>
 </ul>
+
+<p><strong><code>insertLosersVec</code>: el orden de Jacobsthal en código.</strong></p>
+<div class="code"><pre><code class="language-cpp">// Pendientes: b2 .. b_numPairs (+ el straggler como último perdedor)
+size_t pendingSize = pairs.size() - 1 + (hasStraggler ? 1 : 0);
+
+for (size_t k = 3; ; ++k)
+{
+    size_t jPrev = jacobsthal(k - 1);
+    size_t jCurr = jacobsthal(k);
+
+    // Este grupo inserta b_{jCurr} bajando hasta b_{jPrev + 1}
+    size_t first = jPrev - 1;                 // índice de pendiente del menor
+    if (first &gt;= pendingSize)
+        break;                                // ya no quedan pendientes
+    size_t last = std::min(jCurr, pendingSize + 1) - 2;   // recorta el último grupo
+
+    for (size_t p = last + 1; p &gt; first; --p) // p = índice en pairs de b_{p+1}
+    {
+        if (p == pairs.size())                // es el straggler: sin ganador
+        {
+            binaryInsertVec(chain, straggler, chain.size());
+            continue;
+        }
+        size_t pos = std::find(chain.begin(), chain.end(), pairs[p].first) - chain.begin();
+        binaryInsertVec(chain, pairs[p].second, pos);     // busca solo en [0, pos)
+    }
+}</code></pre></div>
+<p>Con k = 3, 4, 5… los pares (J(k−1), J(k)) son (1, 3), (3, 5), (5, 11), (11, 21)… El grupo k inserta de b<sub>J(k)</sub> hacia abajo hasta b<sub>J(k−1)+1</sub>: <code>b3 b2</code>, luego <code>b5 b4</code>, luego <code>b11 … b6</code>. Como b<sub>i</sub> está en <code>pairs[i−1]</code>, la variable <code>p</code> va de <code>last + 1</code> a <code>first + 1</code>. El último grupo se recorta con <code>std::min</code> si no hay tantos perdedores. El bucle termina cuando el primer índice de un grupo ya no existe.</p>
+<p>Si el número de elementos era impar, el straggler cuenta como el perdedor b<sub>numPairs+1</sub> y entra en su grupo como uno más. Como no tiene ganador, se busca en toda la cadena. Insertarlo al final, como hacía la primera versión, costaba en algunos casos una comparación de más.</p>
+<p>Ejecución instrumentada con 22 y 23 elementos. Es el orden canónico de Ford-Johnson:</p>
+<div class="code"><pre><code class="language-text">22 elementos (11 parejas):            b3 b2 b5 b4 b11 b10 b9 b8 b7 b6
+23 elementos (11 parejas + straggler): b3 b2 b5 b4 b11 b10 b9 b8 b7 b6 b12</code></pre></div>
 
 <p><strong><code>binaryInsertVec</code>: búsqueda binaria + inserción.</strong></p>
 <div class="code"><pre><code class="language-cpp">size_t lo = 0, hi = end;
@@ -2643,10 +2879,12 @@ seq.insert(seq.begin() + lo, val);</code></pre></div>
 <p>Encuentra la primera posición cuyo elemento es ≥ <code>val</code> dentro de <code>[0, end)</code>: es lo mismo que hace <code>std::lower_bound</code>, escrito a mano. Luego <code>insert</code> desplaza los elementos siguientes.</p>
 
 <h4>¿Por qué <code>vector</code> y <code>deque</code>?</h4>
-<p>Los dos tienen acceso por índice en O(1), necesario para la búsqueda binaria. <code>vector</code> es un bloque contiguo: muy amigable con la caché. <code>deque</code> son varios bloques: el acceso por índice es O(1) pero con una indirección extra, e insertar por delante (<code>push_front</code>, que usas para b₁) es O(1). En la práctica <code>vector</code> suele salir algo más rápido. Con 3000 números aleatorios obtuve:</p>
-<div class="code"><pre><code class="language-text">Time to process a range of 3000 elements with std::vector : 26169 us
-Time to process a range of 3000 elements with std::deque  : 26601 us</code></pre></div>
-<details class="src"><summary><span class="fname">C09/ex02/PmergeMe.hpp</span> <span class="muted">· código completo (31 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+<p>Los dos tienen acceso por índice en O(1), necesario para la búsqueda binaria. <code>vector</code> es un único bloque contiguo; <code>deque</code> son varios bloques, con una indirección extra en cada acceso, e insertar por delante (<code>push_front</code>, que se usa para b₁) es O(1). La versión <code>deque</code> usa solo <code>deque</code>, también para las parejas (<code>std::deque&lt;std::pair&lt;int,int&gt; &gt;</code>) y las marcas (<code>std::deque&lt;bool&gt;</code>), para que la comparación sea justa.</p>
+<p>Con 3000 números aleatorios, en 5 ejecuciones, <code>deque</code> salió siempre más rápido:</p>
+<div class="code"><pre><code class="language-text">Time to process a range of 3000 elements with std::vector : 17138 us
+Time to process a range of 3000 elements with std::deque  : 10952 us</code></pre></div>
+<p><strong>¿Por qué gana <code>deque</code> si <code>vector</code> es contiguo?</strong> Porque Ford-Johnson hace muchas inserciones <em>en medio</em> de la cadena. <code>vector::insert</code> siempre desplaza todos los elementos que hay detrás de la posición. <code>deque::insert</code> desplaza hacia el extremo más cercano, así que cuando inserta cerca del principio (frecuente aquí, porque los perdedores son los valores pequeños) mueve muchos menos elementos. Es una buena respuesta si te preguntan por la diferencia de tiempos, aunque el resultado puede variar según la máquina y el tamaño de la entrada.</p>
+<details class="src"><summary><span class="fname">C09/ex02/PmergeMe.hpp</span> <span class="muted">· código completo (39 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
 4
@@ -2676,11 +2914,20 @@ Time to process a range of 3000 elements with std::deque  : 26601 us</code></pre
 28
 29
 30
-31</pre><pre><code class="language-cpp">#ifndef PMERGEME_HPP
+31
+32
+33
+34
+35
+36
+37
+38
+39</pre><pre><code class="language-cpp">#ifndef PMERGEME_HPP
 #define PMERGEME_HPP
 
 #include &lt;vector&gt;
 #include &lt;deque&gt;
+#include &lt;utility&gt;
 
 class PmergeMe
 {
@@ -2692,22 +2939,29 @@ public:
 
     void sortAndDisplay(int argc, char **argv);
 
-    void binaryInsertVec(std::vector&lt;int&gt; &amp;seq, int val, size_t end);
-    void binaryInsertDeq(std::deque&lt;int&gt; &amp;seq, int val, size_t end);
-
 private:
     std::vector&lt;int&gt; _vec;
     std::deque&lt;int&gt;  _deq;
 
-    void sortVector();
-    void sortDeque();
+    static bool parseNumber(const char *str, int &amp;out);
 
+    // std::vector implementation
     void fordJohnsonVec(std::vector&lt;int&gt; &amp;seq);
+    void insertLosersVec(std::vector&lt;int&gt; &amp;chain,
+                         const std::vector&lt;std::pair&lt;int, int&gt; &gt; &amp;pairs,
+                         bool hasStraggler, int straggler);
+    void binaryInsertVec(std::vector&lt;int&gt; &amp;chain, int val, size_t end);
+
+    // std::deque implementation
     void fordJohnsonDeq(std::deque&lt;int&gt; &amp;seq);
+    void insertLosersDeq(std::deque&lt;int&gt; &amp;chain,
+                         const std::deque&lt;std::pair&lt;int, int&gt; &gt; &amp;pairs,
+                         bool hasStraggler, int straggler);
+    void binaryInsertDeq(std::deque&lt;int&gt; &amp;chain, int val, size_t end);
 };
 
 #endif</code></pre></div></details>
-<details class="src"><summary><span class="fname">C09/ex02/PmergeMe.cpp</span> <span class="muted">· código completo (424 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
+<details class="src"><summary><span class="fname">C09/ex02/PmergeMe.cpp</span> <span class="muted">· código completo (377 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
 4
@@ -3083,57 +3337,11 @@ private:
 374
 375
 376
-377
-378
-379
-380
-381
-382
-383
-384
-385
-386
-387
-388
-389
-390
-391
-392
-393
-394
-395
-396
-397
-398
-399
-400
-401
-402
-403
-404
-405
-406
-407
-408
-409
-410
-411
-412
-413
-414
-415
-416
-417
-418
-419
-420
-421
-422
-423
-424</pre><pre><code class="language-cpp">#include "PmergeMe.hpp"
+377</pre><pre><code class="language-cpp">#include "PmergeMe.hpp"
 #include &lt;iostream&gt;
 #include &lt;sstream&gt;
 #include &lt;algorithm&gt;
+#include &lt;climits&gt;
 #include &lt;sys/time.h&gt;
 
 PmergeMe::PmergeMe() {}
@@ -3155,6 +3363,7 @@ PmergeMe::~PmergeMe() {}
 
 // ---------------------------------------------------------------------------
 // Jacobsthal sequence: J(0)=0, J(1)=1, J(n)=J(n-1)+2*J(n-2)
+// 0, 1, 1, 3, 5, 11, 21, 43, 85, ...
 // ---------------------------------------------------------------------------
 static size_t jacobsthal(size_t n)
 {
@@ -3171,184 +3380,91 @@ static size_t jacobsthal(size_t n)
 }
 
 // ---------------------------------------------------------------------------
-// Binary insertion: insert val into chain in position [0..end)
+// Argument parsing: a non-negative integer that fits in an int, nothing else
 // ---------------------------------------------------------------------------
-void PmergeMe::binaryInsertVec(std::vector&lt;int&gt; &amp;seq, int val, size_t end)
+bool PmergeMe::parseNumber(const char *str, int &amp;out)
 {
-    if (end &gt; seq.size())
-        end = seq.size();
+    std::istringstream iss(str);
+    long val;
+    iss &gt;&gt; val;
+    if (iss.fail() || !iss.eof() || val &lt; 0 || val &gt; INT_MAX)
+        return false;
+    out = static_cast&lt;int&gt;(val);
+    return true;
+}
+
+static double elapsedMicros(const struct timeval &amp;start, const struct timeval &amp;end)
+{
+    return (end.tv_sec - start.tv_sec) * 1e6 + (end.tv_usec - start.tv_usec);
+}
+
+// ===========================================================================
+//                          std::vector implementation
+// ===========================================================================
+
+// Binary insertion: insert val into chain, searching only in [0, end)
+void PmergeMe::binaryInsertVec(std::vector&lt;int&gt; &amp;chain, int val, size_t end)
+{
+    if (end &gt; chain.size())
+        end = chain.size();
     size_t lo = 0, hi = end;
     while (lo &lt; hi)
     {
         size_t mid = lo + (hi - lo) / 2;
-        if (seq[mid] &lt; val)
+        if (chain[mid] &lt; val)
             lo = mid + 1;
         else
             hi = mid;
     }
-    seq.insert(seq.begin() + static_cast&lt;std::vector&lt;int&gt;::difference_type&gt;(lo), val);
+    chain.insert(chain.begin() + static_cast&lt;std::vector&lt;int&gt;::difference_type&gt;(lo), val);
 }
 
-void PmergeMe::binaryInsertDeq(std::deque&lt;int&gt; &amp;seq, int val, size_t end)
+// Inserts the losers b2, b3, ... (b1 is already in chain) in Jacobsthal order:
+//   b3 b2 | b5 b4 | b11 b10 ... b6 | b21 ... b12 | ...
+// pairs[i] = (a_{i+1}, b_{i+1}), sorted by winner, so b_k = pairs[k - 1].second.
+// Each loser is searched only in the part of chain before its own winner,
+// because b_k &lt;= a_k.
+// If n was odd, the straggler is the last loser b_{numPairs + 1}: it has no
+// winner, so it is searched in the whole chain, but in its Jacobsthal turn.
+void PmergeMe::insertLosersVec(std::vector&lt;int&gt; &amp;chain,
+                               const std::vector&lt;std::pair&lt;int, int&gt; &gt; &amp;pairs,
+                               bool hasStraggler, int straggler)
 {
-    if (end &gt; seq.size())
-        end = seq.size();
-    size_t lo = 0, hi = end;
-    while (lo &lt; hi)
-    {
-        size_t mid = lo + (hi - lo) / 2;
-        if (seq[mid] &lt; val)
-            lo = mid + 1;
-        else
-            hi = mid;
-    }
-    seq.insert(seq.begin() + static_cast&lt;std::deque&lt;int&gt;::difference_type&gt;(lo), val);
-}
-
-// ---------------------------------------------------------------------------
-// Insert losers into a sorted chain using Jacobsthal order.
-// pairs[] is sorted by first (winner). pairs[0].second is already in chain.
-// We insert pairs[i].second for i &gt;= 1.
-// The upper search bound for pairs[i].second is the position of pairs[i].first
-// in chain (the loser is guaranteed &lt;= its paired winner).
-// ---------------------------------------------------------------------------
-static void insertLosersVec(std::vector&lt;int&gt; &amp;chain,
-                             const std::vector&lt;std::pair&lt;int,int&gt; &gt; &amp;pairs,
-                             PmergeMe &amp;pm)
-{
-    size_t pendingSize = pairs.size() - 1; // pairs[0].second already in chain
+    // Losers still to insert: b2 .. b_{numPairs} (+ the straggler)
+    size_t pendingSize = pairs.size() - 1 + (hasStraggler ? 1 : 0);
     if (pendingSize == 0)
         return;
 
-    std::vector&lt;bool&gt; inserted(pendingSize, false);
-
-    // Jacobsthal groups: indices go jPrev..jCurr-1 inserted high-to-low
-    size_t jacobIdx = 2;
-    while (true)
+    for (size_t k = 3; ; ++k)
     {
-        size_t jCurr = jacobsthal(jacobIdx);
-        size_t jPrev = jacobsthal(jacobIdx - 1);
+        size_t jPrev = jacobsthal(k - 1);
+        size_t jCurr = jacobsthal(k);
 
-        if (jPrev &gt;= pendingSize)
+        // This group inserts b_{jCurr} down to b_{jPrev + 1}
+        // -&gt; pending indexes from (jCurr - 2) down to (jPrev - 1)
+        size_t first = jPrev - 1;
+        if (first &gt;= pendingSize)
             break;
+        size_t last = std::min(jCurr, pendingSize + 1) - 2;
 
-        size_t hiIdx = (jCurr &lt;= pendingSize) ? jCurr - 1 : pendingSize - 1;
-
-        // Insert from hiIdx down to jPrev (inclusive)
-        for (size_t idx = hiIdx + 1; idx &gt; jPrev; --idx)
+        // p = index in pairs of the loser b_{p+1}
+        for (size_t p = last + 1; p &gt; first; --p)
         {
-            size_t i = idx - 1; // 0-based index into pending (pending[i] = pairs[i+1].second)
-            if (i &lt; pendingSize &amp;&amp; !inserted[i])
+            if (p == pairs.size())
             {
-                int val          = pairs[i + 1].second;
-                int pairedWinner = pairs[i + 1].first;
-
-                // Find pairedWinner in chain — upper bound is its index (inclusive)
-                size_t upperBound = chain.size();
-                for (size_t k = 0; k &lt; chain.size(); ++k)
-                {
-                    if (chain[k] == pairedWinner)
-                    {
-                        upperBound = k + 1; // search includes up to winner position
-                        break;
-                    }
-                }
-                pm.binaryInsertVec(chain, val, upperBound);
-                inserted[i] = true;
+                binaryInsertVec(chain, straggler, chain.size());
+                continue;
             }
-        }
-        ++jacobIdx;
-    }
+            int val    = pairs[p].second;
+            int winner = pairs[p].first;
 
-    // Flush remaining (shouldn't happen if Jacobsthal covers all, but safety net)
-    for (size_t i = 0; i &lt; pendingSize; ++i)
-    {
-        if (!inserted[i])
-        {
-            int val          = pairs[i + 1].second;
-            int pairedWinner = pairs[i + 1].first;
-            size_t upperBound = chain.size();
-            for (size_t k = 0; k &lt; chain.size(); ++k)
-            {
-                if (chain[k] == pairedWinner)
-                {
-                    upperBound = k + 1;
-                    break;
-                }
-            }
-            pm.binaryInsertVec(chain, val, upperBound);
+            // Position of the winner in chain: the search range is [0, pos)
+            size_t pos = std::find(chain.begin(), chain.end(), winner) - chain.begin();
+            binaryInsertVec(chain, val, pos);
         }
     }
 }
 
-static void insertLosersDeq(std::deque&lt;int&gt; &amp;chain,
-                             const std::vector&lt;std::pair&lt;int,int&gt; &gt; &amp;pairs,
-                             PmergeMe &amp;pm)
-{
-    size_t pendingSize = pairs.size() - 1;
-    if (pendingSize == 0)
-        return;
-
-    std::vector&lt;bool&gt; inserted(pendingSize, false);
-
-    size_t jacobIdx = 2;
-    while (true)
-    {
-        size_t jCurr = jacobsthal(jacobIdx);
-        size_t jPrev = jacobsthal(jacobIdx - 1);
-
-        if (jPrev &gt;= pendingSize)
-            break;
-
-        size_t hiIdx = (jCurr &lt;= pendingSize) ? jCurr - 1 : pendingSize - 1;
-
-        for (size_t idx = hiIdx + 1; idx &gt; jPrev; --idx)
-        {
-            size_t i = idx - 1;
-            if (i &lt; pendingSize &amp;&amp; !inserted[i])
-            {
-                int val          = pairs[i + 1].second;
-                int pairedWinner = pairs[i + 1].first;
-
-                size_t upperBound = chain.size();
-                for (size_t k = 0; k &lt; chain.size(); ++k)
-                {
-                    if (chain[k] == pairedWinner)
-                    {
-                        upperBound = k + 1;
-                        break;
-                    }
-                }
-                pm.binaryInsertDeq(chain, val, upperBound);
-                inserted[i] = true;
-            }
-        }
-        ++jacobIdx;
-    }
-
-    for (size_t i = 0; i &lt; pendingSize; ++i)
-    {
-        if (!inserted[i])
-        {
-            int val          = pairs[i + 1].second;
-            int pairedWinner = pairs[i + 1].first;
-            size_t upperBound = chain.size();
-            for (size_t k = 0; k &lt; chain.size(); ++k)
-            {
-                if (chain[k] == pairedWinner)
-                {
-                    upperBound = k + 1;
-                    break;
-                }
-            }
-            pm.binaryInsertDeq(chain, val, upperBound);
-        }
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Ford-Johnson for std::vector
-// ---------------------------------------------------------------------------
 void PmergeMe::fordJohnsonVec(std::vector&lt;int&gt; &amp;seq)
 {
     size_t n = seq.size();
@@ -3362,6 +3478,7 @@ void PmergeMe::fordJohnsonVec(std::vector&lt;int&gt; &amp;seq)
         return;
     }
 
+    // 1) If n is odd, keep the last element apart (straggler)
     bool hasStraggler = (n % 2 != 0);
     int  straggler    = 0;
     if (hasStraggler)
@@ -3370,9 +3487,9 @@ void PmergeMe::fordJohnsonVec(std::vector&lt;int&gt; &amp;seq)
         seq.pop_back();
     }
 
-    // Build (winner, loser) pairs — winner &gt;= loser
+    // 2) Build (winner, loser) pairs — winner &gt;= loser
     size_t numPairs = seq.size() / 2;
-    std::vector&lt;std::pair&lt;int,int&gt; &gt; pairs(numPairs);
+    std::vector&lt;std::pair&lt;int, int&gt; &gt; pairs(numPairs);
     for (size_t i = 0; i &lt; numPairs; ++i)
     {
         int a = seq[2 * i];
@@ -3380,56 +3497,100 @@ void PmergeMe::fordJohnsonVec(std::vector&lt;int&gt; &amp;seq)
         pairs[i] = (a &gt;= b) ? std::make_pair(a, b) : std::make_pair(b, a);
     }
 
-    // Recursively sort winners
+    // 3) Recursively sort the winners
     std::vector&lt;int&gt; winners;
     winners.reserve(numPairs);
     for (size_t i = 0; i &lt; numPairs; ++i)
         winners.push_back(pairs[i].first);
 
-    fordJohnsonVec(winners); // sorts in place
+    fordJohnsonVec(winners);
 
-    // Rebuild pairs sorted by winner, preserving loser correspondence.
-    // Match each winner (now sorted) to its original pair by value.
-    // If there are duplicate winners, we match them in the order they appear
-    // (stable match by first unmatched).
-    std::vector&lt;bool&gt; matched(numPairs, false);
-    std::vector&lt;std::pair&lt;int,int&gt; &gt; sortedPairs(numPairs);
+    // Re-attach every sorted winner to its loser (first unused pair with that
+    // winner value, so duplicates are handled)
+    std::vector&lt;bool&gt; used(numPairs, false);
+    std::vector&lt;std::pair&lt;int, int&gt; &gt; sortedPairs(numPairs);
     for (size_t i = 0; i &lt; numPairs; ++i)
     {
         for (size_t j = 0; j &lt; numPairs; ++j)
         {
-            if (!matched[j] &amp;&amp; pairs[j].first == winners[i])
+            if (!used[j] &amp;&amp; pairs[j].first == winners[i])
             {
                 sortedPairs[i] = pairs[j];
-                matched[j] = true;
+                used[j] = true;
                 break;
             }
         }
     }
-    pairs = sortedPairs;
 
-    // Build chain starting with all winners
+    // 4) Main chain: b1 followed by all the sorted winners.
+    //    b1 &lt;= a1 and a1 is the smallest winner, so b1 goes first for free.
     std::vector&lt;int&gt; chain;
-    chain.reserve(2 * numPairs + 1);
+    chain.reserve(n);
+    chain.push_back(sortedPairs[0].second);
     for (size_t i = 0; i &lt; numPairs; ++i)
-        chain.push_back(pairs[i].first);
+        chain.push_back(sortedPairs[i].first);
 
-    // Prepend pairs[0].second — it is &lt;= pairs[0].first (the minimum winner)
-    chain.insert(chain.begin(), pairs[0].second);
-
-    // Insert remaining losers using Jacobsthal order
-    insertLosersVec(chain, pairs, *this);
-
-    // Insert straggler with binary search over full chain
-    if (hasStraggler)
-        binaryInsertVec(chain, straggler, chain.size());
+    // 5) Insert the remaining losers (and the straggler) in Jacobsthal order
+    insertLosersVec(chain, sortedPairs, hasStraggler, straggler);
 
     seq = chain;
 }
 
-// ---------------------------------------------------------------------------
-// Ford-Johnson for std::deque (identical algorithm, different container)
-// ---------------------------------------------------------------------------
+// ===========================================================================
+//          std::deque implementation (same algorithm, only std::deque)
+// ===========================================================================
+
+void PmergeMe::binaryInsertDeq(std::deque&lt;int&gt; &amp;chain, int val, size_t end)
+{
+    if (end &gt; chain.size())
+        end = chain.size();
+    size_t lo = 0, hi = end;
+    while (lo &lt; hi)
+    {
+        size_t mid = lo + (hi - lo) / 2;
+        if (chain[mid] &lt; val)
+            lo = mid + 1;
+        else
+            hi = mid;
+    }
+    chain.insert(chain.begin() + static_cast&lt;std::deque&lt;int&gt;::difference_type&gt;(lo), val);
+}
+
+void PmergeMe::insertLosersDeq(std::deque&lt;int&gt; &amp;chain,
+                               const std::deque&lt;std::pair&lt;int, int&gt; &gt; &amp;pairs,
+                               bool hasStraggler, int straggler)
+{
+    // Losers still to insert: b2 .. b_{numPairs} (+ the straggler)
+    size_t pendingSize = pairs.size() - 1 + (hasStraggler ? 1 : 0);
+    if (pendingSize == 0)
+        return;
+
+    for (size_t k = 3; ; ++k)
+    {
+        size_t jPrev = jacobsthal(k - 1);
+        size_t jCurr = jacobsthal(k);
+
+        size_t first = jPrev - 1;
+        if (first &gt;= pendingSize)
+            break;
+        size_t last = std::min(jCurr, pendingSize + 1) - 2;
+
+        for (size_t p = last + 1; p &gt; first; --p)
+        {
+            if (p == pairs.size())
+            {
+                binaryInsertDeq(chain, straggler, chain.size());
+                continue;
+            }
+            int val    = pairs[p].second;
+            int winner = pairs[p].first;
+
+            size_t pos = std::find(chain.begin(), chain.end(), winner) - chain.begin();
+            binaryInsertDeq(chain, val, pos);
+        }
+    }
+}
+
 void PmergeMe::fordJohnsonDeq(std::deque&lt;int&gt; &amp;seq)
 {
     size_t n = seq.size();
@@ -3452,7 +3613,7 @@ void PmergeMe::fordJohnsonDeq(std::deque&lt;int&gt; &amp;seq)
     }
 
     size_t numPairs = seq.size() / 2;
-    std::vector&lt;std::pair&lt;int,int&gt; &gt; pairs(numPairs);
+    std::deque&lt;std::pair&lt;int, int&gt; &gt; pairs(numPairs);
     for (size_t i = 0; i &lt; numPairs; ++i)
     {
         int a = seq[2 * i];
@@ -3466,82 +3627,81 @@ void PmergeMe::fordJohnsonDeq(std::deque&lt;int&gt; &amp;seq)
 
     fordJohnsonDeq(winners);
 
-    std::vector&lt;bool&gt; matched(numPairs, false);
-    std::vector&lt;std::pair&lt;int,int&gt; &gt; sortedPairs(numPairs);
+    std::deque&lt;bool&gt; used(numPairs, false);
+    std::deque&lt;std::pair&lt;int, int&gt; &gt; sortedPairs(numPairs);
     for (size_t i = 0; i &lt; numPairs; ++i)
     {
         for (size_t j = 0; j &lt; numPairs; ++j)
         {
-            if (!matched[j] &amp;&amp; pairs[j].first == winners[i])
+            if (!used[j] &amp;&amp; pairs[j].first == winners[i])
             {
                 sortedPairs[i] = pairs[j];
-                matched[j] = true;
+                used[j] = true;
                 break;
             }
         }
     }
-    pairs = sortedPairs;
 
     std::deque&lt;int&gt; chain;
     for (size_t i = 0; i &lt; numPairs; ++i)
-        chain.push_back(pairs[i].first);
+        chain.push_back(sortedPairs[i].first);
+    chain.push_front(sortedPairs[0].second);
 
-    chain.push_front(pairs[0].second);
-
-    insertLosersDeq(chain, pairs, *this);
-
-    if (hasStraggler)
-        binaryInsertDeq(chain, straggler, chain.size());
+    insertLosersDeq(chain, sortedPairs, hasStraggler, straggler);
 
     seq = chain;
 }
 
-// ---------------------------------------------------------------------------
-// Public interface
-// ---------------------------------------------------------------------------
-void PmergeMe::sortVector()
-{
-    fordJohnsonVec(_vec);
-}
-
-void PmergeMe::sortDeque()
-{
-    fordJohnsonDeq(_deq);
-}
-
+// ===========================================================================
+//                              Public interface
+// ===========================================================================
 void PmergeMe::sortAndDisplay(int argc, char **argv)
 {
+    // Validate every argument before doing anything
+    int val;
     for (int i = 1; i &lt; argc; ++i)
     {
-        std::istringstream iss(argv[i]);
-        long val;
-        iss &gt;&gt; val;
-        if (iss.fail() || !iss.eof() || val &lt; 0)
+        if (!parseNumber(argv[i], val))
         {
             std::cerr &lt;&lt; "Error" &lt;&lt; std::endl;
             return;
         }
-        _vec.push_back(static_cast&lt;int&gt;(val));
-        _deq.push_back(static_cast&lt;int&gt;(val));
     }
 
     std::cout &lt;&lt; "Before:";
-    for (size_t i = 0; i &lt; _vec.size(); ++i)
-        std::cout &lt;&lt; " " &lt;&lt; _vec[i];
+    for (int i = 1; i &lt; argc; ++i)
+    {
+        parseNumber(argv[i], val);
+        std::cout &lt;&lt; " " &lt;&lt; val;
+    }
     std::cout &lt;&lt; std::endl;
 
+    // Each measurement includes the data management (parsing the arguments
+    // and filling the container) and the sort itself.
     struct timeval tstart, tend;
-    gettimeofday(&amp;tstart, NULL);
-    sortVector();
-    gettimeofday(&amp;tend, NULL);
-    double vecTime = (tend.tv_sec - tstart.tv_sec) * 1e6
-                   + (tend.tv_usec - tstart.tv_usec);
 
     gettimeofday(&amp;tstart, NULL);
-    sortDeque();
+    _vec.clear();
+    _vec.reserve(argc - 1);
+    for (int i = 1; i &lt; argc; ++i)
+    {
+        parseNumber(argv[i], val);
+        _vec.push_back(val);
+    }
+    fordJohnsonVec(_vec);
     gettimeofday(&amp;tend, NULL);
-    double deqTime = (tend.tv_sec - tstart.tv_sec) * 1e6
-                   + (tend.tv_usec - tstart.tv_usec);
+    double vecTime = elapsedMicros(tstart, tend);
+
+    gettimeofday(&amp;tstart, NULL);
+    _deq.clear();
+    for (int i = 1; i &lt; argc; ++i)
+    {
+        parseNumber(argv[i], val);
+        _deq.push_back(val);
+    }
+    fordJohnsonDeq(_deq);
+    gettimeofday(&amp;tend, NULL);
+    double deqTime = elapsedMicros(tstart, tend);
 
     std::cout &lt;&lt; "After: ";
     for (size_t i = 0; i &lt; _vec.size(); ++i)
@@ -3588,45 +3748,69 @@ int main(int argc, char **argv)
 
 <h4>Preguntas típicas</h4>
 <details class="qa"><summary>¿Por qué Ford-Johnson y no <code>std::sort</code>?</summary><div class="a"><p>Porque el enunciado lo exige. El objetivo es implementar un algoritmo concreto que minimiza comparaciones, no el más rápido en la práctica. <code>std::sort</code> (introsort) suele ser más rápido en tiempo pero hace más comparaciones.</p></div></details>
-<details class="qa"><summary>¿Cuántas comparaciones hace?</summary><div class="a"><p>Para n elementos, como mucho ∑ₖ₌₁ⁿ ⌈log₂(3k/4)⌉. Por ejemplo: 21 elementos → 66 comparaciones; 3000 → 30 546 como máximo, muy cerca del mínimo teórico log₂(3000!) ≈ 30 331.</p></div></details>
+<details class="qa"><summary>¿Cuántas comparaciones hace?</summary><div class="a"><p>Ford-Johnson garantiza como mucho F(n) = ∑ₖ₌₁ⁿ ⌈log₂(3k/4)⌉ comparaciones, muy cerca del mínimo teórico log₂(n!). Lo comprobé contando cada <code>&lt;</code> entre elementos (parejas, recursión y búsquedas binarias), con 6 entradas aleatorias por tamaño, y quedándome con el peor caso:</p>
+<div class="tw"><table>
+<tr><th>n</th><th>Peor caso medido</th><th>Límite F(n)</th></tr>
+<tr><td>5</td><td>7</td><td>7</td></tr>
+<tr><td>11</td><td>26</td><td>26</td></tr>
+<tr><td>21</td><td>66</td><td>66</td></tr>
+<tr><td>22</td><td>71</td><td>71</td></tr>
+<tr><td>100</td><td>531</td><td>534</td></tr>
+<tr><td>1000</td><td>8568</td><td>8641</td></tr>
+<tr><td>3000</td><td>30 391</td><td>30 546</td></tr>
+</table></div>
+<p>Las búsquedas para localizar al ganador (<code>std::find</code>) y para reasociar las parejas no se cuentan, porque son igualdades de contabilidad interna y no comparaciones de orden. Si un evaluador cuenta comparaciones, este es el número que debe salir.</p></div></details>
 <details class="qa"><summary>¿Qué es la secuencia de Jacobsthal y cómo se calcula?</summary><div class="a"><p>J(0) = 0, J(1) = 1, J(n) = J(n−1) + 2·J(n−2): 0, 1, 1, 3, 5, 11, 21, 43, 85… Tu función <code>jacobsthal</code> la calcula de forma iterativa con dos variables (<code>prev1</code>, <code>prev2</code>). Marca los límites de los grupos de inserción.</p></div></details>
 <details class="qa"><summary>¿Por qué el perdedor solo se busca hasta su ganador?</summary><div class="a"><p>Porque sabemos que bₖ ≤ aₖ: su posición final está a la izquierda de aₖ. Reducir el rango ahorra comparaciones, y con el orden de Jacobsthal ese rango tiene como mucho 2ᵏ − 1 elementos.</p></div></details>
-<details class="qa"><summary>¿Qué incluye el tiempo medido?</summary><div class="a"><p>En tu código, solo la llamada a <code>sortVector()</code> / <code>sortDeque()</code>. El enunciado dice que debe incluir también la gestión de datos (el parseo y la carga en el contenedor). Ver <a href="#revisar">Puntos a revisar</a>.</p></div></details>
+<details class="qa"><summary>¿Qué incluye el tiempo medido?</summary><div class="a"><p>La gestión de datos (convertir cada argumento y meterlo en el contenedor) y la ordenación, por separado para cada contenedor, como pide el enunciado. La validación previa y la impresión no se cuentan, porque son iguales para los dos contenedores.</p></div></details>
+<details class="qa"><summary>¿Qué pasa con <code>./PmergeMe 4294967297 1</code>?</summary><div class="a"><p>Da <code>Error</code>: el número es mayor que <code>INT_MAX</code>. Antes se convertía a <code>int</code> sin comprobarlo y se transformaba en un 1.</p></div></details>
 </section>
 
 <!-- ============================================================ -->
-<h2 id="revisar">Puntos a revisar antes de la evaluación</h2>
-<p>He compilado y probado todo. Funciona con los ejemplos de los enunciados, pero al probar casos límite encontré estos detalles. Están ordenados de más a menos probable que te los pregunten. No he modificado nada de tu código; si quieres te ayudo a corregirlos.</p>
+<h2 id="correcciones">Correcciones aplicadas</h2>
+<p>Al revisar el código y probar casos límite encontré estos problemas. Todos están corregidos en el código del repo (los ficheros completos de arriba ya muestran la versión nueva). Para cada uno tienes qué fallaba, cómo se arregló y cómo se comprobó. Todo compila con <code>c++ -Wall -Wextra -Werror -std=c++98</code>.</p>
 
-<div class="call bad"><div class="t">C09/ex00 · El <code>data.csv</code> no es el oficial</div>
-<p>Tu <code>data.csv</code> tiene 54 filas inventadas (salta de 2013 a 2021) en lugar de las ~1600 del fichero que viene con el enunciado. Por eso <code>2012-01-11 =&gt; 1</code> da <code>5.5</code> en vez del <code>7.1</code> del ejemplo. El evaluador usará el CSV oficial (y probablemente te pida que lo pongas): tu código lo leerá bien porque el formato es el mismo, pero sustitúyelo antes para que la salida coincida.</p></div>
+<div class="call ok"><div class="t">C09/ex00 · <code>data.csv</code> oficial</div>
+<p><strong>Antes:</strong> el <code>data.csv</code> tenía 54 filas inventadas, y <code>2012-01-11 =&gt; 1</code> daba <code>5.5</code> en lugar de <code>7.1</code>.<br>
+<strong>Ahora:</strong> es el fichero del <code>cpp_09.tgz</code> del enunciado (1613 líneas, de 2009-01-02 a 2022-03-29). La salida con el <code>input.txt</code> del enunciado coincide línea a línea.</p></div>
 
-<div class="call bad"><div class="t">C09/ex02 · Números mayores que <code>INT_MAX</code> se corrompen</div>
-<p>Parseas a <code>long</code> y haces <code>static_cast&lt;int&gt;</code> sin comprobar el límite. <code>./PmergeMe 4294967297 1</code> imprime <code>Before: 1 1</code>: el número se convierte en 1. Arreglo: añadir <code>|| val &gt; INT_MAX</code> (de <code>&lt;climits&gt;</code>) a la condición de error.</p></div>
+<div class="call ok"><div class="t">C09/ex02 · Números mayores que <code>INT_MAX</code></div>
+<p><strong>Antes:</strong> <code>./PmergeMe 4294967297 1</code> mostraba <code>Before: 1 1</code>.<br>
+<strong>Ahora:</strong> <code>parseNumber</code> comprueba <code>val &gt; INT_MAX</code> y muestra <code>Error</code>. <code>2147483647</code> sigue siendo válido.</p></div>
 
-<div class="call warn"><div class="t">C09/ex02 · El orden de Jacobsthal tiene un desfase de uno</div>
-<p>Instrumenté <code>insertLosersVec</code> con 22 elementos (11 parejas). El orden real de inserción es <code>b4 b3 · b6 b5 · b11 b10 b9 b8 b7</code> y <code>b2</code> se inserta al final en el bucle de seguridad. El orden canónico es <code>b3 b2 · b5 b4 · b11 … b6</code>. <strong>El resultado sigue saliendo bien ordenado</strong> (cada perdedor se inserta con búsqueda binaria limitada por su ganador), pero no es exactamente el orden de Ford-Johnson y hace alguna comparación de más. Si el evaluador cuenta comparaciones, se notará. La causa: el índice <code>i</code> corresponde a <code>b(i+2)</code>, así que el grupo debería ir de <code>J(k)−2</code> hasta <code>J(k−1)−1</code>, y el código usa <code>J(k)−1</code> hasta <code>J(k−1)</code>.</p></div>
+<div class="call ok"><div class="t">C09/ex02 · Orden de Jacobsthal canónico</div>
+<p><strong>Antes:</strong> por un desfase de índices insertaba <code>b4 b3 · b6 b5 · b11…b7</code>, dejaba <code>b2</code> para un bucle de seguridad final y el straggler iba siempre al final.<br>
+<strong>Ahora:</strong> el orden es <code>b3 b2 · b5 b4 · b11…b6 · …</code>, el straggler entra en su turno, cada búsqueda se limita a <code>[0, pos_ganador)</code> y se eliminó el bucle de seguridad.<br>
+<strong>Comprobado:</strong> 104 entradas aleatorias de 1 a 3001 elementos (con duplicados) salen ordenadas igual que <code>sort -n</code>, y el número de comparaciones nunca supera el límite F(n) de Ford-Johnson (ver la tabla en el ex02).</p></div>
 
-<div class="call warn"><div class="t">C09/ex02 · El tiempo no incluye la gestión de datos</div>
-<p>El enunciado pide medir "el tiempo de todas las operaciones, tanto la ordenación como la gestión de datos". Ahora solo mides la ordenación. Además, <code>gettimeofday</code> tiene resolución de microsegundos: con 5 números a veces da <code>0 us</code> para los dos contenedores, y entonces no se ve la diferencia. Sería mejor medir también la carga de <code>argv</code> en cada contenedor y mostrar decimales (por ejemplo, convirtiendo a milisegundos con <code>std::fixed</code>).</p></div>
+<div class="call ok"><div class="t">C09/ex02 · El tiempo incluye la gestión de datos y el deque es solo deque</div>
+<p><strong>Antes:</strong> solo se medía la ordenación, y <code>fordJohnsonDeq</code> usaba un <code>std::vector</code> de apoyo para las parejas.<br>
+<strong>Ahora:</strong> cada cronómetro incluye parsear los argumentos, llenar el contenedor y ordenar. La versión deque usa <code>std::deque</code> para todo.</p></div>
 
-<div class="call warn"><div class="t">Módulo 09 · <code>std::stack</code> usa <code>std::deque</code> por dentro</div>
-<p>La regla dice que un contenedor usado no se puede reutilizar. <code>std::stack&lt;int&gt;</code> (ex01) está implementado sobre <code>std::deque&lt;int&gt;</code>, y luego usas <code>deque</code> en el ex02. Muchos evaluadores lo aceptan (<code>stack</code> es un adaptador, un tipo distinto), pero es una pregunta frecuente. Para cortar la discusión: <code>std::stack&lt;int, std::list&lt;int&gt; &gt;</code> en el RPN. Ojo también: <code>fordJohnsonDeq</code> usa un <code>std::vector</code> de parejas como apoyo, así que el algoritmo "con deque" no es 100 % deque.</p></div>
+<div class="call ok"><div class="t">C09/ex01 · <code>stack</code> sobre <code>list</code> y control de desbordamiento</div>
+<p><strong>Antes:</strong> <code>std::stack&lt;int&gt;</code> (que usa <code>deque</code> por dentro, el mismo contenedor que el ex02), y 9¹⁰ daba <code>-808182895</code>.<br>
+<strong>Ahora:</strong> <code>std::stack&lt;int, std::list&lt;int&gt; &gt;</code>, y las operaciones se calculan en <code>long</code>. Si el resultado no cabe en un <code>int</code>, se muestra <code>Error</code>.</p></div>
 
-<div class="call warn"><div class="t">C09/ex00 · Detalles de validación y formato</div>
+<div class="call ok"><div class="t">C09/ex00 · Validación y formato de salida</div>
 <ul style="margin:4px 0 0">
-  <li>Un valor no numérico (<code>2011-01-03 | abc</code>) imprime <code>Error: not a positive number.</code> En <code>processInput</code> las dos ramas del <code>if</code> imprimen el mismo mensaje; la segunda debería ser <code>Error: bad input =&gt; ...</code>.</li>
-  <li><code>isValidDate</code> no comprueba días por mes ni años bisiestos: <code>2011-02-30</code> se acepta.</li>
-  <li>Con importes grandes la salida sale en notación científica: <code>2021-09-01 | 1000</code> → <code>4.4e+07</code>. Se arregla con <code>std::fixed</code> y <code>std::setprecision</code>, o usando <code>double</code>.</li>
-  <li><code>./btc</code> sin argumentos imprime <code>Usage: ...</code>; el enunciado muestra <code>Error: could not open file.</code></li>
-  <li>Si no se puede abrir <code>data.csv</code>, el programa continúa con la BD vacía (y todas las líneas dan "bad input").</li>
+  <li><code>abc</code>, <code>1.2.3</code> o un valor vacío → <code>Error: bad input =&gt; …</code> (antes decía "not a positive number").</li>
+  <li>Días por mes y años bisiestos: <code>2011-02-30</code> y <code>2011-02-29</code> son <em>bad input</em>; <code>2012-02-29</code> es válida.</li>
+  <li><code>double</code> y <code>precision(10)</code>: <code>1000</code> BTC el 2022-03-29 → <code>47115930</code> (antes salía en notación científica).</li>
+  <li><code>./btc</code> sin argumentos → <code>Error: could not open file.</code>, como en el enunciado.</li>
+  <li>Si <code>data.csv</code> no se puede cargar, el programa avisa y termina.</li>
+  <li>La cabecera solo se salta si es <code>date | value</code>, y se toleran los finales de línea <code>\r\n</code>.</li>
 </ul></div>
 
-<div class="call warn"><div class="t">C08/ex01 · <code>Span</code> sin constructor por defecto y posible overflow</div>
-<p>La forma canónica pide constructor por defecto; puedes añadir <code>Span()</code> con <code>_maxSize(0)</code>, o justificar que un Span sin N no tiene sentido. Además, <code>longestSpan</code> con <code>INT_MIN</code> e <code>INT_MAX</code> desborda <code>int</code> al restar. Si te lo preguntan: devolver <code>long</code> o <code>unsigned int</code> y restar convirtiendo antes a <code>long</code>.</p></div>
+<div class="call ok"><div class="t">C08/ex01 · <code>Span</code>: forma canónica, desbordamiento y rangos</div>
+<ul style="margin:4px 0 0">
+  <li>Nuevo constructor por defecto <code>Span()</code> (capacidad 0).</li>
+  <li><code>shortestSpan</code> y <code>longestSpan</code> devuelven <code>long</code> y restan en <code>long</code>: con <code>INT_MIN</code> e <code>INT_MAX</code> dan <code>4294967295</code>.</li>
+  <li><code>addNumbers</code> comprueba con <code>std::distance</code> que el rango cabe antes de insertar nada: si no cabe, el Span queda intacto.</li>
+  <li>Tests nuevos en el main: valores extremos, un rango que no cabe y 20 000 números aleatorios.</li>
+</ul></div>
 
-<div class="call ok"><div class="t">C09/ex01 · Desbordamiento en RPN (menor)</div>
-<p><code>"9 9 9 9 9 9 9 9 9 9 * * * * * * * * *"</code> da <code>-808182895</code> (9¹⁰ no cabe en <code>int</code>). El enunciado no lo exige, pero puedes calcular en <code>long</code> y comprobar límites si te lo piden.</p></div>
+<div class="call warn"><div class="t">Para compilar en tu Mac</div>
+<p>En este equipo el linker falla con el SDK 27 de las Command Line Tools ("unknown architecture arm64e.x1"). Es un problema del sistema, no del código. Si te pasa, compila con <code>SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk make</code> o actualiza las Command Line Tools. En los Mac del campus no debería ocurrir.</p></div>
 
 <!-- ============================================================ -->
 <h2 id="chuleta">Chuleta rápida</h2>
@@ -3636,8 +3820,8 @@ int main(int argc, char **argv)
 <tr><td>08/ex01 Span</td><td>Clase sobre un contenedor + rango de iteradores</td><td><code>vector</code>, <code>sort</code>, <code>min/max_element</code></td><td>"Tras ordenar, la distancia mínima siempre está entre vecinos; la máxima es max − min."</td></tr>
 <tr><td>08/ex02 MutantStack</td><td>Adaptadores, miembro <code>protected c</code></td><td><code>stack</code> sobre <code>deque</code></td><td>"Heredo de <code>std::stack</code> y expongo los iteradores de su contenedor interno <code>c</code>; uso <code>this-&gt;c</code> por la búsqueda en dos fases."</td></tr>
 <tr><td>09/ex00 btc</td><td>BD ordenada, búsqueda de la clave anterior</td><td><code>map</code>, <code>lower_bound</code></td><td>"Las fechas ISO se ordenan igual como texto; <code>lower_bound</code> y un paso atrás dan la fecha anterior en O(log n)."</td></tr>
-<tr><td>09/ex01 RPN</td><td>Evaluación con pila (LIFO)</td><td><code>stack</code></td><td>"Número → push; operador → pop b, pop a, push a∘b; al final queda un único valor."</td></tr>
-<tr><td>09/ex02 PmergeMe</td><td>Ford-Johnson, comparar contenedores</td><td><code>vector</code> + <code>deque</code></td><td>"Emparejo, ordeno ganadores recursivamente e inserto perdedores con búsqueda binaria en orden de Jacobsthal."</td></tr>
+<tr><td>09/ex01 RPN</td><td>Evaluación con pila (LIFO)</td><td><code>stack</code> sobre <code>list</code></td><td>"Número → push; operador → pop b, pop a, push a∘b; al final queda un único valor."</td></tr>
+<tr><td>09/ex02 PmergeMe</td><td>Ford-Johnson, comparar contenedores</td><td><code>vector</code> + <code>deque</code></td><td>"Emparejo, ordeno ganadores recursivamente e inserto perdedores (y el straggler) con búsqueda binaria en orden de Jacobsthal: b3 b2, b5 b4, b11…b6."</td></tr>
 </table></div>
 
 <footer>Guía generada a partir del código del repositorio · módulos C++ 08 y 09 de 42.</footer>
