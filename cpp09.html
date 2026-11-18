@@ -368,8 +368,16 @@ return day &gt;= 1 &amp;&amp; day &lt;= maxDay;</code></pre></div>
 <h4>Precisión de la salida</h4>
 <p>Los precios y los valores se guardan en <code>double</code>, y antes de imprimir se hace <code>std::cout.precision(10)</code> (al terminar se restaura el valor anterior). Con la precisión por defecto (6 cifras significativas), <code>1000 × 47115.93</code> se imprimiría en notación científica (<code>4.71159e+07</code>). Con 10 cifras sale <code>47115930</code>, y los casos del enunciado siguen saliendo <code>0.9</code>, <code>0.36</code> o <code>7.1</code>. Además, <code>trimRight</code> elimina un <code>'\r'</code> final, así que también funcionan ficheros guardados con saltos de línea de Windows.</p>
 
-<h4>Salida real con el input del enunciado</h4>
-<div class="code"><pre><code class="language-text">2011-01-03 =&gt; 3 = 0.9
+<h4>Cómo se ha probado</h4>
+<p><strong>El main.cpp</strong> no contiene pruebas: es el punto de entrada del programa. Comprueba que haya exactamente un argumento (si no, <code>Error: could not open file.</code> y devuelve 1), carga <code>data.csv</code> (si falla, muestra un error y devuelve 1) y procesa el fichero recibido. Las pruebas se hacen ejecutando <code>btc</code> con distintos ficheros de entrada. En <code>ex00/</code> está <code>test_input.txt</code>, que es una copia exacta del <code>input.txt</code> del enunciado.</p>
+<div class="tw"><table>
+<tr><th>Comando</th><th>Qué comprueba</th><th>Resultado</th></tr>
+<tr><td><code>./btc</code></td><td>Sin argumentos: el primer caso del ejemplo del enunciado.</td><td><code>Error: could not open file.</code></td></tr>
+<tr><td><code>./btc noexiste.txt</code></td><td>Fichero que no se puede abrir.</td><td><code>Error: could not open file.</code></td></tr>
+<tr><td><code>./btc test_input.txt</code></td><td>El ejemplo completo del enunciado: fecha exacta, fecha intermedia (2011‑01‑09 usa el precio del 2011‑01‑07), decimales, negativo, fecha imposible y número demasiado grande.</td><td>Idéntico al enunciado (abajo)</td></tr>
+</table></div>
+<div class="code"><pre><code class="language-text">$&gt; ./btc test_input.txt
+2011-01-03 =&gt; 3 = 0.9
 2011-01-03 =&gt; 2 = 0.6
 2011-01-03 =&gt; 1 = 0.3
 2011-01-03 =&gt; 1.2 = 0.36
@@ -378,15 +386,22 @@ Error: not a positive number.
 Error: bad input =&gt; 2001-42-42
 2012-01-11 =&gt; 1 = 7.1
 Error: too large a number.</code></pre></div>
-<p>Es idéntica a la del enunciado. Algunos casos límite más:</p>
-<div class="code"><pre><code class="language-text">2011-02-30 | 5      -&gt; Error: bad input =&gt; 2011-02-30 | 5
-2012-02-29 | 1      -&gt; 2012-02-29 =&gt; 1 = 4.98          (2012 es bisiesto)
-2011-01-03 | abc    -&gt; Error: bad input =&gt; 2011-01-03 | abc
+<p><strong>Casos límite.</strong> Probados con un fichero propio (por ejemplo, <code>printf 'date | value\n2011-02-30 | 5\n' &gt; t.txt &amp;&amp; ./btc t.txt</code>). Cada línea comprueba una regla distinta:</p>
+<div class="code"><pre><code class="language-text">2011-02-30 | 5      -&gt; Error: bad input =&gt; 2011-02-30 | 5   (febrero no tiene 30 días)
+2012-02-29 | 1      -&gt; 2012-02-29 =&gt; 1 = 4.98               (2012 es bisiesto)
+2011-02-29 | 1      -&gt; Error: bad input =&gt; 2011-02-29 | 1   (2011 no lo es)
+2011-13-01 | 1      -&gt; Error: bad input =&gt; 2011-13-01 | 1   (mes 13)
+2011-01-03 | abc    -&gt; Error: bad input =&gt; 2011-01-03 | abc (no es un número)
+2011-01-03 | 1.2.3  -&gt; Error: bad input =&gt; 2011-01-03 | 1.2.3
 2011-01-03 | -0.5   -&gt; Error: not a positive number.
-2008-01-01 | 1      -&gt; Error: bad input =&gt; 2008-01-01    (anterior a la BD)
-2022-03-29 | 1000   -&gt; 2022-03-29 =&gt; 1000 = 47115930
-2030-01-01 | 2      -&gt; 2030-01-01 =&gt; 2 = 94231.86        (usa la última fecha)
-./btc               -&gt; Error: could not open file.</code></pre></div>
+2011-01-03 | 1000   -&gt; 2011-01-03 =&gt; 1000 = 300              (1000 es el límite, válido)
+2011-01-03 | 1000.1 -&gt; Error: too large a number.
+2012-01-11|3        -&gt; Error: bad input =&gt; 2012-01-11|3      (falta " | ")
+2008-01-01 | 1      -&gt; Error: bad input =&gt; 2008-01-01        (anterior a la BD)
+2022-03-29 | 1000   -&gt; 2022-03-29 =&gt; 1000 = 47115930         (sin notación científica)
+2030-01-01 | 2      -&gt; 2030-01-01 =&gt; 2 = 94231.86            (posterior: usa la última fecha)
+2011-01-03 | .5     -&gt; 2011-01-03 =&gt; 0.5 = 0.15</code></pre></div>
+<p>También se probó un fichero <strong>sin cabecera</strong> y con finales de línea de Windows (<code>\r\n</code>): procesa todas las líneas igual. Y ejecutar <code>btc</code> desde otra carpeta, donde no encuentra <code>data.csv</code>, muestra <code>Error: could not load database data.csv.</code></p>
 <details class="src"><summary><span class="fname">C09/ex00/BitcoinExchange.hpp</span> <span class="muted">· código completo (26 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
@@ -977,17 +992,29 @@ return _stack.top();</code></pre></div>
   <li><strong>Errores</strong>: menos de dos operandos al encontrar un operador, división por cero, desbordamiento, token desconocido (por ejemplo <code>(</code>) o que no quede exactamente un valor al final. Se lanzan como <code>std::runtime_error("Error")</code> y el <code>main</code> los captura y los imprime por <code>std::cerr</code>.</li>
   <li>Al principio de <code>evaluate</code> vacías la pila por si el objeto se reutiliza (<code>std::stack</code> no tiene <code>clear()</code>, por eso el bucle de <code>pop</code>).</li>
 </ul>
-<div class="code"><pre><code class="language-text">"8 9 * 9 - 9 - 9 - 4 - 1 +"  -&gt; 42
-"7 7 * 7 -"                  -&gt; 42
-"1 2 * 2 / 2 * 2 4 - +"      -&gt; 0
-"(1 + 1)"                    -&gt; Error
-"1 0 /"                      -&gt; Error   (división por cero)
-"1 +"                        -&gt; Error   (faltan operandos)
-"1 2"                        -&gt; Error   (sobran operandos)
-""                           -&gt; Error
-"12 3 +"                     -&gt; Error   (número de dos cifras)
-"9 9 9 9 9 9 9 9 9 * * * * * * * *"        -&gt; 387420489   (9⁹ cabe en un int)
-"9 9 9 9 9 9 9 9 9 9 * * * * * * * * *"    -&gt; Error       (9¹⁰ no cabe)</code></pre></div>
+<h4>Cómo se ha probado</h4>
+<p><strong>El main.cpp</strong> es el punto de entrada. Si no recibe exactamente un argumento, imprime <code>Usage: RPN "&lt;expression&gt;"</code> por <code>std::cerr</code> y devuelve 1. Si lo recibe, llama a <code>evaluate</code> dentro de un <code>try</code>: si va bien, imprime el resultado por <code>std::cout</code>; si se lanza una excepción, imprime <code>e.what()</code> (<code>"Error"</code>) por <code>std::cerr</code> y devuelve 1. La expresión tiene que ir <strong>entre comillas</strong> para que la shell la pase como un único argumento.</p>
+<div class="tw"><table>
+<tr><th>Comando</th><th>Qué comprueba</th><th>Resultado</th></tr>
+<tr><td><code>./RPN "8 9 * 9 - 9 - 9 - 4 - 1 +"</code></td><td>Ejemplo 1 del enunciado: cadena larga de operaciones.</td><td><code>42</code></td></tr>
+<tr><td><code>./RPN "7 7 * 7 -"</code></td><td>Ejemplo 2 del enunciado.</td><td><code>42</code></td></tr>
+<tr><td><code>./RPN "1 2 * 2 / 2 * 2 4 - +"</code></td><td>Ejemplo 3: incluye división y un resultado intermedio negativo (2 − 4).</td><td><code>0</code></td></tr>
+<tr><td><code>./RPN "(1 + 1)"</code></td><td>Ejemplo 4: un token no válido.</td><td><code>Error</code></td></tr>
+<tr><td><code>./RPN "1 2 3 4 5 + + + +"</code></td><td>Primero se apilan todos los números y después se opera: la pila llega a 5 elementos.</td><td><code>15</code></td></tr>
+<tr><td><code>./RPN "7 2 /"</code></td><td>La división es entera.</td><td><code>3</code></td></tr>
+<tr><td><code>./RPN "0 3 -"</code></td><td>Así se obtiene un negativo: importa el orden de los operandos (a − b).</td><td><code>-3</code></td></tr>
+<tr><td><code>./RPN "  3   4  +  "</code></td><td>Los espacios repetidos se ignoran porque <code>&gt;&gt;</code> salta los blancos.</td><td><code>7</code></td></tr>
+<tr><td><code>./RPN "3 4+"</code></td><td>Los tokens tienen que ir separados: <code>4+</code> es un único token no válido.</td><td><code>Error</code></td></tr>
+<tr><td><code>./RPN "1 0 /"</code></td><td>División por cero.</td><td><code>Error</code></td></tr>
+<tr><td><code>./RPN "1 +"</code></td><td>Operador con un solo operando en la pila.</td><td><code>Error</code></td></tr>
+<tr><td><code>./RPN "1 2"</code></td><td>Sobran operandos: al final quedan 2 valores en la pila.</td><td><code>Error</code></td></tr>
+<tr><td><code>./RPN ""</code></td><td>Expresión vacía: al final la pila no tiene exactamente 1 valor.</td><td><code>Error</code></td></tr>
+<tr><td><code>./RPN "12 3 +"</code></td><td>Números de dos cifras (el enunciado dice que son menores que 10).</td><td><code>Error</code></td></tr>
+<tr><td><code>./RPN "9 9 9 9 9 9 9 9 9 * * * * * * * *"</code></td><td>9⁹ = 387 420 489 todavía cabe en un <code>int</code>.</td><td><code>387420489</code></td></tr>
+<tr><td><code>./RPN "9 9 9 9 9 9 9 9 9 9 * * * * * * * * *"</code></td><td>9¹⁰ ya no cabe en un <code>int</code>: desbordamiento.</td><td><code>Error</code></td></tr>
+<tr><td><code>./RPN</code> o <code>./RPN "1" "2"</code></td><td>Número de argumentos incorrecto.</td><td><code>Usage: RPN "&lt;expression&gt;"</code></td></tr>
+</table></div>
+<p>Para comprobar que los errores van por <code>stderr</code>: <code>./RPN "1 +" 2&gt;/dev/null</code> no muestra nada, y <code>echo $?</code> devuelve <code>1</code>.</p>
 <details class="src"><summary><span class="fname">C09/ex01/RPN.hpp</span> <span class="muted">· código completo (24 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
@@ -1376,6 +1403,36 @@ seq.insert(seq.begin() + lo, val);</code></pre></div>
 <div class="code"><pre><code class="language-text">Time to process a range of 3000 elements with std::vector : 17138 us
 Time to process a range of 3000 elements with std::deque  : 10952 us</code></pre></div>
 <p><strong>¿Por qué gana <code>deque</code> si <code>vector</code> es contiguo?</strong> Porque Ford-Johnson hace muchas inserciones <em>en medio</em> de la cadena. <code>vector::insert</code> siempre desplaza todos los elementos que hay detrás de la posición. <code>deque::insert</code> desplaza hacia el extremo más cercano, así que cuando inserta cerca del principio (frecuente aquí, porque los perdedores son los valores pequeños) mueve muchos menos elementos. Es una buena respuesta si te preguntan por la diferencia de tiempos, aunque el resultado puede variar según la máquina y el tamaño de la entrada.</p>
+<h4>Cómo se ha probado</h4>
+<p><strong>El main.cpp</strong> es el punto de entrada. Sin argumentos imprime <code>Usage: PmergeMe &lt;positive integers...&gt;</code> por <code>std::cerr</code> y devuelve 1. Con argumentos crea un <code>PmergeMe</code> y llama a <code>sortAndDisplay</code>, que valida, ordena con los dos contenedores y muestra las cuatro líneas que pide el enunciado.</p>
+<div class="tw"><table>
+<tr><th>Comando</th><th>Qué comprueba</th><th>Resultado</th></tr>
+<tr><td><code>./PmergeMe 3 5 9 7 4</code></td><td>Ejemplo del enunciado (impar: hay straggler).</td><td><code>Before: 3 5 9 7 4</code> / <code>After:  3 4 5 7 9</code> + 2 tiempos</td></tr>
+<tr><td><code>./PmergeMe "-1" "2"</code></td><td>Ejemplo de error del enunciado: número negativo.</td><td><code>Error</code></td></tr>
+<tr><td><code>./PmergeMe 4294967297 1</code></td><td>Número mayor que <code>INT_MAX</code>.</td><td><code>Error</code></td></tr>
+<tr><td><code>./PmergeMe 2147483647 0 2147483647</code></td><td>Los extremos válidos (<code>INT_MAX</code> y 0) con un duplicado.</td><td><code>After:  0 2147483647 2147483647</code></td></tr>
+<tr><td><code>./PmergeMe abc</code>, <code>./PmergeMe 1.5</code>, <code>./PmergeMe 12abc</code>, <code>./PmergeMe "" 2</code></td><td>Texto, decimales, restos detrás del número y argumento vacío.</td><td><code>Error</code></td></tr>
+<tr><td><code>./PmergeMe 5 3 5 1</code></td><td>Duplicados (se aceptan, es decisión libre).</td><td><code>After:  1 3 5 5</code></td></tr>
+<tr><td><code>./PmergeMe 1 2 3 4 5 6</code></td><td>Entrada ya ordenada.</td><td><code>After:  1 2 3 4 5 6</code></td></tr>
+<tr><td><code>./PmergeMe 42</code></td><td>Un solo elemento (caso base de la recursión).</td><td><code>After:  42</code></td></tr>
+<tr><td><code>./PmergeMe</code></td><td>Sin argumentos.</td><td><code>Usage: …</code></td></tr>
+</table></div>
+<p><strong>Prueba de volumen del enunciado (3000 números).</strong> En macOS se usa <code>jot</code>; en Linux, <code>shuf</code>:</p>
+<div class="code"><pre><code class="language-text">$&gt; ./PmergeMe `jot -r 3000 1 100000 | tr '\n' ' '`            # macOS
+$&gt; ./PmergeMe `shuf -i 1-100000 -n 3000 | tr "\n" " "`        # Linux
+...
+Time to process a range of 3000 elements with std::vector : 17138 us
+Time to process a range of 3000 elements with std::deque  : 10952 us</code></pre></div>
+<p><strong>Cómo comprobar que de verdad está ordenado</strong> (con 3000 números no se puede revisar a ojo). Se toma la línea <code>After:</code>, se pone un número por línea y <code>sort -n -c</code> comprueba que ya están en orden:</p>
+<div class="code"><pre><code class="language-text">$&gt; ./PmergeMe `jot -r 3000 1 100000 | tr '\n' ' '` | sed -n 2p | sed 's/^After: *//' | tr ' ' '\n' | sort -n -c &amp;&amp; echo "OK: ordenado"
+OK: ordenado</code></pre></div>
+<p>Si hubiera algún número fuera de orden, <code>sort -c</code> mostraría <code>disorder</code> y no se imprimiría <code>OK</code>.</p>
+<p><strong>Pruebas automáticas adicionales</strong> (hechas con un script aparte, no forman parte del proyecto):</p>
+<ul>
+  <li><strong>Corrección:</strong> 104 entradas aleatorias de 1 a 3001 elementos, con duplicados, comparando la línea <code>After:</code> con el resultado de <code>sort -n</code>. Todas coinciden.</li>
+  <li><strong>Orden de inserción:</strong> con una copia instrumentada se imprimió el orden en que se insertan los perdedores. Con 22 elementos es <code>b3 b2 b5 b4 b11 b10 b9 b8 b7 b6</code>, el orden de Jacobsthal.</li>
+  <li><strong>Número de comparaciones:</strong> contando cada <code>&lt;</code> entre elementos, nunca se supera el límite de Ford-Johnson (tabla en las preguntas típicas).</li>
+</ul>
 <details class="src"><summary><span class="fname">C09/ex02/PmergeMe.hpp</span> <span class="muted">· código completo (39 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3

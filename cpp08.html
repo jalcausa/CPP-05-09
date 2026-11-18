@@ -278,18 +278,40 @@ typename T::iterator easyfind(T&amp; container, int value)
 </ol>
 <p><strong>Segunda sobrecarga con <code>const</code>.</strong> Hay una versión casi idéntica que recibe <code>const T&amp;</code> y devuelve <code>typename T::const_iterator</code>. Sin ella, <code>easyfind(cvec, 5)</code> con un <code>const std::vector&lt;int&gt;</code> no compilaría: de un contenedor <code>const</code>, <code>begin()</code> devuelve un <code>const_iterator</code>, que no se puede convertir a <code>iterator</code>. El compilador elige la sobrecarga adecuada según si el argumento es <code>const</code> o no.</p>
 
-<h4>Los tests (main.cpp)</h4>
-<p>Pruebas con <code>vector</code>, <code>list</code> y <code>deque</code>: un valor que existe, uno al principio, uno que no existe (salta la excepción) y la versión <code>const</code>. Con <code>list</code> no calculas el índice porque su iterador es bidireccional y no admite resta.</p>
-<div class="code"><pre><code class="language-text">-- std::vector&lt;int&gt; --
+<h4>Pruebas del main.cpp</h4>
+<p><strong>Cómo está organizado.</strong> El main prueba <code>easyfind</code> con tres contenedores secuenciales distintos y con un contenedor <code>const</code>. Cada búsqueda va dentro de su propio <code>try</code>/<code>catch</code>, así que si una lanza excepción las demás se siguen ejecutando. Las búsquedas que deberían fallar llevan detrás una línea <code>"should not reach here"</code>: si apareciera en la salida, sería que la excepción no se lanzó. Los resultados correctos van por <code>std::cout</code> y las excepciones por <code>std::cerr</code>.</p>
+<div class="tw"><table>
+<tr><th>#</th><th>Prueba</th><th>Qué comprueba</th><th>Resultado</th></tr>
+<tr><td>1</td><td><code>vector</code> {1, 5, 3, 42, 7}, buscar <code>42</code></td><td>Encuentra un valor en medio y devuelve un iterador válido. El índice se calcula con <code>it - vec.begin()</code>, que vale porque el iterador de <code>vector</code> es de acceso aleatorio.</td><td><code>Found 42 at index 3</code></td></tr>
+<tr><td>2</td><td>Mismo vector, buscar <code>1</code></td><td>Caso límite: el valor está en la primera posición, la que devuelve <code>begin()</code>.</td><td><code>Found 1 at index 0</code></td></tr>
+<tr><td>3</td><td>Mismo vector, buscar <code>99</code></td><td>Valor que no existe: <code>std::find</code> devuelve <code>end()</code> y <code>easyfind</code> lanza <code>std::runtime_error</code>, que se captura como <code>std::exception</code>.</td><td><code>Exception (expected): Value not found in container</code></td></tr>
+<tr><td>4</td><td><code>list</code> {10, 20, 30}, buscar <code>20</code></td><td>El mismo template funciona con otro contenedor. Aquí no se calcula el índice: el iterador de <code>list</code> es bidireccional y no admite resta. El <code>(void)it;</code> evita el aviso de "variable sin usar", que con <code>-Werror</code> impediría compilar.</td><td><code>Found 20 in list</code></td></tr>
+<tr><td>5</td><td>Misma lista, buscar <code>999</code></td><td>La excepción también funciona con <code>list</code>.</td><td><code>Exception (expected): …</code></td></tr>
+<tr><td>6</td><td><code>deque</code> {100, 200, 300}, buscar <code>100</code></td><td>Tercer contenedor. El iterador de <code>deque</code> es de acceso aleatorio, así que el índice sí se puede calcular.</td><td><code>Found 100 at index 0</code></td></tr>
+<tr><td>7</td><td>Mismo deque, buscar <code>0</code></td><td>No encontrado en <code>deque</code>.</td><td><code>Exception (expected): …</code></td></tr>
+<tr><td>8</td><td><code>const std::vector&lt;int&gt; cvec(vec)</code>, buscar <code>5</code></td><td>Se usa la <strong>sobrecarga <code>const</code></strong> y el resultado se guarda en un <code>const_iterator</code>. Sin esa sobrecarga, esta línea no compilaría.</td><td><code>Found 5 at index 1</code></td></tr>
+</table></div>
+<p><strong>Cómo ejecutarlo:</strong> <code>make &amp;&amp; ./easyfind</code>. Si quieres ver solo los errores esperados, usa <code>./easyfind &gt; /dev/null</code>: se descarta <code>stdout</code> y solo queda <code>stderr</code>.</p>
+<details class="src"><summary><span class="fname">Salida completa de ./easyfind</span> <span class="muted">· stdout + stderr</span></summary>
+<div class="code"><pre><code class="language-text">=== easyfind tests ===
+
+-- std::vector&lt;int&gt; --
 Found 42 at index 3
 Found 1 at index 0
 Exception (expected): Value not found in container
+
 -- std::list&lt;int&gt; --
 Found 20 in list
 Exception (expected): Value not found in container
-...
+
+-- std::deque&lt;int&gt; --
+Found 100 at index 0
+Exception (expected): Value not found in container
+
 -- const std::vector&lt;int&gt; --
 Found 5 at index 1</code></pre></div>
+</details>
+<p><strong>Pruebas que te pueden pedir en directo:</strong> un contenedor vacío (<code>begin() == end()</code>, así que lanza la excepción), un valor repetido (devuelve el <em>primero</em>, porque <code>std::find</code> recorre desde el principio) o modificar el valor a través del iterador devuelto (<code>*it = 0;</code> funciona con la versión no <code>const</code>).</p>
 <details class="src"><summary><span class="fname">C08/ex00/easyfind.hpp</span> <span class="muted">· código completo (25 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
@@ -662,23 +684,67 @@ void addNumbers(Iterator begin, Iterator end)
 <h4>Excepciones anidadas</h4>
 <p><code>FullContainerException</code> y <code>NotEnoughNumbersException</code> son clases anidadas dentro de <code>Span</code> que heredan de <code>std::exception</code> y sobrescriben <code>what()</code>. Desde fuera se nombran <code>Span::FullContainerException</code>.</p>
 
-<h4>Los tests</h4>
-<p>Ejemplo del enunciado, Span lleno, Span con 0 y 1 números, <code>addNumbers</code> con <code>vector</code> y con <code>list</code>, <strong>10 000 números</strong> (0…9999 → shortest 1, longest 9999), constructor de copia (modificar la copia no afecta al original, porque <code>vector</code> hace copia profunda), valores extremos <code>INT_MIN</code>/<code>INT_MAX</code>, un rango que no cabe y <strong>20 000 números aleatorios</strong>.</p>
-<div class="code"><pre><code class="language-text">-- Subject example --
+<h4>Pruebas del main.cpp</h4>
+<p><strong>Cómo está organizado.</strong> El main tiene 10 bloques. Cada uno va entre llaves <code>{ }</code>, así que el <code>Span</code> de cada prueba se destruye al salir del bloque y se puede reutilizar el nombre <code>sp</code>. Las pruebas que esperan excepción la capturan con <code>catch (const std::exception&amp; e)</code> y la imprimen por <code>std::cerr</code> con el prefijo <code>Exception (expected)</code>. Al lado de cada resultado hay un comentario con el valor esperado (<code>// expected 2</code>).</p>
+<div class="tw"><table>
+<tr><th>#</th><th>Prueba</th><th>Qué comprueba</th><th>Resultado</th></tr>
+<tr><td>1</td><td>Ejemplo del enunciado: 6, 3, 17, 9, 11</td><td>El caso mínimo exigido. Ordenado queda 3 6 9 11 17: la menor diferencia es 11 − 9 y la mayor 17 − 3.</td><td><code>2</code> y <code>14</code></td></tr>
+<tr><td>2</td><td><code>Span(2)</code> con 1 y 2, y luego <code>addNumber(3)</code></td><td>No se puede superar la capacidad N.</td><td><code>FullContainerException</code></td></tr>
+<tr><td>3</td><td><code>shortestSpan()</code> sin números; <code>longestSpan()</code> con un solo número (42)</td><td>Los dos casos en los que no existe ninguna distancia, uno para cada función.</td><td><code>NotEnoughNumbersException</code> ×2</td></tr>
+<tr><td>4</td><td><code>addNumbers</code> con un <code>vector</code> {10, 50, 30, 20, 40}</td><td>Rellenar con un rango de iteradores. Los datos van desordenados a propósito para comprobar que <code>shortestSpan</code> ordena.</td><td><code>10</code> y <code>40</code></td></tr>
+<tr><td>5</td><td><code>addNumbers</code> con una <code>list</code> {0, 100, 50}</td><td>Como <code>addNumbers</code> es template, también acepta iteradores bidireccionales de otro contenedor.</td><td><code>50</code> y <code>100</code></td></tr>
+<tr><td>6</td><td>10 000 números (0…9999) con <code>addNumbers</code></td><td>El requisito del enunciado: "al menos 10 000 números". Los consecutivos dan una distancia mínima conocida.</td><td><code>1</code> y <code>9999</code></td></tr>
+<tr><td>7</td><td>Copia: <code>sp2(sp1)</code> con {1, 10, 5}, y después <code>sp2.addNumber(20)</code></td><td>El constructor de copia hace una <strong>copia profunda</strong>: añadir a <code>sp2</code> no cambia <code>sp1</code>.</td><td>shortest <code>4</code>/<code>4</code>; longest <code>9</code> (sp1) y <code>19</code> (sp2)</td></tr>
+<tr><td>8</td><td><code>INT_MIN</code> e <code>INT_MAX</code></td><td>La distancia más grande posible entre dos <code>int</code>: no cabe en un <code>int</code>, y por eso las funciones devuelven <code>long</code>.</td><td><code>4294967295</code> y <code>4294967295</code></td></tr>
+<tr><td>9</td><td><code>Span(4)</code> con un número; <code>addNumbers</code> de 5 elementos y después <code>addNumber(10)</code></td><td>El rango no cabe: se lanza la excepción y <strong>no se añade nada</strong>. Por eso después sigue habiendo sitio y el longest es 10 − 1.</td><td>Excepción y después <code>9</code></td></tr>
+<tr><td>10</td><td>20 000 números aleatorios (<code>std::srand(42)</code> + <code>std::rand()</code>)</td><td>Prueba de volumen con datos no ordenados, más del doble del mínimo exigido. La semilla fija hace que el resultado sea reproducible.</td><td><code>2</code> y <code>2147464069</code> (en macOS)</td></tr>
+</table></div>
+<p><strong>Cómo ejecutarlo:</strong> <code>make &amp;&amp; ./span</code>. Los números de la prueba 10 dependen de la implementación de <code>rand()</code>: en Linux salen otros valores, pero igual de coherentes (el shortest pequeño y el longest cerca de <code>RAND_MAX</code>).</p>
+<details class="src"><summary><span class="fname">Salida completa de ./span</span> <span class="muted">· stdout + stderr</span></summary>
+<div class="code"><pre><code class="language-text">=== Span tests ===
+
+-- Subject example --
 shortestSpan() = 2
 longestSpan()  = 14
-...
+
+-- addNumber on full Span --
+Exception (expected): Span: container is full, cannot add more numbers
+
+-- Span with 0 or 1 numbers --
+Exception (expected): Span: need at least 2 numbers to compute a span
+Exception (expected): Span: need at least 2 numbers to compute a span
+
+-- addNumbers (vector range) --
+shortestSpan() = 10
+longestSpan()  = 40
+
+-- addNumbers (list range) --
+shortestSpan() = 50
+longestSpan()  = 100
+
 -- Large Span (10000 numbers) --
 shortestSpan() = 1
 longestSpan()  = 9999
-...
+
+-- Copy constructor --
+sp1 shortestSpan() = 4
+sp2 shortestSpan() = 4
+sp1 longestSpan()  = 9
+sp2 longestSpan()  = 19
+
 -- INT_MIN / INT_MAX --
 shortestSpan() = 4294967295
 longestSpan()  = 4294967295
 
 -- addNumbers range too big --
 Exception (expected): Span: container is full, cannot add more numbers
-longestSpan()  = 9</code></pre></div>
+longestSpan()  = 9
+
+-- 20000 random numbers --
+shortestSpan() = 2
+longestSpan()  = 2147464069</code></pre></div>
+</details>
+<p><strong>Pruebas que te pueden pedir en directo:</strong> 100 000 aleatorios (cambia los dos <code>20000</code> del bloque 10), números negativos (<code>-5</code> y <code>5</code> → longest <code>10</code>) o duplicados (<code>3, 3</code> → shortest <code>0</code>: es válido, la distancia entre dos iguales es 0).</p>
 <details class="src"><summary><span class="fname">C08/ex01/Span.hpp</span> <span class="muted">· código completo (55 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
@@ -1322,8 +1388,25 @@ MutantStack&amp; operator=(const MutantStack&amp; other)
 <p>Forma canónica delegando en la clase base: como no añades atributos propios, copiar el <code>stack</code> (que copia su <code>deque</code> interno) es suficiente.</p>
 
 <h4>Orden de iteración</h4>
-<p><code>begin()</code> apunta al <strong>fondo</strong> de la pila (el primer elemento que se metió) y <code>end()</code> está después del <strong>tope</strong>. Por eso el ejemplo del enunciado imprime en el mismo orden que una <code>std::list</code> con <code>push_back</code>: 5, 3, 5, 737, 0. Tu main lo comprueba ejecutando las dos versiones una detrás de otra.</p>
-<div class="code"><pre><code class="language-text">-- Subject example --
+<p><code>begin()</code> apunta al <strong>fondo</strong> de la pila (el primer elemento que se metió) y <code>end()</code> está después del <strong>tope</strong>. Por eso el ejemplo del enunciado imprime en el mismo orden que una <code>std::list</code> con <code>push_back</code>: 5, 3, 5, 737, 0. Con <code>rbegin()</code>/<code>rend()</code> se recorre del tope al fondo, el mismo orden en que saldrían los elementos con <code>pop()</code>.</p>
+
+<h4>Pruebas del main.cpp</h4>
+<p><strong>Cómo está organizado.</strong> El main tiene 7 bloques independientes entre llaves <code>{ }</code>. Los dos primeros reproducen exactamente la comparación que pide el enunciado: el mismo código con <code>MutantStack</code> y con <code>std::list</code>, cambiando <code>push</code>/<code>top</code>/<code>pop</code> por <code>push_back</code>/<code>back</code>/<code>pop_back</code>. Los demás prueban los iteradores <code>const</code> y <code>reverse</code>, la forma canónica y que el template funciona con otro tipo.</p>
+<div class="tw"><table>
+<tr><th>#</th><th>Prueba</th><th>Qué comprueba</th><th>Resultado</th></tr>
+<tr><td>1</td><td>Main del enunciado: <code>push</code> 5 y 17, <code>top</code>, <code>pop</code>, <code>size</code>; <code>push</code> 3, 5, 737, 0; recorrer con <code>++it; --it;</code> y un <code>while</code></td><td>Siguen funcionando las funciones heredadas de <code>std::stack</code>, y los iteradores avanzan y retroceden (son bidireccionales, en realidad de acceso aleatorio porque vienen de <code>deque</code>).</td><td><code>top() = 17</code>, <code>size() = 1</code>, después <code>5 3 5 737 0</code></td></tr>
+<tr><td>2</td><td>El mismo código con <code>std::list&lt;int&gt;</code></td><td>Es la prueba que exige el enunciado: las dos salidas deben ser <strong>idénticas</strong>.</td><td><code>back() = 17</code>, <code>size() = 1</code>, después <code>5 3 5 737 0</code></td></tr>
+<tr><td>3</td><td>Copia <code>const MutantStack&lt;int&gt; cmstack(mstack)</code> recorrida con <code>const_iterator</code></td><td>Sobre un objeto <code>const</code> solo se pueden llamar métodos <code>const</code>: comprueba que existen <code>begin() const</code> y <code>end() const</code>.</td><td><code>1 2 3</code></td></tr>
+<tr><td>4</td><td><code>push</code> 10, 20, 30 y recorrer con <code>rbegin()</code>/<code>rend()</code></td><td>Iteradores inversos: del tope al fondo.</td><td><code>30 20 10</code></td></tr>
+<tr><td>5</td><td><code>ms2(ms1)</code> y después <code>ms2.push(300)</code></td><td>El constructor de copia crea una pila independiente: <code>ms1</code> no cambia.</td><td>tamaños <code>2</code> y <code>3</code>; <code>ms2</code> = <code>100 200 300</code></td></tr>
+<tr><td>6</td><td><code>ms2</code> con {99}, después <code>ms2 = ms1</code> con {7, 8}</td><td>El operador de asignación sustituye el contenido anterior.</td><td><code>7 8</code></td></tr>
+<tr><td>7</td><td><code>MutantStack&lt;std::string&gt;</code>: <code>push</code> "hello" y "world", <code>top</code>, <code>empty</code>, <code>pop</code></td><td>El template funciona con tipos que no son <code>int</code>. <code>empty()</code> se imprime como <code>0</code> porque <code>std::cout</code> muestra los <code>bool</code> como número (para ver <code>false</code> haría falta <code>std::boolalpha</code>).</td><td><code>top = world</code>, <code>empty = 0</code>, <code>top after pop = hello</code></td></tr>
+</table></div>
+<p><strong>Cómo ejecutarlo:</strong> <code>make &amp;&amp; ./mutantstack</code>. Para hacer la comparación del enunciado a mano, compara las líneas de los bloques <code>Subject example</code> y <code>Equivalent std::list</code>.</p>
+<details class="src"><summary><span class="fname">Salida completa de ./mutantstack</span> <span class="muted">· stdout + stderr</span></summary>
+<div class="code"><pre><code class="language-text">=== MutantStack tests ===
+
+-- Subject example --
 top() = 17
 size() = 1
 Iterating MutantStack:
@@ -1332,13 +1415,37 @@ Iterating MutantStack:
 5
 737
 0
+
 -- Equivalent std::list --
 back() = 17
 size() = 1
 Iterating std::list:
-5 ... (idéntico)
+5
+3
+5
+737
+0
+
+-- Const iterators --
+Const iterate: 1 2 3
+
 -- Reverse iterators --
-Reverse iterate: 30 20 10</code></pre></div>
+Reverse iterate: 30 20 10
+
+-- Copy constructor --
+ms1 size = 2
+ms2 size = 3
+ms2 contents: 100 200 300
+
+-- Assignment operator --
+ms2 after assignment: 7 8
+
+-- Stack member functions --
+top = world
+empty = 0
+top after pop = hello</code></pre></div>
+</details>
+<p><strong>La última línea del main del enunciado</strong>, <code>std::stack&lt;int&gt; s(mstack);</code>, no está en este main, pero si el evaluador la añade compila y funciona. Lo he comprobado: con una pila {1, 2}, <code>s.top()</code> da <code>2</code> y <code>s.size()</code> da <code>2</code>. Funciona por la herencia pública: un <code>MutantStack&lt;int&gt;</code> <em>es un</em> <code>std::stack&lt;int&gt;</code> y se puede pasar al constructor de copia de <code>stack</code>.</p>
 <details class="src"><summary><span class="fname">C08/ex02/MutantStack.hpp</span> <span class="muted">· código completo (42 líneas)</span></summary><div class="code numbered"><pre class="gutter" aria-hidden="true">1
 2
 3
